@@ -13,6 +13,21 @@ use Illuminate\Support\Str;
 
 class TourController extends Controller
 {
+    private function formatHighlightActivities(array|string|null $highlightActivities): ?string
+    {
+        if (! is_array($highlightActivities)) {
+            return null;
+        }
+
+        $activities = array_values(array_filter(array_map(static function ($activity) {
+            return trim((string) $activity);
+        }, $highlightActivities), static function ($activity) {
+            return $activity !== '';
+        }));
+
+        return $activities === [] ? null : implode("\n", $activities);
+    }
+
     public function index()
     {
         $tours = Tour::with(['category', 'type', 'theme', 'countryModel', 'images'])->paginate(20);
@@ -35,6 +50,7 @@ class TourController extends Controller
         $data = $request->validated();
         $data['slug'] = Str::slug($data['slug'] ?: $data['title']);
         $data['destinations'] = $data['destinations'] ?? [];
+        $data['highlight_activities'] = $this->formatHighlightActivities($data['highlight_activities'] ?? null);
         if ($request->hasFile('banner_img')) {
             $data['banner_img_path'] = $request->file('banner_img')->store('tours/banners', 'public');
         }
@@ -77,6 +93,7 @@ class TourController extends Controller
         $data = $request->validated();
         $data['slug'] = Str::slug($data['slug'] ?: $data['title']);
         $data['destinations'] = $data['destinations'] ?? [];
+        $data['highlight_activities'] = $this->formatHighlightActivities($data['highlight_activities'] ?? null);
 
         if ($request->hasFile('banner_img')) {
             $data['banner_img_path'] = $request->file('banner_img')->store('tours/banners', 'public');

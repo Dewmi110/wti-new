@@ -13,27 +13,27 @@
                             <a class="btn btn-sm btn-primary mb-3" href="{{ route('admin.tours.create') }}">Create Tour</a>
 
                             <div class="table-responsive">
-                                <table class="table align-items-center mb-0">
+                                <table class="table table-sm align-items-center mb-0" style="table-layout: fixed; width: 100%;">
                                     <thead>
                                         <tr>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Image</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Title</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Type</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Location</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Duration</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Price</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Actions</th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center" style="width: 6%;">No</th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center" style="width: 8%;">Image</th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center" style="width: 26%;">Title</th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center" style="width: 12%;">Type</th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center" style="width: 12%;">Location</th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center" style="width: 8%;">Duration</th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center" style="width: 10%;">Price</th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center" style="width: 10%;">Status</th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center" style="width: 14%;">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                     @foreach($tours as $tour)
                                         <tr>
-                                            <td>
+                                            <td class="text-center align-middle">
                                                 <p class="text-sm font-weight-bold mb-0">{{ $loop->iteration }}</p>
                                             </td>
-                                            <td>
+                                            <td class="text-center align-middle">
                                                 @php
                                                     $tourImagePath = $tour->images->first()?->img_path ?? $tour->banner_img_path;
                                                 @endphp
@@ -43,30 +43,34 @@
                                                     <span class="text-xs text-secondary">No image</span>
                                                 @endif
                                             </td>
-                                            <td><p class="text-sm font-weight-bold mb-0">{{ $tour->title }}</p></td>
-                                            <td><p class="text-sm mb-0">{{ optional($tour->type)->type_name }}</p></td>
-                                            <td><p class="text-sm mb-0">{{ optional($tour->countryModel)->name ?? '-' }}</p></td>
-                                            <td><p class="text-sm mb-0">{{ $tour->duration }}</p></td>
-                                            <td><p class="text-sm mb-0">{{ number_format($tour->price,2) }}</p></td>
-                                            <td>
-                                                <span class="badge {{ $tour->status == 1 ? 'bg-success' : ($tour->status == 0 ? 'bg-secondary' : 'bg-danger') }}">
+                                            <td class="align-middle text-justify" style="white-space: normal; word-break: break-word;">
+                                                <p class="text-sm font-weight-bold mb-0">{{ $tour->title }}</p>
+                                            </td>
+                                            <td class="align-middle text-center"><p class="text-sm mb-0">{{ optional($tour->type)->type_name }}</p></td>
+                                            <td class="align-middle text-center px-1"><p class="text-sm mb-0">{{ optional($tour->countryModel)->name ?? '-' }}</p></td>
+                                            <td class="align-middle text-center px-1"><p class="text-sm mb-0">{{ $tour->duration }}</p></td>
+                                            <td class="align-middle text-center"><p class="text-sm mb-0">{{ number_format($tour->price,2) }}</p></td>
+                                            <td class="align-middle text-center">
+                                                <span class="badge {{ $tour->status == 1 ? 'bg-success' : ($tour->status == 0 ? 'bg-secondary' : 'bg-danger') }} text-wrap">
                                                     {{ $tour->status == 1 ? 'Active' : ($tour->status == 0 ? 'Inactive' : 'Deleted') }}
                                                 </span>
                                             </td>
-                                            <td class="text-start">
-                                                <button type="button" class="btn btn-link text-info text-sm mb-0" data-bs-toggle="modal" data-bs-target="#tourViewModal{{ $tour->id }}" title="View" aria-label="View">
-                                                    <i class="material-icons opacity-10">visibility</i>
-                                                </button>
-                                                <a class="btn btn-link text-dark text-sm mb-0" href="{{ route('admin.tours.edit', $tour) }}" title="Edit" aria-label="Edit">
-                                                    <i class="material-icons opacity-10">edit</i>
-                                                </a>
-                                                <form action="{{ route('admin.tours.destroy', $tour) }}" method="POST" class="d-inline">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-link text-danger text-sm mb-0" title="Delete" aria-label="Delete" onclick="return confirm('Delete this tour?')">
-                                                        <i class="material-icons opacity-10">delete</i>
+                                            <td class="text-center align-middle">
+                                                <div class="d-inline-flex align-items-center justify-content-center gap-3 flex-nowrap">
+                                                    <button type="button" class="btn btn-link text-info text-sm mb-0 p-0" data-bs-toggle="modal" data-bs-target="#tourViewModal{{ $tour->id }}" title="View" aria-label="View">
+                                                        <i class="material-icons opacity-10">visibility</i>
                                                     </button>
-                                                </form>
+                                                    <a class="btn btn-link text-dark text-sm mb-0 p-0" href="{{ route('admin.tours.edit', $tour) }}" title="Edit" aria-label="Edit">
+                                                        <i class="material-icons opacity-10">edit</i>
+                                                    </a>
+                                                    <form action="{{ route('admin.tours.destroy', $tour) }}" method="POST" class="d-inline m-0 p-0">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-link text-danger text-sm mb-0 p-0" title="Delete" aria-label="Delete" onclick="return confirm('Delete this tour?')">
+                                                            <i class="material-icons opacity-10">delete</i>
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </td>
                                         </tr>
 
