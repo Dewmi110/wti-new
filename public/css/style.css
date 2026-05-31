@@ -201,6 +201,21 @@ figure {
   margin: 0 0 1rem;
 }
 
+/* Hero slider subtle zoom animation for active slide (Ken Burns effect) */
+.hero-wrap .hero-slide {
+  transition: transform 10s ease;
+  transform-origin: center center;
+}
+.hero-wrap .owl-item.active .hero-slide {
+  transform: scale(1.03);
+}
+.hero-wrap .hero-slide .subheading {
+  /* ensure subheading stays readable during zoom */
+  z-index: 2;
+  position: relative;
+}
+
+
 img {
   vertical-align: middle;
   border-style: none;
@@ -12927,7 +12942,7 @@ h5,
   top: -8px;
   left: 20px;
   display: inline-block;
-  background: #8CC7C4;
+  background: #000000;
   color: #fff;
   padding: 8px;
   font-size: 16px;
@@ -12952,7 +12967,7 @@ h5,
   height: 0;
   border-style: solid;
   border-width: 0 0 8px 8px;
-  border-color: transparent transparent #199589  transparent;
+  border-color: transparent transparent #9c9c9c  transparent;
 }
 
 .project-wrap .img .price:before {
@@ -12961,7 +12976,7 @@ h5,
   height: 0;
   border-style: solid;
   border-width: 8px 0 0 8px;
-  border-color: transparent transparent transparent #199589;
+  border-color: transparent transparent transparent #9c9c9c;
 }
 
 .project-wrap.hotel .img {
@@ -13076,7 +13091,7 @@ h5,
   margin-left: -35px;
   margin-bottom: 10px;
   /* background: #f15d30; */
-  background: #8CC7C4;
+  background: #000000;
   position: relative;
 }
 
@@ -13094,7 +13109,7 @@ h5,
   height: 0;
   border-style: solid;
   border-width: 0 0 5px 5px;
-  border-color: transparent transparent #c7390d transparent;
+  border-color: transparent transparent #706e6e transparent;
 }
 
 .services.services-1 .media-body {
@@ -13328,7 +13343,7 @@ textarea.form-control {
 
 .ftco-footer {
   font-size: 16px;
-  padding: 7em 0;
+  padding: 1em 0;
   z-index: 0;
   border-top: 1px solid rgba(0, 0, 0, 0.05);
 }

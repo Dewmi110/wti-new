@@ -1,19 +1,56 @@
 @extends('frontend.components.layout')
 
 @section('content')
-<div class="hero-wrap js-fullheight" style="background-image: url('images/hero-bg-1.jpg');">
-    <div class="overlay"></div>
-    <div class="container">
-        <div class="row no-gutters slider-text js-fullheight align-items-center" data-scrollax-parent="true">
-            <div class="col-md-7 ftco-animate">
-                <span class="subheading">Welcome to WTI Holidays</span>
-                <h1 class="mb-4">Discover Your Favorite Place with Us</h1>
-                <p class="caps">Travel to the any corner of the world, without going around in circles</p>
+<div class="hero-wrap js-fullheight owl-carousel">
+    <div class="hero-slide js-fullheight" style="background-image: url('{{ asset('images/hero-slider/slider1.jpg') }}'); background-position: center; background-size: cover;">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row no-gutters slider-text js-fullheight align-items-center" data-scrollax-parent="true">
+                <div class="col-md-7 ftco-animate">
+                    <span class="subheading" style="background: rgba(255, 255, 255, 0.9); color: #e11d2e; display: inline-block; padding: 12px 24px; line-height: 1;">Welcome to WTI Holidays</span>
+                    <h1 class="mb-4">Discover Your Favorite Place with Us</h1>
+                    <p class="caps">Travel to the any corner of the world, without going around in circles</p>
+                </div>
             </div>
-            {{-- <a href="https://vimeo.com/45830194"
-                class="icon-video popup-vimeo d-flex align-items-center justify-content-center mb-4">
-                <span class="fa fa-play"></span>
-            </a> --}}
+        </div>
+    </div>
+
+    <div class="hero-slide js-fullheight" style="background-image: url('{{ asset('images/hero-slider/slider2.png') }}'); background-position: center; background-size: cover;">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row no-gutters slider-text js-fullheight align-items-center" data-scrollax-parent="true">
+                <div class="col-md-7 ftco-animate">
+                    <span class="subheading" style="background: rgba(255, 255, 255, 0.9); color: #e11d2e; display: inline-block; padding: 12px 24px; line-height: 1;">Explore Handpicked Tours</span>
+                    <h1 class="mb-4">Unforgettable Journeys Await</h1>
+                    <p class="caps">Find curated packages and authentic experiences.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero-slide js-fullheight" style="background-image: url('{{ asset('images/hero-slider/slider3.jpg') }}'); background-position: center; background-size: cover;">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row no-gutters slider-text js-fullheight align-items-center" data-scrollax-parent="true">
+                <div class="col-md-7 ftco-animate">
+                    <span class="subheading" style="background: rgba(255, 255, 255, 0.9); color: #e11d2e; display: inline-block; padding: 12px 24px; line-height: 1;">Travel With Confidence</span>
+                    <h1 class="mb-4">Safe, Seamless & Memorable</h1>
+                    <p class="caps">Let us handle the details while you make memories.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero-slide js-fullheight" style="background-image: url('{{ asset('images/hero-slider/slider4.jpg') }}'); background-position: center; background-size: cover;">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row no-gutters slider-text js-fullheight align-items-center" data-scrollax-parent="true">
+                <div class="col-md-7 ftco-animate">
+                    <span class="subheading" style="background: rgba(255, 255, 255, 0.9); color: #e11d2e; display: inline-block; padding: 12px 24px; line-height: 1;">Amazing Destinations</span>
+                    <h1 class="mb-4">Create Lasting Memories</h1>
+                    <p class="caps">Experience the beauty and culture of the world.</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -198,16 +235,15 @@
         <div class="row d-flex">
             <div class="col-md-6 order-md-last heading-section pl-md-5 ftco-animate d-flex align-items-center">
                 <div class="w-100">
-                    <span class="subheading">Welcome to Pacific</span>
+                    <span class="subheading">Welcome to WTI Holidays</span>
                     <h2 class="mb-4">It's time to start your adventure</h2>
-                    <p>A small river named Duden flows by their place and supplies it with the necessary regelialia. It
-                        is a paradisematic country, in which roasted parts of sentences fly into your mouth.</p>
-                    <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there
+                    <p>Escape the ordinary and dive into unforgettable adventures. Whether you crave tranquil beaches, breathtaking mountain escapes, or vibrant city explorations, we craft experiences that match your dreams. Travel isn’t just about the destination—it’s about the memories you create along the way. With our carefully curated packages, seamless itineraries, and expert guidance, you can embrace new cultures, discover hidden gems, and travel with complete peace of mind. Let us handle the details while you focus on making moments that last a lifetime.</p>
+                    {{-- <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there
                         live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics,
                         a large language ocean.
                         A small river named Duden flows by their place and supplies it with the necessary regelialia.
-                    </p>
-                    <p><a href="#" class="btn btn-primary py-3 px-4">Search Destination</a></p>
+                    </p> --}}
+                    <p><a href="{{ route('frontend.visit_to_srilanka') }}" class="btn btn-primary py-3 px-4">Search Destination</a></p>
                 </div>
             </div>
             <div class="col-md-6">
@@ -262,8 +298,8 @@
     </div>
 </section>
 
-<div class="paralax-1" style="background-image: url('{{ asset('images/paralax-6.jpg') }}');" data-scrollax="properties: { translateY: '30%' }">
-</div>
+{{-- <div class="paralax-1" style="background-image: url('{{ asset('images/paralax-6.jpg') }}');" data-scrollax="properties: { translateY: '30%' }">
+</div> --}}
 
 <section class="ftco-section img ftco-select-destination" style="background-image: url(images/bg_3.jpg);">
     <div class="container">
@@ -333,8 +369,8 @@
         </div>
     </div>
 </section>
-<div class="paralax-1" style="background-image: url('{{ asset('images/paralax-5.jpg') }}');" data-scrollax="properties: { translateY: '30%' }">
-</div>
+{{-- <div class="paralax-1" style="background-image: url('{{ asset('images/paralax-5.jpg') }}');" data-scrollax="properties: { translateY: '30%' }">
+</div> --}}
 <section class="ftco-section">
     <div class="container">
         <div class="row justify-content-center pb-4">
@@ -395,58 +431,6 @@
                     </div>
                 </div>
             </div>
-
-            <div class="col-md-4 ftco-animate">
-                <div class="project-wrap">
-                    <a href="#" class="img" style="background-image: url(images/destination-4.jpg);">
-                        <span class="price">$550/person</span>
-                    </a>
-                    <div class="text p-4">
-                        <span class="days">8 Days Tour</span>
-                        <h3><a href="#">Banaue Rice Terraces</a></h3>
-                        <p class="location"><span class="fa fa-map-marker"></span> Banaue, Ifugao, Philippines</p>
-                        <ul>
-                            <li><span class="flaticon-shower"></span>2</li>
-                            <li><span class="flaticon-king-size"></span>3</li>
-                            <li><span class="flaticon-sun-umbrella"></span>Near Beach</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 ftco-animate">
-                <div class="project-wrap">
-                    <a href="#" class="img" style="background-image: url(images/destination-5.jpg);">
-                        <span class="price">$550/person</span>
-                    </a>
-                    <div class="text p-4">
-                        <span class="days">10 Days Tour</span>
-                        <h3><a href="#">Banaue Rice Terraces</a></h3>
-                        <p class="location"><span class="fa fa-map-marker"></span> Banaue, Ifugao, Philippines</p>
-                        <ul>
-                            <li><span class="flaticon-shower"></span>2</li>
-                            <li><span class="flaticon-king-size"></span>3</li>
-                            <li><span class="flaticon-sun-umbrella"></span>Near Beach</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 ftco-animate">
-                <div class="project-wrap">
-                    <a href="#" class="img" style="background-image: url(images/destination-6.jpg);">
-                        <span class="price">$550/person</span>
-                    </a>
-                    <div class="text p-4">
-                        <span class="days">7 Days Tour</span>
-                        <h3><a href="#">Banaue Rice Terraces</a></h3>
-                        <p class="location"><span class="fa fa-map-marker"></span> Banaue, Ifugao, Philippines</p>
-                        <ul>
-                            <li><span class="flaticon-shower"></span>2</li>
-                            <li><span class="flaticon-king-size"></span>3</li>
-                            <li><span class="flaticon-sun-umbrella"></span>Near Beach</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </section>
@@ -456,10 +440,10 @@
     <div class="container py-md-5">
         <div class="row py-md-5">
             <div class="col-md d-flex align-items-center justify-content-center">
-                <a href="https://vimeo.com/45830194"
+                {{-- <a href="https://vimeo.com/45830194"
                     class="icon-video popup-vimeo d-flex align-items-center justify-content-center mb-4">
                     <span class="fa fa-play"></span>
-                </a>
+                </a> --}}
             </div>
         </div>
     </div>

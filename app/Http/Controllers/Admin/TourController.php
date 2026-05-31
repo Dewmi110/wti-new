@@ -9,10 +9,55 @@ use App\Models\Tour;
 use App\Models\TourImage;
 use App\Models\DayItinerary;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
 class TourController extends Controller
 {
+    private const FEATURE_ICON_SOURCE_URL = 'https://raw.githubusercontent.com/FortAwesome/Font-Awesome/7.x/metadata/icons.json';
+
+    /**
+     * Normalize feature rows into a clean array for JSON storage.
+     *
+     * @param  array<int, array<string, mixed>>|null  $features
+     * @return array<int, array{label: string, icon: string}>|null
+     */
+    private function formatFeatures(array|null $features): ?array
+    {
+        if (! is_array($features)) {
+            return null;
+        }
+
+        $items = array_values(array_filter(array_map(static function (array|string|null $feature): array|null {
+            if (! is_array($feature)) {
+                return null;
+            }
+
+            $label = trim((string) ($feature['label'] ?? ''));
+            $prefix = trim((string) ($feature['prefix'] ?? 'emoji'));
+            $icon = trim((string) ($feature['icon'] ?? ''));
+
+            if ($label === '' || $icon === '') {
+                return null;
+            }
+
+            if ($prefix === '') {
+                $prefix = 'emoji';
+            }
+
+            return [
+                'label' => $label,
+                'prefix' => $prefix,
+                'icon' => $icon,
+            ];
+        }, $features), static function (array|null $feature): bool {
+            return is_array($feature);
+        }));
+
+        return $items === [] ? null : $items;
+    }
+
     private function formatHighlightActivities(array|string|null $highlightActivities): ?string
     {
         if (! is_array($highlightActivities)) {
@@ -26,6 +71,58 @@ class TourController extends Controller
         }));
 
         return $activities === [] ? null : implode("\n", $activities);
+    }
+
+    public function featureIcons()
+    {
+        $features = Cache::remember('tour.feature-icons.catalog', now()->day(), function (): array {
+            $response = Http::timeout(15)
+                ->retry(2, 250)
+                ->get(self::FEATURE_ICON_SOURCE_URL);
+
+            if (! $response->successful()) {
+                return [];
+            }
+
+            $catalog = $response->json();
+
+            if (! is_array($catalog)) {
+                return [];
+            }
+
+            $stylePrefixes = [
+                'solid' => 'fas',
+                'regular' => 'far',
+                'brands' => 'fab',
+            ];
+
+            return collect($catalog)
+                ->map(static function (array $metadata, string $iconName) use ($stylePrefixes): ?array {
+                    $styles = array_values(array_intersect($metadata['styles'] ?? [], array_keys($stylePrefixes)));
+
+                    if ($styles === []) {
+                        return null;
+                    }
+
+                    $searchTerms = array_values(array_unique(array_filter(array_map('strval', array_merge(
+                        $metadata['search']['terms'] ?? [],
+                        $metadata['ligatures'] ?? [],
+                        [$iconName, $metadata['label'] ?? '']
+                    )))));
+
+                    return [
+                        'label' => (string) ($metadata['label'] ?? Str::headline($iconName)),
+                        'prefix' => $stylePrefixes[$styles[0]],
+                        'icon' => 'fa-' . $iconName,
+                        'keywords' => array_map(static fn (string $term): string => Str::lower($term), $searchTerms),
+                    ];
+                })
+                ->filter()
+                ->values()
+                ->all();
+        });
+
+        return response()->json($features);
     }
 
     public function index()
@@ -50,6 +147,7 @@ class TourController extends Controller
         $data = $request->validated();
         $data['slug'] = Str::slug($data['slug'] ?: $data['title']);
         $data['destinations'] = $data['destinations'] ?? [];
+        $data['features'] = $this->formatFeatures($data['features'] ?? null) ?? [];
         $data['highlight_activities'] = $this->formatHighlightActivities($data['highlight_activities'] ?? null);
         if ($request->hasFile('banner_img')) {
             $data['banner_img_path'] = $request->file('banner_img')->store('tours/banners', 'public');
@@ -93,6 +191,7 @@ class TourController extends Controller
         $data = $request->validated();
         $data['slug'] = Str::slug($data['slug'] ?: $data['title']);
         $data['destinations'] = $data['destinations'] ?? [];
+        $data['features'] = $this->formatFeatures($data['features'] ?? null) ?? [];
         $data['highlight_activities'] = $this->formatHighlightActivities($data['highlight_activities'] ?? null);
 
         if ($request->hasFile('banner_img')) {

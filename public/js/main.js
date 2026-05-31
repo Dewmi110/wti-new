@@ -36,6 +36,21 @@
    $.Scrollax();
 
 	var carousel = function() {
+		// Hero slider
+		$('.hero-wrap.owl-carousel').owlCarousel({
+			items: 1,
+			loop: true,
+			autoplay: true,
+			autoplayTimeout: 3000,
+			autoplaySpeed: 700,
+			smartSpeed: 800,
+			autoplayHoverPause: true,
+			animateOut: 'fadeOutLeft',
+			animateIn: 'fadeInRight',
+			dots: true,
+			nav: false
+		});
+
 		$('.carousel-testimony').owlCarousel({
 			center: true,
 			loop: true,

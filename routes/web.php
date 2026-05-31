@@ -19,6 +19,7 @@ Route::controller(FrontendController::class)->group(function () {
 	// Route::get('/about', 'about')->name('frontend.about');
 	Route::get('/visit-to-srilanka', 'visit_to_srilanka')->name('frontend.visit_to_srilanka');
 	Route::get('/outbound', 'outbound')->name('frontend.outbound');
+	Route::get('/tours/{tour}', 'singleTour')->name('frontend.single_tour');
 	// Route::get('/blog', 'blog')->name('frontend.blog');
 	// Route::get('/contact', 'contact')->name('frontend.contact');
 });
@@ -36,6 +37,7 @@ Route::prefix('admin')->middleware(AdminAuth::class)->group(function () {
 
 	// Tour management
 	Route::resource('tours', \App\Http\Controllers\Admin\TourController::class, ['as' => 'admin']);
+	Route::get('tours/feature-icons', [\App\Http\Controllers\Admin\TourController::class, 'featureIcons'])->name('admin.tours.feature-icons');
 
 	// Taxonomy
 	Route::resource('tour-categories', \App\Http\Controllers\Admin\TourCategoryController::class, ['as' => 'admin']);

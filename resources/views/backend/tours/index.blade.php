@@ -12,50 +12,57 @@
                         <div class="card-body pt-4 p-3">
                             <a class="btn btn-sm btn-primary mb-3" href="{{ route('admin.tours.create') }}">Create Tour</a>
 
-                            <div class="table-responsive">
-                                <table class="table table-sm align-items-center mb-0" style="table-layout: fixed; width: 100%;">
+                            <div class="table-responsive tour-table-responsive">
+                                <table class="table table-sm align-items-center mb-0 tour-table">
                                     <thead>
                                         <tr>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center" style="width: 6%;">No</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center" style="width: 8%;">Image</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center" style="width: 26%;">Title</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center" style="width: 12%;">Type</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center" style="width: 12%;">Location</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center" style="width: 8%;">Duration</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center" style="width: 10%;">Price</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center" style="width: 10%;">Status</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center" style="width: 14%;">Actions</th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center tour-table-no">No</th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center tour-table-image">Image</th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center tour-table-title">Title</th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center tour-table-type">Type</th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center tour-table-location">Location</th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center tour-table-duration">Duration</th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center tour-table-price">Price</th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center tour-table-status">Status</th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center tour-table-actions">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                     @foreach($tours as $tour)
                                         <tr>
-                                            <td class="text-center align-middle">
+                                            <td class="text-center align-middle tour-table-no">
                                                 <p class="text-sm font-weight-bold mb-0">{{ $loop->iteration }}</p>
                                             </td>
-                                            <td class="text-center align-middle">
+                                            <td class="text-center align-middle tour-table-image">
                                                 @php
                                                     $tourImagePath = $tour->images->first()?->img_path ?? $tour->banner_img_path;
                                                 @endphp
                                                 @if($tourImagePath)
-                                                    <img src="{{ \Illuminate\Support\Facades\Storage::url($tourImagePath) }}" alt="{{ $tour->title }}" class="rounded" style="width: 56px; height: 56px; object-fit: cover;">
+                                                    <div class="tour-table-thumb-wrap mx-auto">
+                                                        <img src="{{ \Illuminate\Support\Facades\Storage::url($tourImagePath) }}" alt="{{ $tour->title }}" class="tour-table-thumb" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('d-none');">
+                                                        <div class="tour-table-thumb-fallback d-none">
+                                                            <i class="material-icons opacity-10">image</i>
+                                                        </div>
+                                                    </div>
                                                 @else
-                                                    <span class="text-xs text-secondary">No image</span>
+                                                    <div class="tour-table-thumb-fallback mx-auto">
+                                                        <i class="material-icons opacity-10">image</i>
+                                                    </div>
                                                 @endif
                                             </td>
-                                            <td class="align-middle text-justify" style="white-space: normal; word-break: break-word;">
+                                            <td class="align-middle text-justify tour-table-title">
                                                 <p class="text-sm font-weight-bold mb-0">{{ $tour->title }}</p>
                                             </td>
-                                            <td class="align-middle text-center"><p class="text-sm mb-0">{{ optional($tour->type)->type_name }}</p></td>
-                                            <td class="align-middle text-center px-1"><p class="text-sm mb-0">{{ optional($tour->countryModel)->name ?? '-' }}</p></td>
-                                            <td class="align-middle text-center px-1"><p class="text-sm mb-0">{{ $tour->duration }}</p></td>
-                                            <td class="align-middle text-center"><p class="text-sm mb-0">{{ number_format($tour->price,2) }}</p></td>
-                                            <td class="align-middle text-center">
+                                            <td class="align-middle text-center tour-table-type"><p class="text-sm mb-0">{{ optional($tour->type)->type_name }}</p></td>
+                                            <td class="align-middle text-center tour-table-location"><p class="text-sm mb-0">{{ optional($tour->countryModel)->name ?? '-' }}</p></td>
+                                            <td class="align-middle text-center tour-table-duration"><p class="text-sm mb-0">{{ $tour->duration }}</p></td>
+                                            <td class="align-middle text-center tour-table-price"><p class="text-sm mb-0">{{ number_format($tour->price,2) }}</p></td>
+                                            <td class="align-middle text-center tour-table-status">
                                                 <span class="badge {{ $tour->status == 1 ? 'bg-success' : ($tour->status == 0 ? 'bg-secondary' : 'bg-danger') }} text-wrap">
                                                     {{ $tour->status == 1 ? 'Active' : ($tour->status == 0 ? 'Inactive' : 'Deleted') }}
                                                 </span>
                                             </td>
-                                            <td class="text-center align-middle">
+                                            <td class="text-center align-middle tour-table-actions">
                                                 <div class="d-inline-flex align-items-center justify-content-center gap-3 flex-nowrap">
                                                     <button type="button" class="btn btn-link text-info text-sm mb-0 p-0" data-bs-toggle="modal" data-bs-target="#tourViewModal{{ $tour->id }}" title="View" aria-label="View">
                                                         <i class="material-icons opacity-10">visibility</i>
@@ -115,4 +122,87 @@
         </div>
     </main>
 </x-layout>
+
+<style>
+.tour-table-responsive {
+    overflow-x: auto;
+}
+
+.tour-table {
+    min-width: 1180px;
+    table-layout: auto;
+}
+
+.tour-table th {
+    white-space: nowrap;
+}
+
+.tour-table-no {
+    width: 64px;
+}
+
+.tour-table-image {
+    width: 96px;
+}
+
+.tour-table-title {
+    min-width: 280px;
+    max-width: 360px;
+}
+
+.tour-table-type,
+.tour-table-location,
+.tour-table-duration,
+.tour-table-price,
+.tour-table-status,
+.tour-table-actions {
+    white-space: nowrap;
+}
+
+.tour-table-location {
+    min-width: 150px;
+}
+
+.tour-table-actions {
+    min-width: 120px;
+}
+
+.tour-table-title p,
+.tour-table-type p,
+.tour-table-location p,
+.tour-table-duration p,
+.tour-table-price p {
+    margin-bottom: 0;
+}
+
+.tour-table-title p {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.tour-table-thumb-wrap,
+.tour-table-thumb-fallback {
+    width: 56px;
+    height: 56px;
+    border-radius: 0.5rem;
+}
+
+.tour-table-thumb {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    display: block;
+    border-radius: 0.5rem;
+}
+
+.tour-table-thumb-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    color: #8392ab;
+}
+</style>
 
