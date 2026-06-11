@@ -1,59 +1,164 @@
-<x-layout bodyClass="g-sidenav-show  bg-gray-200">
-    <x-navbars.sidebar activePage='tour-types'></x-navbars.sidebar>
-    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-        <x-navbars.navs.auth titlePage="Tour Types"></x-navbars.navs.auth>
-        <div class="container-fluid py-4">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card mb-4">
-                        <div class="card-header pb-0 px-3">
-                            <h6 class="mb-0">Tour Types</h6>
-                        </div>
-                        <div class="card-body pt-4 p-3">
-                            <a class="btn btn-sm btn-primary mb-3" href="{{ route('admin.tour-types.create') }}">Create Type</a>
+@extends('backend.components.layoutV2')
 
-                            <div class="table-responsive">
-                                <table class="table align-items-center mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
-                                            <th class="text-secondary opacity-7"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach($items as $it)
-                                        <tr>
-                                            <td>
-                                                <p class="text-sm font-weight-bold mb-0">{{ $it->type_name }}</p>
-                                            </td>
-                                            <td>
-                                                <span class="badge {{ $it->status ? 'bg-success' : 'bg-secondary' }}">{{ $it->status ? 'Active' : 'Inactive' }}</span>
-                                            </td>
-                                            <td class="text-end">
-                                                <a class="btn btn-link text-dark text-sm mb-0" href="{{ route('admin.tour-types.edit', $it) }}" title="Edit" aria-label="Edit">
-                                                    <i class="material-icons opacity-10">edit</i>
-                                                </a>
-                                                <form action="{{ route('admin.tour-types.destroy', $it) }}" method="POST" class="d-inline">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-link text-danger text-sm mb-0" title="Delete" aria-label="Delete" onclick="return confirm('Delete this type?')">
-                                                        <i class="material-icons opacity-10">delete</i>
-                                                    </button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
+@section('main')
+@include('backend.components.navbars.header')
 
-                            <div class="mt-3">{{ $items->links() }}</div>
-                        </div>
-                    </div>
+    <div class="page">
+
+        {{-- <div class="section-block">
+            <div class="section-heading">
+                Tour Management
+            </div>
+        </div> --}}
+<div>
+                    <h3 class="card-header-title">
+                        Tour Types
+                    </h3>
                 </div>
+        <div class="card">
+
+            <div class="table-toolbar">
+
+                
+<div class="table-search">
+            <div class="input-icon-wrap">
+                <i class="fas fa-search input-icon"></i>
+                <input type="text"
+                       class="form-input"
+                       placeholder="Search types...">
             </div>
         </div>
-    </main>
-</x-layout>
+                <div class="table-filters">
+                    <a href="{{ route('admin.tour-types.create') }}"
+                       class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i>
+                        Create Type
+                    </a>
+                </div>
 
+            </div>
+
+            <div class="table-wrap">
+
+                <table class="data-table">
+
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th width="140">Status</th>
+                            <th width="120" class="text-center">
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @forelse($items as $it)
+
+                            <tr>
+
+                                <td>
+                                    <strong>{{ $it->type_name }}</strong>
+                                </td>
+
+                                <td>
+
+                                    @if($it->status)
+
+                                        <span class="td-badge badge-success">
+                                            <span class="dot dot-green"></span>
+                                            Active
+                                        </span>
+
+                                    @else
+
+                                        <span class="td-badge badge-dark">
+                                            <span class="dot dot-orange"></span>
+                                            Inactive
+                                        </span>
+
+                                    @endif
+
+                                </td>
+
+                                <td>
+
+                                    <div class="td-actions justify-content-center">
+
+                                        <a href="{{ route('admin.tour-types.edit', $it) }}"
+                                           class="action-btn action-edit"
+                                           title="Edit">
+                                            <i class="fas fa-pen"></i>
+                                        </a>
+
+                                        <form action="{{ route('admin.tour-types.destroy', $it) }}"
+                                              method="POST">
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <button type="submit"
+                                                    class="action-btn action-delete"
+                                                    title="Delete"
+                                                    onclick="return confirm('Delete this type?')">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        @empty
+
+                            <tr>
+                                <td colspan="3" class="text-center">
+                                    No tour types found.
+                                </td>
+                            </tr>
+
+                        @endforelse
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div class="table-footer">
+
+                <div class="table-info">
+                    Showing
+                    {{ $items->firstItem() ?? 0 }}
+                    -
+                    {{ $items->lastItem() ?? 0 }}
+                    of
+                    {{ $items->total() }}
+                    records
+                </div>
+
+                <div>
+                    {{ $items->links() }}
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+{{-- </main> --}}
+
+<style>
+.text-center{
+    text-align:center;
+}
+
+.justify-content-center{
+    justify-content:center;
+}
+</style>
+
+@endsection

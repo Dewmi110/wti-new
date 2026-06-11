@@ -1,35 +1,99 @@
-<x-layout bodyClass="g-sidenav-show  bg-gray-200">
-    <x-navbars.sidebar activePage='countries'></x-navbars.sidebar>
-    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-        <x-navbars.navs.auth titlePage="Edit Country"></x-navbars.navs.auth>
-        <div class="container-fluid py-4">
-            <div class="row">
-                <div class="col-lg-6 col-md-8 mx-auto">
-                    <div class="card">
-                        <div class="card-header pb-0 px-3 d-flex align-items-center justify-content-between">
-                            <h6 class="mb-0">Edit Country</h6>
-                            <a href="{{ route('admin.countries.index') }}" class="btn btn-outline-primary btn-sm mb-0">Back</a>
-                        </div>
-                        <div class="card-body pt-4 p-3">
-                            <form action="{{ route('admin.countries.update', $item) }}" method="POST">
-                                @csrf
-                                @method('PUT')
-                                <div class="input-group input-group-outline mt-3">
-                                    <label class="form-label">Name</label>
-                                    <input type="text" name="name" class="form-control" value="{{ old('name', $item->name) }}">
-                                </div>
-                                <div class="form-check form-switch mt-4">
-                                    <input class="form-check-input" type="checkbox" id="status" name="status" value="1" {{ $item->status ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="status">Active</label>
-                                </div>
-                                <div class="text-end mt-4">
-                                    <button type="submit" class="btn btn-primary">Save</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
+@extends('backend.components.layoutV2')
+
+@section('main')
+
+<div class="page">
+
+    <div class="page-header">
+        <div>
+            <h2 class="page-title">Edit Country</h2>
+            <p class="page-subtitle">Update country information</p>
         </div>
-    </main>
-</x-layout>
+
+        <a href="{{ route('admin.countries.index') }}"
+           class="btn btn-outline">
+            <i class="fas fa-arrow-left"></i>
+            Back
+        </a>
+    </div>
+
+    <div class="section-block">
+
+        <div class="card">
+
+            <div class="card-header">
+                <h3>Edit Country</h3>
+            </div>
+
+            <div class="card-body">
+
+                @if($errors->any())
+                    <div class="alert alert-danger mb-4">
+                        {{ $errors->first() }}
+                    </div>
+                @endif
+
+                <form action="{{ route('admin.countries.update', $item) }}"
+                      method="POST">
+
+                    @csrf
+                    @method('PUT')
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Country Name
+                        </label>
+
+                        <input type="text"
+                               name="name"
+                               class="form-input"
+                               value="{{ old('name', $item->name) }}"
+                               placeholder="Enter country name"
+                               required>
+                    </div>
+
+                    <div class="form-group mt-4">
+
+                        <label class="switch">
+
+                            <input type="checkbox"
+                                   name="status"
+                                   value="1"
+                                   {{ old('status', $item->status) ? 'checked' : '' }}>
+
+                            <span class="slider"></span>
+
+                        </label>
+
+                        <span class="switch-label ms-2">
+                            Active
+                        </span>
+
+                    </div>
+
+                    <div class="form-actions mt-4">
+
+                        <a href="{{ route('admin.countries.index') }}"
+                           class="btn btn-secondary">
+                            Cancel
+                        </a>
+
+                        <button type="submit"
+                                class="btn btn-primary">
+                            <i class="fas fa-save"></i>
+                            Update Country
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@endsection

@@ -20,9 +20,9 @@
                                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center tour-table-image">Image</th>
                                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center tour-table-title">Title</th>
                                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center tour-table-type">Type</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center tour-table-location">Location</th>
+                                            {{-- <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center tour-table-location">Location</th>
                                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center tour-table-duration">Duration</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center tour-table-price">Price</th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center tour-table-price">Price</th> --}}
                                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center tour-table-status">Status</th>
                                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center tour-table-actions">Actions</th>
                                         </tr>
@@ -54,9 +54,9 @@
                                                 <p class="text-sm font-weight-bold mb-0">{{ $tour->title }}</p>
                                             </td>
                                             <td class="align-middle text-center tour-table-type"><p class="text-sm mb-0">{{ optional($tour->type)->type_name }}</p></td>
-                                            <td class="align-middle text-center tour-table-location"><p class="text-sm mb-0">{{ optional($tour->countryModel)->name ?? '-' }}</p></td>
-                                            <td class="align-middle text-center tour-table-duration"><p class="text-sm mb-0">{{ $tour->duration }}</p></td>
-                                            <td class="align-middle text-center tour-table-price"><p class="text-sm mb-0">{{ number_format($tour->price,2) }}</p></td>
+                                            {{-- <td class="align-middle text-center tour-table-location"><p class="text-sm mb-0">{{ optional($tour->countryModel)->name ?? '-' }}</p></td> --}}
+                                            {{-- <td class="align-middle text-center tour-table-duration"><p class="text-sm mb-0">{{ $tour->duration }}</p></td> --}}
+                                            {{-- <td class="align-middle text-center tour-table-price"><p class="text-sm mb-0">{{ number_format($tour->price,2) }}</p></td> --}}
                                             <td class="align-middle text-center tour-table-status">
                                                 <span class="badge {{ $tour->status == 1 ? 'bg-success' : ($tour->status == 0 ? 'bg-secondary' : 'bg-danger') }} text-wrap">
                                                     {{ $tour->status == 1 ? 'Active' : ($tour->status == 0 ? 'Inactive' : 'Deleted') }}

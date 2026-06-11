@@ -8,12 +8,7 @@ class Destination extends Model
 {
     protected $table = 'destinations';
 
-    protected $fillable = ['name', 'status', 'country_id'];
-
-    public function tours()
-    {
-        return $this->belongsToMany(Tour::class, 'destination_tour', 'destination_id', 'tour_id');
-    }
+    protected $fillable = ['name', 'status', 'country_id', 'image'];
 
     public function country()
     {

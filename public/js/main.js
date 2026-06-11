@@ -74,8 +74,8 @@
 		$('.carousel-destination').owlCarousel({
 			center: false,
 			loop: true,
-			items:1,
-			margin: 30,
+			items: 1,
+			margin: 8,
 			stagePadding: 0,
 			nav: false,
 			navText: ['<span class="ion-ios-arrow-back">', '<span class="ion-ios-arrow-forward">'],
@@ -83,11 +83,17 @@
 				0:{
 					items: 1
 				},
-				600:{
+				576:{
 					items: 2
 				},
-				1000:{
+				768:{
+					items: 3
+				},
+				992:{
 					items: 4
+				},
+				1200:{
+					items: 6
 				}
 			}
 		});

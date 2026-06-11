@@ -4,6 +4,8 @@
             <div class="col-md pt-1">
                 <div class="ftco-footer-widget pt-md-5 mb-4">
                     <h2 class="ftco-heading-2">About WTI</h2>
+                    <img src="{{ asset('images/logo/WTI.png') }}" alt="" style="width: 100px;">
+                    
                     <p>Your trusted travel companion for unforgettable journeys.</p>
                     <ul class="ftco-footer-social list-unstyled float-md-left float-lft">
                         <li class="ftco-animate"><a href="#"><span class="fa fa-twitter"></span></a></li>
@@ -48,6 +50,28 @@
                             <li><a href="#"><span class="icon fa fa-paper-plane"></span><span
                                         class="text">hello@wti.lk</span></a></li>
                         </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md pt-1 border-left">
+                <div class="ftco-footer-widget pt-md-5 mb-4 ml-md-5">
+                    <h2 class="ftco-heading-2">Certifications & Licenses</h2>
+                    <div class="row certifications-row">
+                        
+                        <div class="col-6 mb-3 text-center">
+                            <img src="{{ asset('images/logo/CAA.png') }}" alt="CAA Certification" class="img-fluid" style="max-width:80px;">
+                        </div>
+                        <div class="col-6 mb-3 text-center">
+                            <img src="{{ asset('images/logo/IATA.png') }}" alt="IATA Certification" class="img-fluid" style="max-width:80px;">
+                        </div>
+                        <div class="col-6 mb-3 text-center">
+                            <img src="{{ asset('images/logo/SLTDA.png') }}" alt="SLTDA Certification" class="img-fluid" style="max-width:80px;">
+                        </div>
+                        
+                        <div class="col-6 mb-3 text-center">
+                            <img src="{{ asset('images/logo/OS.png') }}" alt="OS Certification" class="img-fluid" style="max-width:80px;">
+                        </div>
+                        
                     </div>
                 </div>
             </div>

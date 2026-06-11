@@ -1,41 +1,100 @@
-<x-layout bodyClass="g-sidenav-show  bg-gray-200">
-	<x-navbars.sidebar activePage='tour-types'></x-navbars.sidebar>
-	<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-		<x-navbars.navs.auth titlePage="Edit Type"></x-navbars.navs.auth>
-		<div class="container-fluid py-4">
-			<div class="row">
-				<div class="col-lg-6 col-md-8 mx-auto">
-					<div class="card">
-						<div class="card-header pb-0 px-3 d-flex align-items-center justify-content-between">
-							<h6 class="mb-0">Edit Type</h6>
-							<a href="{{ route('admin.tour-types.index') }}" class="btn btn-outline-primary btn-sm mb-0">Back</a>
-						</div>
-						<div class="card-body pt-4 p-3">
-							@if($errors->any())
-								<div class="alert alert-danger">{{ $errors->first() }}</div>
-							@endif
-							<form method="POST" action="{{ route('admin.tour-types.update', $item) }}">
-								@csrf
-								@method('PUT')
-								<div class="input-group input-group-outline mt-3">
-									<label class="form-label">Type Name</label>
-									<input type="text" name="type_name" class="form-control" value="{{ old('type_name', $item->type_name) }}">
-								</div>
+@extends('backend.components.layoutV2')
 
-								<div class="form-check form-switch mt-3">
-									<input class="form-check-input" type="checkbox" id="status" name="status" value="1" {{ $item->status ? 'checked' : '' }}>
-									<label class="form-check-label" for="status">Active</label>
-								</div>
+@section('main')
 
-								<div class="text-end mt-4">
-									<button type="submit" class="btn btn-primary">Save</button>
-								</div>
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</main>
-</x-layout>
+<div class="page">
 
+    {{-- <div class="section-block"> --}}
+
+        <div class="card">
+
+            <div class="card-header">
+                <div>
+                    <h3 class="card-title">Edit Tour Type</h3>
+                    <p class="card-subtitle">Update tour type information</p>
+                </div>
+
+                <a href="{{ route('admin.tour-types.index') }}"
+                   class="btn btn-outline">
+                    <i class="fas fa-arrow-left"></i>
+                    Back
+                </a>
+            </div>
+
+            <div class="card-body">
+
+                @if($errors->any())
+                    <div class="alert alert-danger mb-4">
+                        {{ $errors->first() }}
+                    </div>
+                @endif
+
+                <form action="{{ route('admin.tour-types.update', $item) }}"
+                      method="POST">
+
+                    @csrf
+                    @method('PUT')
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Type Name
+                        </label>
+
+                        <input type="text"
+                               name="type_name"
+                               class="form-input"
+                               value="{{ old('type_name', $item->type_name) }}"
+                               placeholder="Enter tour type name">
+
+                        @error('type_name')
+                            <small class="text-danger">
+                                {{ $message }}
+                            </small>
+                        @enderror
+                    </div>
+
+                    {{-- <div class="form-group mt-4">
+
+                        <label class="switch">
+
+                            <input type="checkbox"
+                                   name="status"
+                                   value="1"
+                                   {{ old('status', $item->status) ? 'checked' : '' }}>
+
+                            <span class="slider"></span>
+
+                        </label>
+
+                        <span class="switch-label ms-2">
+                            Active
+                        </span>
+
+                    </div> --}}
+
+                    <div class="form-actions mt-4">
+
+                        <a href="{{ route('admin.tour-types.index') }}"
+                           class="btn btn-secondary">
+                            Cancel
+                        </a>
+
+                        <button type="submit"
+                                class="btn btn-primary">
+                            <i class="fas fa-save"></i>
+                            Update Type
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    {{-- </div> --}}
+
+</div>
+
+@endsection

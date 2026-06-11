@@ -3,13 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tour;
+use App\Models\Destination;
 use Illuminate\Http\Request;
 
 class FrontendController extends Controller
 {
     public function index()
     {
-        return view('frontend.index');
+        $destinations = Destination::query()
+            ->with(['country'])
+            ->where('status', 1)
+            ->latest()
+            ->take(8)
+            ->get();
+
+        return view('frontend.index', compact('destinations'));
     }
         // public function about()
         // {
@@ -39,13 +47,13 @@ class FrontendController extends Controller
             return view('frontend.single_tour', compact('tour'));
         }
     
-        // public function blog()
-        // {
-        //     return view('frontend.blog');
-        // }
+        public function blog()
+        {
+            return view('frontend.blog');
+        }
     
-        // public function contact()
-        // {
-        //     return view('frontend.contact');
-        // }
+        public function contact()
+        {
+            return view('frontend.contact');
+        }
 }
