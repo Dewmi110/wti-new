@@ -18,7 +18,7 @@
 							<a class="dropdown-item" href="{{ route('frontend.outbound') }}">Outbound Tours</a>
 						</div>
 					</li>
-					<li class="nav-item"><a href="hotel.html" class="nav-link">Hotel</a></li>
+					<li class="nav-item"><a href="hotel.html" class="nav-link">Corporate</a></li>
 					<li class="nav-item"><a href="{{ route('frontend.blog') }}" class="nav-link">Blog</a></li>
 					<li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
 				</ul>

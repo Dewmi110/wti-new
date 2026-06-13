@@ -13035,7 +13035,7 @@ h5,
   overflow: visible; /* IMPORTANT: allows body panel to show its shadow */
   background: transparent;
   margin: 6px 6px 20px;
-  height: 400px;
+  height: 320px;
 }
 
 /* Image fills entire card */
@@ -14071,7 +14071,7 @@ textarea.form-control {
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   -ms-border-radius: 5px;
-  border-radius: 5px;
+  border-radius: 25px;
 }
 
 .testimonial-text{

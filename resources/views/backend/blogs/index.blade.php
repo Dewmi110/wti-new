@@ -2,6 +2,11 @@
 
 @section('main')
 @include('backend.components.navbars.header')
+<div>
+        <h3 class="card-header-title">
+            Blog
+        </h3>
+    </div>
 <div class="card">
 
     <div class="table-toolbar">
@@ -51,7 +56,7 @@
                         <td>
                             <div class="td-avatar">
 
-                                @if($it->image)
+                                {{-- @if($it->image)
                                     <img src="{{ asset('storage/'.$it->image) }}"
                                          class="avatar"
                                          alt="{{ $it->name }}">
@@ -59,7 +64,7 @@
                                     <div class="avatar">
                                         <i class="fas fa-blog"></i>
                                     </div>
-                                @endif
+                                @endif --}}
 
                                 <div class="avatar-info">
                                     <strong>{{ $it->name }}</strong>

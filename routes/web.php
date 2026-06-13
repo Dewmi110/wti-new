@@ -25,7 +25,9 @@ Route::controller(FrontendController::class)->group(function () {
     Route::get('/outbound', 'outbound')->name('frontend.outbound');
     Route::get('/tours/{tour}', 'singleTour')->name('frontend.single_tour');
     Route::get('/blog', 'blog')->name('frontend.blog');
-    // Route::get('/contact', 'contact')->name('frontend.contact');
+    Route::get('/single-blog/{blog}', 'singleBlog')->name('frontend.blog-single');
+    Route::get('/contact', 'contact')->name('frontend.contact');
+    Route::post('/send-inquiry', 'sendInquiry')->name('send.inquiry');
 });
 
 // Admin auth routes

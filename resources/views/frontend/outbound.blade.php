@@ -1,59 +1,108 @@
 @extends('frontend.components.layout')
-
 @section('content')
-<section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('images/paralax-4.jpg');">
+
+<section class="hero-wrap hero-wrap-2"
+    style="background-image: url('images/bg_6.jpg'); min-height: 85vh; position: relative;">
     <div class="overlay"></div>
     <div class="container">
-        <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-center">
+        <div class="row no-gutters slider-text align-items-center justify-content-center" style="min-height: 85vh;">
             <div class="col-md-9 ftco-animate pb-5 text-center">
                 <p class="breadcrumbs"><span class="mr-2"><a href="{{ route('frontend.index') }}">Home <i
                                 class="fa fa-chevron-right"></i></a></span> <span>Tour List <i
                             class="fa fa-chevron-right"></i></span></p>
-                <h1 class="mb-0 bread">Outbound List</h1>
+                <h1 class="mb-0 bread">Out Bound Tours</h1>
             </div>
         </div>
     </div>
+    </div>
 </section>
-
-@include('frontend.components.search')
 
 <section class="ftco-section">
     <div class="container">
         <div class="row">
-            <div class="col-md-4 ftco-animate">
-                <div class="project-wrap">
-                    <a href="#" class="img" style="background-image: url(images/destination-1.jpg);">
-                        <span class="price">$550/person</span>
-                    </a>
-                    <div class="text p-4">
-                        <span class="days">8 Days Tour</span>
-                        <h3><a href="#">Banaue Rice Terraces</a></h3>
-                        <p class="location"><span class="fa fa-map-marker"></span> Banaue, Ifugao, Philippines</p>
-                        <ul>
-                            <li><span class="flaticon-shower"></span>2</li>
-                            <li><span class="flaticon-king-size"></span>3</li>
-                            <li><span class="flaticon-mountains"></span>Near Mountain</li>
-                        </ul>
-                    </div>
+            {{-- LEFT: Filter Sidebar --}}
+            <div class="col-md-3">
+                <div style="position: sticky; top: 20px;">
+                    @include('frontend.components.filter_bar')
                 </div>
             </div>
-        </div>
-        @include('frontend.components.pagination')
-    </div>
-</section>
+            {{-- RIGHT: Tour Cards Grid --}}
+            <div class="col-md-9">
+                <div class="row">
+                    @if ($tours->isNotEmpty())
+                    @foreach ($tours as $tour)
+                    @php
+                    $coverImagePath = $tour->banner_img_path ?: $tour->images->first()?->img_path;
+                    $coverImageUrl = $coverImagePath ? \Illuminate\Support\Facades\Storage::url($coverImagePath) :
+                    asset('images/destination-1.jpg');
+                    $displayPrice = $tour->discount_price ?: $tour->price;
+                    $locationName = optional($tour->countryModel)->name ?? 'Sri Lanka';
+                    $features = is_array($tour->features) ? $tour->features : [];
+                    @endphp
+                    @foreach ($tours as $tour)
+                    <div class="col-md-4 ftco-animate mb-4">
+                        <div class="tour-card-v3">
+                            {{-- Full-bleed background image --}}
+                            <div class="tour-card-v3__img" style="background-image: url('{{ $coverImageUrl }}');"></div>
+                            {{-- White slide-up panel --}}
+                            <div class="tour-card-v3__footer">
+                                {{-- Scrollable content inside panel --}}
+                                <div class="tour-card-v3__footer-inner">
+                                    <div class="tour-card-v3__footer-top">
+                                        <div style="min-width: 0;">
+                                            <h3 class="tour-card-v3__title">
+                                                <a href="{{ route('frontend.single_tour', $tour) }}">{{ $tour->title
+                                                    }}</a>
+                                            </h3>
+                                            <p class="tour-card-v3__subtitle">{{ $tour->duration }} Nights, {{
+                                                $locationName }}</p>
+                                        </div>
+                                        {{-- <span class="tour-card-v3__toggle-icon">&#8743;</span> --}}
+                                    </div>
 
+                                    <div class="tour-card-v3__icons">
+                                        <span title="Accommodation"><i class="fa fa-building-o"></i></span>
+                                        <span title="Flights"><i class="fa fa-plane"></i></span>
+                                        <span title="Transport"><i class="fa fa-car"></i></span>
+                                        <span title="WiFi"><i class="fa fa-wifi"></i></span>
+                                    </div>
 
+                                    <div class="tour-card-v3__details">
+                                        @if(!empty($features))
+                                        @foreach ($features as $feature)
+                                        @if(!empty($feature['label']))
+                                        <p>- {{ strtoupper($feature['label']) }}</p>
+                                        @endif
+                                        @endforeach
+                                        @else
+                                        <p>No features listed.</p>
+                                        @endif
+                                    </div>
 
-<section class="ftco-intro ftco-section ftco-no-pt">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-12 text-center">
-                <div class="img" style="background-image: url(images/bg_2.jpg);">
-                    <div class="overlay"></div>
-                    <h2>We Are Pacific A Travel Agency</h2>
-                    <p>We can manage your dream building A small river named Duden flows by their place</p>
-                    <p class="mb-0"><a href="#" class="btn btn-primary px-4 py-3">Ask For A Quote</a></p>
+                                </div>{{-- end footer-inner --}}
+
+                                {{-- Bottom bar OUTSIDE footer-inner so sticky works --}}
+                                <div class="tour-card-v3__bottom">
+                                    <div class="tour-card-v3__price-wrap">
+                                        <span class="tour-card-v3__nights">{{ $tour->duration }} Nights</span>
+                                        <span class="tour-card-v3__price">From ${{ number_format((float) $displayPrice,
+                                            0) }} PP</span>
+                                    </div>
+                                    <a href="{{ route('frontend.single_tour', $tour) }}" class="tour-card-v3__btn">VIEW
+                                        DEAL</a>
+                                </div>
+                            </div>{{-- end footer --}}
+                        </div>
+                    </div>
+                    @endforeach
+                    @else
+                    <div class="col-12">
+                        <p class="text-center mb-0">No tours are available right now.</p>
+                    </div>
+                    @endif
                 </div>
+                {{-- Pagination --}}
+                @include('frontend.components.pagination')
             </div>
         </div>
     </div>

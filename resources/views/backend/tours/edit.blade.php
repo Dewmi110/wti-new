@@ -1,415 +1,608 @@
-<x-layout bodyClass="g-sidenav-show  bg-gray-200">
-    <x-navbars.sidebar activePage='tours'></x-navbars.sidebar>
-    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-        <x-navbars.navs.auth titlePage="Edit Tour"></x-navbars.navs.auth>
-        <div class="container-fluid py-4">
-            <div class="row">
-                <div class="col-lg-10 col-md-12 mx-auto">
-                    <div class="card">
-                        <div class="card-header pb-0 px-3 d-flex align-items-center justify-content-between">
-                            <h6 class="mb-0">Edit Tour</h6>
-                            <a href="{{ route('admin.tours.index') }}" class="btn btn-outline-primary btn-sm mb-0">Back</a>
+@extends('backend.components.layoutV2')
+
+@section('main')
+@include('backend.components.navbars.header')
+
+<div class="page">
+
+    {{-- Page Title --}}
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+        <h3 class="card-header-title">Edit Tour</h3>
+        <a href="{{ route('admin.tours.index') }}" class="btn btn-outline btn-sm">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+    </div>
+
+    @php
+        $highlightActivities = old('highlight_activities');
+        $selectedDestinationIds = old('destinations', $tour->destinations ?? []);
+        $featureItems = old('features', $tour->features ?? []);
+
+        if (!is_array($selectedDestinationIds)) $selectedDestinationIds = [];
+        if (!is_array($featureItems)) $featureItems = [];
+
+        $selectedDestinationIds = collect($selectedDestinationIds)
+            ->map(fn($d) => (int) $d)->filter()->values()->all();
+
+        $selectedDestinationNames = collect($destinations)
+            ->filter(fn($d) => in_array((int) $d->id, $selectedDestinationIds, true))
+            ->pluck('name')->values()->all();
+
+        $featureItems = collect($featureItems)
+            ->map(function ($feature) {
+                if (!is_array($feature)) return null;
+                $label  = trim((string) ($feature['label']  ?? ''));
+                $prefix = trim((string) ($feature['prefix'] ?? 'fas'));
+                $icon   = trim((string) ($feature['icon']   ?? ''));
+                if ($label === '' || $icon === '') return null;
+                return ['label' => $label, 'prefix' => $prefix ?: 'fas', 'icon' => $icon];
+            })->filter()->values()->all();
+
+        if (!is_array($highlightActivities)) {
+            $highlightActivities = collect(preg_split('/\r\n|\r|\n/',
+                (string) ($tour->highlight_activities ?? ''), -1, PREG_SPLIT_NO_EMPTY))
+                ->map(fn($a) => trim($a))->filter()->values()->all();
+        }
+        if ($highlightActivities === []) $highlightActivities = [''];
+    @endphp
+
+    @if($errors->any())
+        <div class="alert alert-danger" style="margin-bottom:16px;">
+            <i class="fas fa-times-circle alert-icon"></i>
+            <div class="alert-body">
+                <strong>Please fix the following errors:</strong>
+                {{ $errors->first() }}
+            </div>
+        </div>
+    @endif
+
+    <form action="{{ route('admin.tours.update', $tour) }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
+
+        <div style="display:flex; flex-direction:column; gap:18px;">
+
+            {{-- ── 1. BASIC INFO ── --}}
+            <div class="card">
+                <div class="card-header" style="padding:18px 22px 0;">
+                    <div>
+                        <div class="card-header-title">
+                            <i class="fas fa-info-circle" style="color:var(--purple);margin-right:6px;"></i>
+                            Basic Information
                         </div>
-                        <div class="card-body pt-4 p-3">
-                            @if($errors->any())
-                                <div class="alert alert-danger">{{ $errors->first() }}</div>
-                            @endif
+                    </div>
+                </div>
+                <div class="card-body" style="display:flex; flex-direction:column; gap:16px;">
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label class="form-label">Title <span class="required">*</span></label>
+                            <div class="input-icon-wrap">
+                                <i class="fas fa-suitcase-rolling input-icon"></i>
+                                <input type="text" name="title" class="form-input {{ $errors->has('title') ? 'is-error' : '' }}"
+                                    placeholder="Tour title" value="{{ old('title', $tour->title) }}">
+                            </div>
+                            @error('title')<div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>@enderror
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Slug</label>
+                            <div class="input-icon-wrap">
+                                <i class="fas fa-link input-icon"></i>
+                                <input type="text" name="slug" class="form-input"
+                                    placeholder="auto-generated-slug" value="{{ old('slug', $tour->slug) }}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Duration</label>
+                            <div class="input-icon-wrap">
+                                <i class="fas fa-clock input-icon"></i>
+                                <input type="text" name="duration" class="form-input"
+                                    placeholder="e.g. 7D / 6N" value="{{ old('duration', $tour->duration) }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description <span class="required">*</span></label>
+                        <textarea name="description" class="form-textarea {{ $errors->has('description') ? 'is-error' : '' }}"
+                            placeholder="Full tour description..." style="min-height:120px;">{{ old('description', $tour->description) }}</textarea>
+                        @error('description')<div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>@enderror
+                    </div>
+                </div>
+            </div>
 
-                            @php
-                                $highlightActivities = old('highlight_activities');
-                                $selectedDestinationIds = old('destinations', $tour->destinations ?? []);
-                                $featureItems = old('features', $tour->features ?? []);
-
-                                if (! is_array($selectedDestinationIds)) {
-                                    $selectedDestinationIds = [];
-                                }
-
-                                if (! is_array($featureItems)) {
-                                    $featureItems = [];
-                                }
-
-                                $selectedDestinationIds = collect($selectedDestinationIds)
-                                    ->map(static fn ($destinationId) => (int) $destinationId)
-                                    ->filter()
-                                    ->values()
-                                    ->all();
-
-                                $selectedDestinationNames = collect($destinations)
-                                    ->filter(static fn ($destination) => in_array((int) $destination->id, $selectedDestinationIds, true))
-                                    ->pluck('name')
-                                    ->values()
-                                    ->all();
-
-                                $featureItems = collect($featureItems)
-                                    ->map(static function ($feature) {
-                                        if (! is_array($feature)) {
-                                            return null;
-                                        }
-
-                                        $label = trim((string) ($feature['label'] ?? ''));
-                                        $prefix = trim((string) ($feature['prefix'] ?? 'fas'));
-                                        $icon = trim((string) ($feature['icon'] ?? ''));
-
-                                        if ($label === '' || $icon === '') {
-                                            return null;
-                                        }
-
-                                        if ($prefix === '') {
-                                            $prefix = 'fas';
-                                        }
-
-                                        return [
-                                            'label' => $label,
-                                            'prefix' => $prefix,
-                                            'icon' => $icon,
-                                        ];
-                                    })
-                                    ->filter()
-                                    ->values()
-                                    ->all();
-
-                                if (! is_array($highlightActivities)) {
-                                    $highlightActivities = collect(preg_split('/\r\n|\r|\n/', (string) ($tour->highlight_activities ?? ''), -1, PREG_SPLIT_NO_EMPTY))
-                                        ->map(static fn ($activity) => trim($activity))
-                                        ->filter()
-                                        ->values()
-                                        ->all();
-                                }
-
-                                if ($highlightActivities === []) {
-                                    $highlightActivities = [''];
-                                }
-                            @endphp
-
-                            <form action="{{ route('admin.tours.update', $tour) }}" method="POST" enctype="multipart/form-data">
-                                @csrf
-                                @method('PUT')
-                                <div class="row g-4">
-                                    <div class="col-12">
-                                        <div class="border rounded-3 p-3">
-                                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                                <h6 class="mb-0">Basic Info</h6>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="input-group input-group-outline mt-3">
-                                                        <label class="form-label">Title</label>
-                                                        <input type="text" name="title" class="form-control" value="{{ old('title', $tour->title) }}">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="input-group input-group-outline mt-3">
-                                                        <label class="form-label">Slug</label>
-                                                        <input type="text" name="slug" class="form-control" value="{{ old('slug', $tour->slug) }}">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-12">
-                                                    <div class="input-group input-group-outline mt-3">
-                                                        <label class="form-label">Description</label>
-                                                        <textarea name="description" class="form-control" rows="4">{{ old('description', $tour->description) }}</textarea>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div class="input-group input-group-outline mt-3">
-                                                        <label class="form-label">Duration</label>
-                                                        <input type="text" name="duration" class="form-control" value="{{ old('duration', $tour->duration) }}">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-12">
-                                        <div class="border rounded-3 p-3">
-                                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                                <h6 class="mb-0">Tour Type</h6>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="input-group input-group-outline mt-3 is-filled">
-                                                        <label class="form-label">Type</label>
-                                                        <select name="t_type" class="form-control">
-                                                            @foreach($types as $t)
-                                                                <option value="{{ $t->id }}" @selected($tour->t_type == $t->id)>{{ $t->type_name }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-12">
-                                        <div class="border rounded-3 p-3">
-                                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                                <h6 class="mb-0">Classification</h6>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="input-group input-group-outline mt-3 is-filled">
-                                                        <label class="form-label">Category</label>
-                                                        <select name="t_category" class="form-control">
-                                                            @foreach($categories as $c)
-                                                                <option value="{{ $c->id }}" @selected($tour->t_category == $c->id)>{{ $c->category_name }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="input-group input-group-outline mt-3 is-filled">
-                                                        <label class="form-label">Theme</label>
-                                                        <select name="t_theme" class="form-control">
-                                                            @foreach($themes as $th)
-                                                                <option value="{{ $th->id }}" @selected($tour->t_theme == $th->id)>{{ $th->theme_name }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-12">
-                                        <div class="border rounded-3 p-3">
-                                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                                <h6 class="mb-0">Location</h6>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="input-group input-group-outline mt-3 is-filled">
-                                                        <label class="form-label">Country</label>
-                                                        <select id="country-select" name="country" class="form-control">
-                                                            @foreach($countries as $co)
-                                                                <option value="{{ $co->id }}" @selected($tour->country == $co->id)>{{ $co->name }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-12">
-                                                    <div class="form-group mt-3">
-                                                        <label class="form-control-label mb-2" for="destinationsDropdownToggle">Destinations</label>
-                                                        <div class="dropdown-multiselect position-relative tour-destination-picker">
-                                                            <button type="button" class="form-control destination-select-toggle d-flex justify-content-between align-items-center" id="destinationsDropdownToggle">
-                                                                <span class="selected-text text-truncate" id="destinationsSelectedText">{{ implode(', ', $selectedDestinationNames) ?: 'Select destinations' }}</span>
-                                                                <span class="text-muted ms-3"><i class="fas fa-chevron-down"></i></span>
-                                                            </button>
-                                                            <div class="dropdown-menu w-100 mt-2 p-0 destination-dropdown-menu" id="destinationsDropdownMenu" style="max-height: 280px; overflow-y: auto;"></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-12">
-                                        <div class="border rounded-3 p-3">
-                                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                                <h6 class="mb-0">Tour Features</h6>
-                                                <small class="text-muted">Search an icon and add multiple feature tags</small>
-                                            </div>
-                                            <div class="feature-picker position-relative">
-                                                <div class="position-relative">
-                                                    <label class="form-control-label mb-2" for="featureSearchInput">Feature search</label>
-                                                    <input type="search" id="featureSearchInput" class="form-control feature-search-input" placeholder="Type Beach, Adventure, Camping, Family Friendly..." autocomplete="off">
-                                                    <div id="featureSuggestions" class="feature-suggestions"></div>
-                                                </div>
-                                                <div id="featureSelectedGrid" class="feature-selected-grid mt-3"></div>
-                                                <div id="featureHiddenInputs"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-12">
-                                        <div class="border rounded-3 p-3">
-                                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                                <h6 class="mb-0">Cover / Main Image</h6>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-lg-8 col-xl-6">
-                                                    @if($tour->banner_img_path)
-                                                        <div class="mb-3">
-                                                            <label class="form-control-label mb-2">Current Banner</label>
-                                                            <div class="tour-preview-card">
-                                                                <img src="{{ \Illuminate\Support\Facades\Storage::url($tour->banner_img_path) }}" alt="{{ $tour->title }} banner" class="tour-preview-thumb">
-                                                            </div>
-                                                        </div>
-                                                    @endif
-                                                    <label class="form-control-label mb-2">Banner Image</label>
-                                                    <label class="tour-upload-trigger w-100" for="banner_img_input">
-                                                        <input id="banner_img_input" type="file" name="banner_img" class="tour-upload-input" accept="image/*">
-                                                        <div class="d-flex align-items-center gap-3">
-                                                            <div class="tour-upload-icon">
-                                                                <i class="fas fa-image"></i>
-                                                            </div>
-                                                            <div class="flex-grow-1">
-                                                                <div class="tour-upload-title">Choose a replacement cover image</div>
-                                                                <div class="tour-upload-hint">PNG, JPG, or JPEG. Click to browse and preview instantly.</div>
-                                                            </div>
-                                                            <div class="tour-upload-action text-primary fw-semibold">Browse</div>
-                                                        </div>
-                                                    </label>
-                                                    <div class="tour-preview-card mt-3" id="bannerPreview">
-                                                        @if($tour->banner_img_path)
-                                                            <img src="{{ \Illuminate\Support\Facades\Storage::url($tour->banner_img_path) }}" alt="{{ $tour->title }} banner preview" class="tour-preview-thumb">
-                                                        @else
-                                                            <div class="tour-preview-empty p-4 text-center text-secondary">
-                                                                <i class="fas fa-image fa-2x mb-2"></i>
-                                                                <div>No banner image selected yet.</div>
-                                                            </div>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-12">
-                                        <div class="border rounded-3 p-3">
-                                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                                <h6 class="mb-0">Pricing</h6>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-4">
-                                                    <div class="input-group input-group-outline mt-3">
-                                                        <label class="form-label">Price</label>
-                                                        <input type="text" name="price" class="form-control" value="{{ old('price', $tour->price) }}">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div class="input-group input-group-outline mt-3">
-                                                        <label class="form-label">Discount Price</label>
-                                                        <input type="text" name="discount_price" class="form-control" value="{{ old('discount_price', $tour->discount_price) }}">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-12">
-                                        <div class="border rounded-3 p-3">
-                                            <div class="d-flex justify-content-between align-items-center mt-1 mb-3">
-                                                <h6 class="mb-0">Highlights / Activities</h6>
-                                                <button type="button" class="btn btn-sm btn-outline-primary mb-0" onclick="addHighlightActivity()">Add Point</button>
-                                            </div>
-                                            <div id="highlight-activities" class="mt-2">
-                                                @foreach($highlightActivities as $highlightActivity)
-                                                    <div class="row highlight-activity-row mb-3 align-items-start">
-                                                        <div class="col-md-11">
-                                                            <div class="input-group input-group-outline is-filled">
-                                                                <label class="form-label">Point</label>
-                                                                <input type="text" name="highlight_activities[{{ $loop->index }}]" class="form-control" value="{{ $highlightActivity }}">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-1 d-flex align-items-center pt-2">
-                                                            <button type="button" class="btn btn-link text-danger p-0" onclick="removeHighlightActivity(this)">Remove</button>
-                                                        </div>
-                                                    </div>
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-12">
-                                        <div class="border rounded-3 p-3">
-                                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                                <h6 class="mb-0">Day-by-Day Itinerary</h6>
-                                                <button type="button" class="btn btn-sm btn-outline-primary mb-0" onclick="addItinerary()">Add Day</button>
-                                            </div>
-                                            <div id="itineraries" class="mt-3">
-                                                @foreach($tour->itineraries as $i)
-                                                    <div class="row itinerary-row mb-3">
-                                                        <div class="col-md-2">
-                                                            <div class="input-group input-group-outline is-filled">
-                                                                <label class="form-label">Day</label>
-                                                                <input type="number" name="itineraries[{{ $loop->index }}][day]" class="form-control" value="{{ $i->day }}">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-10">
-                                                            <div class="input-group input-group-outline is-filled">
-                                                                <label class="form-label">Description</label>
-                                                                <textarea name="itineraries[{{ $loop->index }}][description]" class="form-control" rows="2">{{ $i->description }}</textarea>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-12">
-                                        <div class="border rounded-3 p-3">
-                                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                                <h6 class="mb-0">Image Gallery</h6>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    @if($tour->images->isNotEmpty())
-                                                        <div class="mb-3">
-                                                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                                                <label class="form-control-label mb-0">Current Gallery</label>
-                                                                <small class="text-muted">{{ $tour->images->count() }} images</small>
-                                                            </div>
-                                                            <div class="tour-preview-grid">
-                                                                @foreach($tour->images as $image)
-                                                                    <div class="tour-preview-tile">
-                                                                        <img src="{{ \Illuminate\Support\Facades\Storage::url($image->img_path) }}" alt="{{ $tour->title }} gallery image {{ $loop->iteration }}" class="tour-preview-thumb">
-                                                                    </div>
-                                                                @endforeach
-                                                            </div>
-                                                        </div>
-                                                    @endif
-                                                    <label class="form-control-label mb-2">Images</label>
-                                                    <label class="tour-upload-trigger w-100" for="gallery_images_input">
-                                                        <input id="gallery_images_input" type="file" name="images[]" class="tour-upload-input" accept="image/*" multiple>
-                                                        <div class="d-flex align-items-center gap-3">
-                                                            <div class="tour-upload-icon tour-upload-icon-gallery">
-                                                                <i class="fas fa-images"></i>
-                                                            </div>
-                                                            <div class="flex-grow-1">
-                                                                <div class="tour-upload-title">Add more gallery images</div>
-                                                                <div class="tour-upload-hint">Select multiple images to preview them before saving.</div>
-                                                            </div>
-                                                            <div class="tour-upload-action text-primary fw-semibold">Browse</div>
-                                                        </div>
-                                                    </label>
-                                                    <div class="tour-preview-grid mt-3" id="galleryPreview"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-12">
-                                        <div class="border rounded-3 p-3">
-                                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                                <h6 class="mb-0">Visibility</h6>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-4">
-                                                    <div class="input-group input-group-outline mt-3 is-filled">
-                                                        <label class="form-label">Visibility</label>
-                                                        <select name="visibility" class="form-control">
-                                                            <option value="1" @selected($tour->visibility == 1)>Home</option>
-                                                            <option value="0" @selected($tour->visibility == 0)>Featured</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="text-end mt-4">
-                                    <button type="submit" class="btn btn-primary">Save</button>
-                                </div>
-                            </form>
+            {{-- ── 2. CLASSIFICATION ── --}}
+            <div class="card">
+                <div class="card-header" style="padding:18px 22px 0;">
+                    <div class="card-header-title">
+                        <i class="fas fa-tags" style="color:var(--purple);margin-right:6px;"></i>
+                        Classification
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="form-grid-3">
+                        <div class="form-group">
+                            <label class="form-label">Tour Type <span class="required">*</span></label>
+                            <div class="form-select-wrap">
+                                <select name="t_type" class="form-select">
+                                    @foreach($types as $t)
+                                        <option value="{{ $t->id }}" @selected(old('t_type', $tour->t_type) == $t->id)>
+                                            {{ $t->type_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Category <span class="required">*</span></label>
+                            <div class="form-select-wrap">
+                                <select name="t_category" class="form-select">
+                                    @foreach($categories as $c)
+                                        <option value="{{ $c->id }}" @selected(old('t_category', $tour->t_category) == $c->id)>
+                                            {{ $c->category_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Theme</label>
+                            <div class="form-select-wrap">
+                                <select name="t_theme" class="form-select">
+                                    @foreach($themes as $th)
+                                        <option value="{{ $th->id }}" @selected(old('t_theme', $tour->t_theme) == $th->id)>
+                                            {{ $th->theme_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </main>
-</x-layout>
 
+            {{-- ── 3. LOCATION ── --}}
+            <div class="card">
+                <div class="card-header" style="padding:18px 22px 0;">
+                    <div class="card-header-title">
+                        <i class="fas fa-map-marker-alt" style="color:var(--purple);margin-right:6px;"></i>
+                        Location
+                    </div>
+                </div>
+                <div class="card-body" style="display:flex; flex-direction:column; gap:16px;">
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label class="form-label">Country <span class="required">*</span></label>
+                            <div class="form-select-wrap">
+                                <select id="country-select" name="country" class="form-select">
+                                    @foreach($countries as $co)
+                                        <option value="{{ $co->id }}" @selected(old('country', $tour->country) == $co->id)>
+                                            {{ $co->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Destinations multiselect --}}
+                    <div class="form-group">
+                        <label class="form-label">Destinations</label>
+                        <div class="tour-destination-picker" style="position:relative;">
+                            <button type="button"
+                                id="destinationsDropdownToggle"
+                                class="form-input"
+                                style="display:flex; justify-content:space-between; align-items:center; cursor:pointer; text-align:left; height:42px;">
+                                <span id="destinationsSelectedText" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--text-muted);">
+                                    {{ implode(', ', $selectedDestinationNames) ?: 'Select destinations...' }}
+                                </span>
+                                <i class="fas fa-chevron-down" style="color:var(--text-muted); font-size:11px; flex-shrink:0; margin-left:8px;"></i>
+                            </button>
+                            <div id="destinationsDropdownMenu"
+                                style="display:none; position:absolute; top:100%; left:0; right:0; z-index:200;
+                                       background:white; border:1.5px solid var(--purple); border-radius:var(--radius-sm);
+                                       margin-top:4px; max-height:260px; overflow-y:auto;
+                                       box-shadow:0 8px 24px rgba(108,92,231,0.12);">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- ── 4. TOUR FEATURES ── --}}
+            <div class="card">
+                <div class="card-header" style="padding:18px 22px 0;">
+                    <div style="display:flex; align-items:center; justify-content:space-between; width:100%;">
+                        <div class="card-header-title">
+                            <i class="fas fa-star" style="color:var(--purple);margin-right:6px;"></i>
+                            Tour Features
+                        </div>
+                        <span style="font-size:11px; color:var(--text-muted);">Search an icon and add multiple feature tags</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="feature-picker" style="position:relative;">
+                        <div class="form-group">
+                            <label class="form-label">Search Feature</label>
+                            <div class="input-icon-wrap">
+                                <i class="fas fa-search input-icon"></i>
+                                <input type="search" id="featureSearchInput" class="form-input"
+                                    placeholder="Type Beach, Adventure, Camping, Family Friendly..."
+                                    autocomplete="off">
+                            </div>
+                            <div id="featureSuggestions" class="feature-suggestions"></div>
+                        </div>
+                        <div id="featureSelectedGrid" class="feature-selected-grid" style="margin-top:12px;"></div>
+                        <div id="featureHiddenInputs"></div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- ── 5. PRICING ── --}}
+            <div class="card">
+                <div class="card-header" style="padding:18px 22px 0;">
+                    <div class="card-header-title">
+                        <i class="fas fa-dollar-sign" style="color:var(--purple);margin-right:6px;"></i>
+                        Pricing
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="form-grid-3">
+                        <div class="form-group">
+                            <label class="form-label">Price <span class="required">*</span></label>
+                            <div class="input-icon-wrap">
+                                <i class="fas fa-dollar-sign input-icon"></i>
+                                <input type="text" name="price" class="form-input {{ $errors->has('price') ? 'is-error' : '' }}"
+                                    placeholder="0.00" value="{{ old('price', $tour->price) }}">
+                            </div>
+                            @error('price')<div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>@enderror
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Discount Price</label>
+                            <div class="input-icon-wrap">
+                                <i class="fas fa-percent input-icon"></i>
+                                <input type="text" name="discount_price" class="form-input"
+                                    placeholder="0.00" value="{{ old('discount_price', $tour->discount_price) }}">
+                            </div>
+                            <div class="form-hint">Leave empty if no discount</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- ── 6. HIGHLIGHT ACTIVITIES ── --}}
+            <div class="card">
+                <div class="card-header" style="padding:18px 22px 0;">
+                    <div style="display:flex; align-items:center; justify-content:space-between; width:100%;">
+                        <div class="card-header-title">
+                            <i class="fas fa-list-ul" style="color:var(--purple);margin-right:6px;"></i>
+                            Highlight Activities
+                        </div>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="addHighlightActivity()">
+                            <i class="fas fa-plus"></i> Add Point
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="highlight-activities" style="display:flex; flex-direction:column; gap:10px;">
+                        @foreach($highlightActivities as $highlightActivity)
+                            <div class="highlight-activity-row"
+                                style="display:flex; align-items:center; gap:10px;">
+                                <div class="input-icon-wrap" style="flex:1;">
+                                    <i class="fas fa-grip-lines input-icon"></i>
+                                    <input type="text"
+                                        name="highlight_activities[{{ $loop->index }}]"
+                                        class="form-input"
+                                        placeholder="e.g. Snorkeling at coral reef"
+                                        value="{{ $highlightActivity }}">
+                                </div>
+                                <button type="button" class="action-btn action-delete"
+                                    onclick="removeHighlightActivity(this)" title="Remove">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
+            {{-- ── 7. DAY-BY-DAY ITINERARY ── --}}
+            <div class="card">
+                <div class="card-header" style="padding:18px 22px 0;">
+                    <div style="display:flex; align-items:center; justify-content:space-between; width:100%;">
+                        <div class="card-header-title">
+                            <i class="fas fa-calendar-alt" style="color:var(--purple);margin-right:6px;"></i>
+                            Day-by-Day Itinerary
+                        </div>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="addItinerary()">
+                            <i class="fas fa-plus"></i> Add Day
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="itineraries" style="display:flex; flex-direction:column; gap:12px;">
+                        @foreach($tour->itineraries as $i)
+                            <div class="itinerary-row"
+                                style="display:grid; grid-template-columns:90px 1fr auto; gap:10px; align-items:start;">
+                                <div class="form-group">
+                                    <label class="form-label">Day</label>
+                                    <input type="number"
+                                        name="itineraries[{{ $loop->index }}][day]"
+                                        class="form-input"
+                                        placeholder="{{ $loop->iteration }}"
+                                        value="{{ $i->day }}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Description</label>
+                                    <textarea name="itineraries[{{ $loop->index }}][description]"
+                                        class="form-textarea"
+                                        style="min-height:70px;">{{ $i->description }}</textarea>
+                                </div>
+                                <div style="padding-top:26px;">
+                                    <button type="button" class="action-btn action-delete"
+                                        onclick="this.closest('.itinerary-row').remove()" title="Remove">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
+            {{-- ── 8. COVER / BANNER IMAGE ── --}}
+            <div class="card">
+                <div class="card-header" style="padding:18px 22px 0;">
+                    <div class="card-header-title">
+                        <i class="fas fa-image" style="color:var(--purple);margin-right:6px;"></i>
+                        Cover / Banner Image
+                    </div>
+                </div>
+                <div class="card-body">
+                    @if($tour->banner_img_path)
+                        <div style="margin-bottom:14px;">
+                            <label class="form-label">Current Banner</label>
+                            <div style="margin-top:6px;">
+                                <img src="{{ Storage::url($tour->banner_img_path) }}"
+                                    alt="{{ $tour->title }} banner"
+                                    style="height:120px; border-radius:10px; object-fit:cover; border:1px solid var(--border);">
+                            </div>
+                        </div>
+                    @endif
+
+                    <div class="form-group">
+                        <label class="form-label">Replace Banner Image</label>
+                        <label class="file-upload" for="banner_img_input">
+                            <input id="banner_img_input" type="file" name="banner_img"
+                                accept="image/*" onchange="previewBanner(event)">
+                            <div class="upload-icon"><i class="fas fa-image"></i></div>
+                            <div class="upload-text">Click to upload a new cover image</div>
+                            <div class="upload-hint">PNG, JPG, JPEG — max 5MB</div>
+                        </label>
+                    </div>
+
+                    <div id="bannerPreview" style="margin-top:10px; display:none;">
+                        <label class="form-label">New Image Preview</label>
+                        <div style="position:relative; display:inline-block; margin-top:6px;">
+                            <img id="bannerPreviewImg" src="" alt="Banner preview"
+                                style="height:120px; border-radius:10px; object-fit:cover; border:1px solid var(--border);">
+                            <button type="button" onclick="clearBanner()"
+                                style="position:absolute; top:5px; right:5px; width:22px; height:22px;
+                                       background:var(--red); border:none; border-radius:50%; color:white;
+                                       font-size:9px; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- ── 9. IMAGE GALLERY ── --}}
+            <div class="card">
+                <div class="card-header" style="padding:18px 22px 0;">
+                    <div style="display:flex; align-items:center; justify-content:space-between; width:100%;">
+                        <div class="card-header-title">
+                            <i class="fas fa-images" style="color:var(--purple);margin-right:6px;"></i>
+                            Image Gallery
+                        </div>
+                        @if($tour->images->isNotEmpty())
+                            <span style="font-size:12px; color:var(--text-muted);">
+                                {{ $tour->images->count() }} current images
+                            </span>
+                        @endif
+                    </div>
+                </div>
+                <div class="card-body" style="display:flex; flex-direction:column; gap:16px;">
+
+                    {{-- Existing images --}}
+                    @if($tour->images->isNotEmpty())
+                        <div>
+                            <label class="form-label">Current Gallery</label>
+                            <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:8px;">
+                                @foreach($tour->images as $image)
+                                    <div style="position:relative;">
+                                        <img src="{{ Storage::url($image->img_path) }}"
+                                            alt="Gallery {{ $loop->iteration }}"
+                                            style="width:80px; height:80px; border-radius:10px;
+                                                   object-fit:cover; border:1px solid var(--border);">
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+
+                    {{-- Upload new --}}
+                    <div class="form-group">
+                        <label class="form-label">Add More Images</label>
+                        <label class="file-upload" for="gallery_images_input">
+                            <input id="gallery_images_input" type="file" name="images[]"
+                                accept="image/*" multiple onchange="previewGallery(event)">
+                            <div class="upload-icon"><i class="fas fa-photo-video"></i></div>
+                            <div class="upload-text">Click to upload gallery images</div>
+                            <div class="upload-hint">Select multiple images — max 5MB each</div>
+                        </label>
+                        <div id="galleryPreview"
+                            style="display:flex; flex-wrap:wrap; gap:10px; margin-top:10px;"></div>
+                    </div>
+
+                </div>
+            </div>
+
+            {{-- ── 10. VISIBILITY ── --}}
+            <div class="card">
+                <div class="card-header" style="padding:18px 22px 0;">
+                    <div class="card-header-title">
+                        <i class="fas fa-eye" style="color:var(--purple);margin-right:6px;"></i>
+                        Visibility & Status
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label class="form-label">Display Location</label>
+                            <div class="form-select-wrap">
+                                <select name="visibility" class="form-select">
+                                    <option value="1" @selected(old('visibility', $tour->visibility) == 1)>Home</option>
+                                    <option value="0" @selected(old('visibility', $tour->visibility) == 0)>Featured</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Status</label>
+                            <div style="display:flex; flex-direction:column; gap:10px; margin-top:6px;">
+                                <div class="toggle-wrap">
+                                    <label class="toggle">
+                                        <input type="checkbox" name="status" value="1"
+                                            {{ old('status', $tour->status) == 1 ? 'checked' : '' }}>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                    <span class="toggle-label">Active (visible to users)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- ── FORM ACTIONS ── --}}
+            <div style="display:flex; justify-content:flex-end; gap:10px; padding-bottom:20px;">
+                <a href="{{ route('admin.tours.index') }}" class="btn btn-outline">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-check-circle"></i> Update Tour
+                </button>
+            </div>
+
+        </div>
+    </form>
+
+</div>
+
+{{-- ── SCRIPTS ── --}}
+<script>
+// Banner preview
+function previewBanner(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+        document.getElementById('bannerPreviewImg').src = e.target.result;
+        document.getElementById('bannerPreview').style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+}
+function clearBanner() {
+    document.getElementById('banner_img_input').value = '';
+    document.getElementById('bannerPreviewImg').src = '';
+    document.getElementById('bannerPreview').style.display = 'none';
+}
+
+// Gallery preview
+function previewGallery(event) {
+    const preview = document.getElementById('galleryPreview');
+    preview.innerHTML = '';
+    Array.from(event.target.files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = e => {
+            const wrap = document.createElement('div');
+            wrap.style.cssText = 'position:relative;';
+            wrap.innerHTML = `
+                <img src="${e.target.result}" style="width:80px;height:80px;border-radius:10px;
+                     object-fit:cover;border:1px solid var(--border);">
+            `;
+            preview.appendChild(wrap);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+// Highlight Activities
+let highlightIndex = {{ count($highlightActivities) }};
+function addHighlightActivity() {
+    const container = document.getElementById('highlight-activities');
+    const row = document.createElement('div');
+    row.className = 'highlight-activity-row';
+    row.style.cssText = 'display:flex; align-items:center; gap:10px;';
+    row.innerHTML = `
+        <div class="input-icon-wrap" style="flex:1;">
+            <i class="fas fa-grip-lines input-icon"></i>
+            <input type="text" name="highlight_activities[${highlightIndex}]"
+                class="form-input" placeholder="e.g. Snorkeling at coral reef">
+        </div>
+        <button type="button" class="action-btn action-delete"
+            onclick="removeHighlightActivity(this)" title="Remove">
+            <i class="fas fa-times"></i>
+        </button>
+    `;
+    container.appendChild(row);
+    highlightIndex++;
+}
+function removeHighlightActivity(btn) {
+    btn.closest('.highlight-activity-row').remove();
+}
+
+// Itinerary
+let itineraryIndex = {{ $tour->itineraries->count() }};
+function addItinerary() {
+    const container = document.getElementById('itineraries');
+    const row = document.createElement('div');
+    row.className = 'itinerary-row';
+    row.style.cssText = 'display:grid; grid-template-columns:90px 1fr auto; gap:10px; align-items:start;';
+    row.innerHTML = `
+        <div class="form-group">
+            <label class="form-label">Day</label>
+            <input type="number" name="itineraries[${itineraryIndex}][day]"
+                class="form-input" placeholder="${itineraryIndex + 1}">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea name="itineraries[${itineraryIndex}][description]"
+                class="form-textarea" style="min-height:70px;" placeholder="Describe the day's activities..."></textarea>
+        </div>
+        <div style="padding-top:26px;">
+            <button type="button" class="action-btn action-delete"
+                onclick="this.closest('.itinerary-row').remove()" title="Remove">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+    container.appendChild(row);
+    itineraryIndex++;
+}
+
+// Destinations dropdown toggle
+document.getElementById('destinationsDropdownToggle')?.addEventListener('click', function () {
+    const menu = document.getElementById('destinationsDropdownMenu');
+    menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+});
+document.addEventListener('click', function (e) {
+    if (!e.target.closest('.tour-destination-picker')) {
+        const menu = document.getElementById('destinationsDropdownMenu');
+        if (menu) menu.style.display = 'none';
+    }
+});
+</script>
+
+@endsection
 <style>
 .tour-destination-picker .destination-select-toggle {
     min-height: 48px;

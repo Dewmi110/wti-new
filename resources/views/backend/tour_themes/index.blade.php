@@ -2,6 +2,11 @@
 
 @section('main')
 @include('backend.components.navbars.header')
+<div>
+        <h3 class="card-header-title">
+            Tour Themes
+        </h3>
+    </div>
 <div class="card">
 
     <div class="table-toolbar">

@@ -1,7 +1,7 @@
 @extends('backend.components.layoutV2')
 
 @section('main')
-
+@include('backend.components.navbars.header')
     <div class="page">
 
         <div class="section-block">

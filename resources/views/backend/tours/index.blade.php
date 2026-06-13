@@ -1,208 +1,301 @@
-<x-layout bodyClass="g-sidenav-show  bg-gray-200">
-    <x-navbars.sidebar activePage='tours'></x-navbars.sidebar>
-    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-        <x-navbars.navs.auth titlePage="Tour Packages"></x-navbars.navs.auth>
-        <div class="container-fluid py-4">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card mb-4">
-                        <div class="card-header pb-0 px-3">
-                            <h6 class="mb-0">Tour Packages</h6>
-                        </div>
-                        <div class="card-body pt-4 p-3">
-                            <a class="btn btn-sm btn-primary mb-3" href="{{ route('admin.tours.create') }}">Create Tour</a>
+@extends('backend.components.layoutV2')
 
-                            <div class="table-responsive tour-table-responsive">
-                                <table class="table table-sm align-items-center mb-0 tour-table">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center tour-table-no">No</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center tour-table-image">Image</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center tour-table-title">Title</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center tour-table-type">Type</th>
-                                            {{-- <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center tour-table-location">Location</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center tour-table-duration">Duration</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center tour-table-price">Price</th> --}}
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center tour-table-status">Status</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center tour-table-actions">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach($tours as $tour)
-                                        <tr>
-                                            <td class="text-center align-middle tour-table-no">
-                                                <p class="text-sm font-weight-bold mb-0">{{ $loop->iteration }}</p>
-                                            </td>
-                                            <td class="text-center align-middle tour-table-image">
-                                                @php
-                                                    $tourImagePath = $tour->images->first()?->img_path ?? $tour->banner_img_path;
-                                                @endphp
-                                                @if($tourImagePath)
-                                                    <div class="tour-table-thumb-wrap mx-auto">
-                                                        <img src="{{ \Illuminate\Support\Facades\Storage::url($tourImagePath) }}" alt="{{ $tour->title }}" class="tour-table-thumb" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('d-none');">
-                                                        <div class="tour-table-thumb-fallback d-none">
-                                                            <i class="material-icons opacity-10">image</i>
-                                                        </div>
-                                                    </div>
-                                                @else
-                                                    <div class="tour-table-thumb-fallback mx-auto">
-                                                        <i class="material-icons opacity-10">image</i>
-                                                    </div>
-                                                @endif
-                                            </td>
-                                            <td class="align-middle text-justify tour-table-title">
-                                                <p class="text-sm font-weight-bold mb-0">{{ $tour->title }}</p>
-                                            </td>
-                                            <td class="align-middle text-center tour-table-type"><p class="text-sm mb-0">{{ optional($tour->type)->type_name }}</p></td>
-                                            {{-- <td class="align-middle text-center tour-table-location"><p class="text-sm mb-0">{{ optional($tour->countryModel)->name ?? '-' }}</p></td> --}}
-                                            {{-- <td class="align-middle text-center tour-table-duration"><p class="text-sm mb-0">{{ $tour->duration }}</p></td> --}}
-                                            {{-- <td class="align-middle text-center tour-table-price"><p class="text-sm mb-0">{{ number_format($tour->price,2) }}</p></td> --}}
-                                            <td class="align-middle text-center tour-table-status">
-                                                <span class="badge {{ $tour->status == 1 ? 'bg-success' : ($tour->status == 0 ? 'bg-secondary' : 'bg-danger') }} text-wrap">
-                                                    {{ $tour->status == 1 ? 'Active' : ($tour->status == 0 ? 'Inactive' : 'Deleted') }}
-                                                </span>
-                                            </td>
-                                            <td class="text-center align-middle tour-table-actions">
-                                                <div class="d-inline-flex align-items-center justify-content-center gap-3 flex-nowrap">
-                                                    <button type="button" class="btn btn-link text-info text-sm mb-0 p-0" data-bs-toggle="modal" data-bs-target="#tourViewModal{{ $tour->id }}" title="View" aria-label="View">
-                                                        <i class="material-icons opacity-10">visibility</i>
-                                                    </button>
-                                                    <a class="btn btn-link text-dark text-sm mb-0 p-0" href="{{ route('admin.tours.edit', $tour) }}" title="Edit" aria-label="Edit">
-                                                        <i class="material-icons opacity-10">edit</i>
-                                                    </a>
-                                                    <form action="{{ route('admin.tours.destroy', $tour) }}" method="POST" class="d-inline m-0 p-0">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-link text-danger text-sm mb-0 p-0" title="Delete" aria-label="Delete" onclick="return confirm('Delete this tour?')">
-                                                            <i class="material-icons opacity-10">delete</i>
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </td>
-                                        </tr>
+@section('main')
+@include('backend.components.navbars.header')
+<div>
+    <h3 class="card-header-title">
+        Tour Packages
+    </h3>
+</div>
 
-                                    @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
+<div class="card">
 
-                            @foreach($tours as $tour)
-                                <div class="modal fade" id="tourViewModal{{ $tour->id }}" tabindex="-1" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">{{ $tour->title }}</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="row g-3">
-                                                    <div class="col-md-6"><strong>Type:</strong> {{ optional($tour->type)->type_name ?? '-' }}</div>
-                                                    <div class="col-md-6"><strong>Location:</strong> {{ optional($tour->countryModel)->name ?? '-' }}</div>
-                                                    <div class="col-md-6"><strong>Duration:</strong> {{ $tour->duration }}</div>
-                                                    <div class="col-md-6"><strong>Price:</strong> {{ number_format($tour->price, 2) }}</div>
-                                                    <div class="col-md-6"><strong>Discount Price:</strong> {{ $tour->discount_price ? number_format($tour->discount_price, 2) : '-' }}</div>
-                                                    <div class="col-md-6"><strong>Status:</strong> {{ $tour->status == 1 ? 'Active' : ($tour->status == 0 ? 'Inactive' : 'Deleted') }}</div>
-                                                    <div class="col-12"><strong>Description:</strong><br>{{ $tour->description }}</div>
-                                                    <div class="col-12"><strong>Highlight Activities:</strong><br>{{ $tour->highlight_activities ?: '-' }}</div>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-
-                            <div class="mt-3">{{ $tours->links() }}</div>
-                        </div>
-                    </div>
-                </div>
+    <div class="table-toolbar">
+        <div class="table-search">
+            <div class="input-icon-wrap">
+                <i class="fas fa-search input-icon"></i>
+                <input type="text"
+                       class="form-input"
+                       placeholder="Search tours...">
             </div>
         </div>
-    </main>
-</x-layout>
+
+        <div class="table-filters">
+            <a href="{{ route('admin.tours.create') }}"
+               class="btn btn-primary btn-sm">
+                <i class="fas fa-plus"></i>
+                Create Tour
+            </a>
+        </div>
+    </div>
+
+    <div class="table-wrap">
+
+        <table class="data-table">
+
+            <thead>
+                <tr>
+                    <th width="70">#</th>
+                    <th width="90">Image</th>
+                    <th>Tour</th>
+                    <th width="150">Type</th>
+                    <th width="120">Status</th>
+                    <th width="150" class="text-center">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @forelse($tours as $tour)
+
+                    <tr>
+
+                        <td>
+                            {{ ($tours->currentPage() - 1) * $tours->perPage() + $loop->iteration }}
+                        </td>
+
+                        <td>
+
+                            @php
+                                $tourImagePath = $tour->images->first()?->img_path ?? $tour->banner_img_path;
+                            @endphp
+
+                            @if($tourImagePath)
+                                <img src="{{ Storage::url($tourImagePath) }}"
+                                     alt="{{ $tour->title }}"
+                                     class="tour-thumb">
+                            @else
+                                <div class="tour-thumb placeholder-thumb">
+                                    <i class="fas fa-image"></i>
+                                </div>
+                            @endif
+
+                        </td>
+
+                        <td>
+                            <div class="avatar-info">
+                                <strong>{{ $tour->title }}</strong>
+
+                                <span>
+                                    {{ \Illuminate\Support\Str::limit(strip_tags($tour->description), 80) }}
+                                </span>
+                            </div>
+                        </td>
+
+                        <td>
+                            {{ optional($tour->type)->type_name ?? '-' }}
+                        </td>
+
+                        <td>
+
+                            @if($tour->status == 1)
+                                <span class="td-badge badge-success">
+                                    <span class="dot dot-green"></span>
+                                    Active
+                                </span>
+                            @elseif($tour->status == 0)
+                                <span class="td-badge badge-dark">
+                                    <span class="dot dot-orange"></span>
+                                    Inactive
+                                </span>
+                            @else
+                                <span class="td-badge badge-danger">
+                                    <span class="dot"></span>
+                                    Deleted
+                                </span>
+                            @endif
+
+                        </td>
+
+                        <td>
+
+                            <div class="td-actions justify-content-center">
+
+                                <button type="button"
+                                        class="action-btn action-view"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#tourModal{{ $tour->id }}">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+
+                                <a href="{{ route('admin.tours.edit', $tour) }}"
+                                   class="action-btn action-edit">
+                                    <i class="fas fa-pen"></i>
+                                </a>
+
+                                <form action="{{ route('admin.tours.destroy', $tour) }}"
+                                      method="POST">
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button type="submit"
+                                            class="action-btn action-delete"
+                                            onclick="return confirm('Delete this tour?')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                @empty
+
+                    <tr>
+                        <td colspan="6" class="text-center">
+                            No tours found.
+                        </td>
+                    </tr>
+
+                @endforelse
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <div class="table-footer">
+
+        <div class="table-info">
+            Showing
+            {{ $tours->firstItem() ?? 0 }}
+            -
+            {{ $tours->lastItem() ?? 0 }}
+            of
+            {{ $tours->total() }}
+            tours
+        </div>
+
+        <div>
+            {{ $tours->links() }}
+        </div>
+
+    </div>
+
+</div>
+
+{{-- Tour View Modals --}}
+@foreach($tours as $tour)
+
+{{-- <div class="modal fade"
+     id="tourModal{{ $tour->id }}"
+     tabindex="-1"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    {{ $tour->title }}
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+                        <strong>Type:</strong>
+                        {{ optional($tour->type)->type_name ?? '-' }}
+                    </div>
+
+                    <div class="col-md-6">
+                        <strong>Country:</strong>
+                        {{ optional($tour->countryModel)->name ?? '-' }}
+                    </div>
+
+                    <div class="col-md-6">
+                        <strong>Duration:</strong>
+                        {{ $tour->duration }}
+                    </div>
+
+                    <div class="col-md-6">
+                        <strong>Price:</strong>
+                        {{ number_format($tour->price, 2) }}
+                    </div>
+
+                    <div class="col-md-6">
+                        <strong>Discount Price:</strong>
+                        {{ $tour->discount_price ? number_format($tour->discount_price,2) : '-' }}
+                    </div>
+
+                    <div class="col-md-6">
+                        <strong>Status:</strong>
+                        {{ $tour->status == 1 ? 'Active' : ($tour->status == 0 ? 'Inactive' : 'Deleted') }}
+                    </div>
+
+                    <div class="col-12">
+                        <strong>Description:</strong>
+                        <p class="mt-2">
+                            {{ $tour->description }}
+                        </p>
+                    </div>
+
+                    <div class="col-12">
+                        <strong>Highlight Activities:</strong>
+                        <p class="mt-2">
+                            {{ $tour->highlight_activities ?: '-' }}
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div> --}}
+
+@endforeach
 
 <style>
-.tour-table-responsive {
-    overflow-x: auto;
+.tour-thumb{
+    width:60px;
+    height:60px;
+    object-fit:cover;
+    border-radius:10px;
 }
 
-.tour-table {
-    min-width: 1180px;
-    table-layout: auto;
+.placeholder-thumb{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#f3f4f6;
+    color:#9ca3af;
 }
 
-.tour-table th {
-    white-space: nowrap;
+.text-center{
+    text-align:center;
 }
 
-.tour-table-no {
-    width: 64px;
+.justify-content-center{
+    justify-content:center;
 }
 
-.tour-table-image {
-    width: 96px;
+.table-wrap{
+    overflow-x:auto;
 }
 
-.tour-table-title {
-    min-width: 280px;
-    max-width: 360px;
+.data-table{
+    width:100%;
 }
 
-.tour-table-type,
-.tour-table-location,
-.tour-table-duration,
-.tour-table-price,
-.tour-table-status,
-.tour-table-actions {
-    white-space: nowrap;
-}
-
-.tour-table-location {
-    min-width: 150px;
-}
-
-.tour-table-actions {
-    min-width: 120px;
-}
-
-.tour-table-title p,
-.tour-table-type p,
-.tour-table-location p,
-.tour-table-duration p,
-.tour-table-price p {
-    margin-bottom: 0;
-}
-
-.tour-table-title p {
-    white-space: normal;
-    overflow-wrap: anywhere;
-    word-break: break-word;
-}
-
-.tour-table-thumb-wrap,
-.tour-table-thumb-fallback {
-    width: 56px;
-    height: 56px;
-    border-radius: 0.5rem;
-}
-
-.tour-table-thumb {
-    width: 56px;
-    height: 56px;
-    object-fit: cover;
-    display: block;
-    border-radius: 0.5rem;
-}
-
-.tour-table-thumb-fallback {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #f8f9fa;
-    border: 1px solid #e9ecef;
-    color: #8392ab;
+.badge-danger{
+    background:#fee2e2;
+    color:#dc2626;
 }
 </style>
 
+@endsection
