@@ -10,7 +10,16 @@
 			<div class="collapse navbar-collapse" id="ftco-nav">
 				<ul class="navbar-nav ml-auto">
 					<li class="nav-item active"><a href="{{ route('frontend.index') }}" class="nav-link">Home</a></li>
-					<li class="nav-item"><a href="about.html" class="nav-link">Services</a></li>
+					<li class="nav-item dropdown">
+						<a href="#" class="nav-link dropdown-toggle" id="destinationDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Services</a>
+						<div class="dropdown-menu" aria-labelledby="destinationDropdown">
+							<a class="dropdown-item" href="{{ route('frontend.air_tickets') }}">Air Tickets</a>
+							<a class="dropdown-item" href="{{ route('frontend.visa_services') }}">Visa Services</a>
+							<a class="dropdown-item" href="{{ route('frontend.visit_to_srilanka') }}">Visit to SriLanka</a>
+							<a class="dropdown-item" href="{{ route('frontend.outbound') }}">Global Tour Holidays</a>
+							<a class="dropdown-item" href="{{ route('frontend.mice_tours') }}">MICE Tours</a>
+						</div>
+					</li>
 					<li class="nav-item dropdown">
 						<a href="#" class="nav-link dropdown-toggle" id="destinationDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Destination</a>
 						<div class="dropdown-menu" aria-labelledby="destinationDropdown">
@@ -18,7 +27,7 @@
 							<a class="dropdown-item" href="{{ route('frontend.outbound') }}">Outbound Tours</a>
 						</div>
 					</li>
-					<li class="nav-item"><a href="hotel.html" class="nav-link">Corporate</a></li>
+					<li class="nav-item"><a href="{{ route('frontend.corporate') }}" class="nav-link">Corporate</a></li>
 					<li class="nav-item"><a href="{{ route('frontend.blog') }}" class="nav-link">Blog</a></li>
 					<li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
 				</ul>

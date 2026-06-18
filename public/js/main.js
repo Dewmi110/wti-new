@@ -292,3 +292,70 @@
 
 })(jQuery);
 
+// -----------------------------------------------------------------------------
+// Custom JS for micro-interactions and animations
+// ------------------------------------------------------------
+  $(document).ready(function () {
+
+    /* ── 1. Owl Carousel — partner logos ── */
+    $('.partner-slider').owlCarousel({
+      loop: true,
+      margin: 20,
+      nav: false,
+      dots: false,
+      autoplay: true,
+      autoplayTimeout: 2800,
+      autoplayHoverPause: true,
+      smartSpeed: 700,
+      responsive: {
+        0:    { items: 2 },
+        480:  { items: 3 },
+        768:  { items: 4 },
+        1024: { items: 6 }
+      }
+    });
+
+    /* ── 2. Intersection Observer — staggered card reveal ── */
+    if ('IntersectionObserver' in window) {
+      var cards = document.querySelectorAll('.sc-wrap');
+
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            var delay = entry.target.dataset.delay || 0;
+            setTimeout(function () {
+              entry.target.classList.add('is-visible');
+            }, delay);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+
+      cards.forEach(function (card, i) {
+        card.dataset.delay = i * 90;
+        observer.observe(card);
+      });
+
+    } else {
+      document.querySelectorAll('.sc-wrap').forEach(function (el) {
+        el.classList.add('is-visible');
+      });
+    }
+
+    /* ── 3. Tilt micro-interaction (desktop only) ── */
+    if (window.innerWidth > 768) {
+      document.querySelectorAll('.sc-inner').forEach(function (card) {
+        card.addEventListener('mousemove', function (e) {
+          var rect = card.getBoundingClientRect();
+          var dx   = (e.clientX - rect.left  - rect.width  / 2) / (rect.width  / 2);
+          var dy   = (e.clientY - rect.top   - rect.height / 2) / (rect.height / 2);
+          card.style.transform = 'translateY(-6px) rotateY(' + (dx * 5) + 'deg) rotateX(' + (-dy * 4) + 'deg)';
+        });
+        card.addEventListener('mouseleave', function () {
+          card.style.transform = '';
+        });
+      });
+    }
+
+  });
+

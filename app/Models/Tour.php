@@ -10,7 +10,7 @@ class Tour extends Model
     protected $table = 'tours';
 
     protected $fillable = [
-        't_category', 't_type', 't_theme', 'title', 'slug', 'description', 'duration', 'country', 'destinations', 'price', 'discount_price', 'highlight_activities', 'features', 'banner_img_path', 'visibility', 'status',
+        't_category', 't_type', 't_theme', 'title', 'slug', 'description', 'duration', 'country', 'destinations', 'price', 'discount_price', 'highlight_activities', 'features', 'banner_img_path', 'group_size', 'guide', 'price_include', 'cancellation_policy', 'visibility', 'status',
     ];
 
     protected $casts = [
@@ -18,6 +18,7 @@ class Tour extends Model
         'features' => 'array',
         'price' => 'decimal:2',
         'discount_price' => 'decimal:2',
+        'group_size' => 'integer',
     ];
 
     public function category()

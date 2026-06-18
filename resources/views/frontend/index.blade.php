@@ -2,23 +2,25 @@
 
 @section('content')
 <div class="hero-wrap js-fullheight owl-carousel">
+    @foreach ($imageSliders as $slider)
     <div class="hero-slide js-fullheight"
-        style="background-image: url('{{ asset('images/hero-slider/slider6.jpg') }}'); background-position: center; background-size: cover;">
+        style="background-image: url('{{ Storage::url($slider->image_path) }}'); background-position: center; background-size: cover;">
         <div class="overlay"></div>
         <div class="container">
             <div class="row no-gutters slider-text js-fullheight align-items-center" data-scrollax-parent="true">
                 <div class="col-md-7 ftco-animate">
                     <span class="subheading"
-                        style="background: rgba(255, 255, 255, 0.9); color: #e11d2e; display: inline-block; padding: 12px 24px; line-height: 1;">Welcome
-                        to WTI Holidays</span>
-                    <h1 class="mb-4">Discover Your Favorite Place with Us</h1>
-                    <p class="caps">Travel to the any corner of the world, without going around in circles</p>
+                        style="background: rgba(255, 255, 255, 0.9); color: #e11d2e; display: inline-block; padding: 12px 24px; line-height: 1;">
+                        {{ $slider->header ?? 'Explore Handpicked Tours' }}</span>
+                   
+                    <h1 class="mb-4">{{ $slider->title ?? 'Unforgettable Journeys Await' }}</h1>
+                    <p class="caps">{{ $slider->description ?? 'Find curated packages and authentic experiences.' }}</p>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="hero-slide js-fullheight"
+    @endforeach
+    {{-- <div class="hero-slide js-fullheight"
         style="background-image: url('{{ asset('images/hero-slider/slider7.jpg') }}'); background-position: center; background-size: cover;">
         <div class="overlay"></div>
         <div class="container">
@@ -64,7 +66,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 </div>
 
 <section class="ftco-section ftco-no-pb ftco-no-pt">
@@ -404,6 +406,96 @@
     </div>
 </section>
 
+<section class="ftco-section ftco-section--parallax">
+    <div class="ftco-section__parallax-bg" id="parallaxBg"></div>
+    <div class="ftco-section__overlay"></div>
+    <div class="container" style="position: relative; z-index: 2;">
+        <div class="row justify-content-center pb-4">
+            <div class="col-md-12 heading-section text-center ftco-animate">
+                <span class="subheading">Find Your Destinations Here</span>
+                <h2 class="mb-1">Featured Tours</h2>
+                <p class="cap">Discover our most popular tour packages and create unforgettable memories.</p>
+            </div>
+        </div>
+        <div class="row">
+            @if ($featured_tours->isNotEmpty())
+            @foreach ($featured_tours as $featured_tour)
+            @php
+            $coverImagePath = $featured_tour->banner_img_path ?: $featured_tour->images->first()?->img_path;
+            $coverImageUrl = $coverImagePath ? \Illuminate\Support\Facades\Storage::url($coverImagePath) :
+            asset('images/destination-1.jpg');
+            $displayPrice = $featured_tour->discount_price ?: $featured_tour->price;
+            $locationName = optional($featured_tour->countryModel)->name ?? 'Sri Lanka';
+            $features = is_array($featured_tour->features) ? $featured_tour->features : [];
+            @endphp
+
+            <div class="col-md-3 ftco-animate mb-4">
+                <div class="tour-card-v3">
+
+                    {{-- Full-bleed background image --}}
+                    <div class="tour-card-v3__img" style="background-image: url('{{ $coverImageUrl }}');"></div>
+
+                    {{-- White slide-up panel --}}
+                    <div class="tour-card-v3__footer">
+
+                        {{-- Scrollable content inside panel --}}
+                        <div class="tour-card-v3__footer-inner">
+
+                            <div class="tour-card-v3__footer-top">
+                                <div style="min-width: 0;">
+                                    <h3 class="tour-card-v3__title">
+                                        <a href="{{ route('frontend.single_tour', $featured_tour) }}">{{ $featured_tour->title
+                                            }}</a>
+                                    </h3>
+                                    <p class="tour-card-v3__subtitle">{{ $featured_tour->duration }} Nights, {{
+                                        $locationName }}</p>
+                                </div>
+                                {{-- <span class="tour-card-v3__toggle-icon">&#8743;</span> --}}
+                            </div>
+
+                            <div class="tour-card-v3__icons">
+                                <span title="Accommodation"><i class="fa fa-building-o"></i></span>
+                                <span title="Flights"><i class="fa fa-plane"></i></span>
+                                <span title="Transport"><i class="fa fa-car"></i></span>
+                                <span title="WiFi"><i class="fa fa-wifi"></i></span>
+                            </div>
+
+                            <div class="tour-card-v3__details">
+                                @if(!empty($features))
+                                @foreach ($features as $feature)
+                                @if(!empty($feature['label']))
+                                <p>- {{ strtoupper($feature['label']) }}</p>
+                                @endif
+                                @endforeach
+                                @else
+                                <p>No features listed.</p>
+                                @endif
+                            </div>
+
+                        </div>{{-- end footer-inner --}}
+                        {{-- Bottom bar OUTSIDE footer-inner so sticky works --}}
+                        <div class="tour-card-v3__bottom">
+                            <div class="tour-card-v3__price-wrap">
+                                <span class="tour-card-v3__nights">{{ $featured_tour->duration }} Nights</span>
+                                <span class="tour-card-v3__price">From ${{ number_format((float) $displayPrice,
+                                    0) }} PP</span>
+                            </div>
+                            <a href="{{ route('frontend.single_tour', $featured_tour) }}" class="tour-card-v3__btn">VIEW
+                                DEAL</a>
+                        </div>
+                    </div>{{-- end footer --}}
+                </div>
+            </div>
+            @endforeach
+            @else
+            <div class="col-12">
+                <p class="text-center mb-0">No tours are available right now.</p>
+            </div>
+            @endif
+        </div>
+    </div>
+</section>
+
 <section class="ftco-section ftco-about img" style="background-image: url(images/bg_7.jpg);">
     <div class="overlay"></div>
     <div class="container py-md-5">
@@ -628,7 +720,37 @@
         </div>
     </div>
 </section> --}}
+<style>
+    /* --- Parallax Section --- */
+.ftco-section--parallax {
+    position: relative;
+    overflow: hidden;
+}
 
+.ftco-section__parallax-bg {
+    position: absolute;
+    inset: -30% 0; /* extra height top & bottom for parallax travel */
+    background-image: url('/images/paralax-6.jpg'); /* 👈 change this */
+    background-size: cover;
+    background-position: center;
+    will-change: transform;
+    z-index: 0;
+}
+
+.ftco-section__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55); /* dark tint so text stays readable */
+    z-index: 1;
+}
+
+/* Make headings/text readable on dark bg */
+.ftco-section--parallax .subheading,
+.ftco-section--parallax h2,
+.ftco-section--parallax .cap {
+    color: #fff;
+}
+</style>
 <script>
     $(document).ready(function () {
         $('.carousel-destination').owlCarousel({
@@ -651,5 +773,35 @@
             }
         });
     });
+
+    /* --- Parallax Section --- */
+.ftco-section--parallax {
+    position: relative;
+    overflow: hidden;
+}
+
+.ftco-section__parallax-bg {
+    position: absolute;
+    inset: -30% 0; /* extra height top & bottom for parallax travel */
+    background-image: url('/images/paralax-6.jpg'); /* 👈 change this */
+    background-size: cover;
+    background-position: center;
+    will-change: transform;
+    z-index: 0;
+}
+
+.ftco-section__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55); /* dark tint so text stays readable */
+    z-index: 1;
+}
+
+/* Make headings/text readable on dark bg */
+.ftco-section--parallax .subheading,
+.ftco-section--parallax h2,
+.ftco-section--parallax .cap {
+    color: #fff;
+}
 </script>
 @endsection

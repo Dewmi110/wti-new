@@ -39,7 +39,7 @@
                     $locationName = optional($tour->countryModel)->name ?? 'Sri Lanka';
                     $features = is_array($tour->features) ? $tour->features : [];
                     @endphp
-                    @foreach ($tours as $tour)
+             
                     <div class="col-md-4 ftco-animate mb-4">
                         <div class="tour-card-v3">
                             {{-- Full-bleed background image --}}

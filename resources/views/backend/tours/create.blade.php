@@ -350,6 +350,53 @@
 
             {{-- ── 7. HIGHLIGHT ACTIVITIES ── --}}
             <div class="card">
+
+                <div class="card-header" style="padding:18px 22px 0;">
+                    <div class="card-header-title">
+                        <i class="fas fa-users" style="color:var(--purple);margin-right:6px;"></i>
+                        Group & Policies
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="form-grid-3">
+                        <div class="form-group">
+                            <label class="form-label">Group Size</label>
+                            <div class="input-icon-wrap">
+                                <i class="fas fa-user-friends input-icon"></i>
+                                <input type="number" name="group_size" class="form-input {{ $errors->has('group_size') ? 'is-error' : '' }}"
+                                    placeholder="e.g. 10" value="{{ old('group_size') }}">
+                            </div>
+                            @error('group_size')<div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>@enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Guide</label>
+                            <div class="input-icon-wrap">
+                                <i class="fas fa-user-tie input-icon"></i>
+                                <input type="text" name="guide" class="form-input" placeholder="Guide name or info"
+                                    value="{{ old('guide') }}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Price Includes</label>
+                            <div class="input-icon-wrap">
+                                <i class="fas fa-list input-icon"></i>
+                                <textarea name="price_include" class="form-input" rows="4" placeholder="Use line breaks for bullets, **bold**, or *italic* formatting">{{ old('price_include') }}</textarea>
+                            </div>
+                            <div class="form-hint">Use one entry per line. Prefix list items with -, *, or + for bullet formatting.</div>
+                        </div>
+
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label">Cancellation Policy</label>
+                            <div class="input-icon-wrap">
+                                <i class="fas fa-file-contract input-icon"></i>
+                                <textarea name="cancellation_policy" class="form-input" rows="4" placeholder="Use line breaks for bullets, **bold**, or *italic* formatting">{{ old('cancellation_policy') }}</textarea>
+                            </div>
+                            <div class="form-hint">Enter a full policy with paragraphs, bullets, and emphasis.</div>
+                        </div>
+                    </div>
+                </div>
                 <div class="card-header" style="padding:18px 22px 0;">
                     <div style="display:flex; align-items:center; justify-content:space-between; width:100%;">
                         <div class="card-header-title">
@@ -475,11 +522,10 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label class="form-label">Status</label>
                             <div style="margin-top:6px;">
                                 <div class="toggle-wrap">
-                                    {{-- Defaults to inactive on create, matching original behaviour --}}
                                     <label class="toggle">
                                         <input type="checkbox" name="status" value="0" disabled>
                                         <span class="toggle-slider"></span>
@@ -491,6 +537,38 @@
                                 <div class="form-hint" style="margin-top:6px;">
                                     You can activate the tour from the edit page after reviewing it.
                                 </div>
+                            </div>
+                        </div> --}}
+                        <div class="form-group">
+                            <label class="form-label">Status</label>
+                            <div style="margin-top:6px;">
+                                <div class="toggle-wrap">
+                                    @php
+                                        $canToggle = auth()->user()->isSuperAdmin() || auth()->user()->isAdmin();
+                                    @endphp
+
+                                    <label class="toggle">
+                                        <input type="checkbox"
+                                            name="status"
+                                            value="1"
+                                            {{ $canToggle ? '' : 'disabled' }}>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+
+                                    @if($canToggle)
+                                        <span class="toggle-label" id="status-label">Inactive</span>
+                                    @else
+                                        <span class="toggle-label" style="color:var(--text-muted);">
+                                            Status defaults to inactive after creation
+                                        </span>
+                                    @endif
+                                </div>
+
+                                @if(!$canToggle)
+                                    <div class="form-hint" style="margin-top:6px;">
+                                        You can activate the tour from the edit page after reviewing it.
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>

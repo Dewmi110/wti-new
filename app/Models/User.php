@@ -21,11 +21,34 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'location',
-        'phone',
-        'about',
-        'password_confirmation'
+        'role_id',
+        'status',
     ];
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->role?->slug === 'super_admin';
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role?->slug === 'admin';
+    }
+
+    public function isUser(): bool
+    {
+        return $this->role?->slug === 'user';
+    }
+
+    public function hasRole(string $slug): bool
+    {
+        return $this->role?->slug === $slug;
+    }
 
     /**
      * The attributes that should be hidden for serialization.

@@ -5,6 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TourStoreRequest;
 use App\Http\Requests\TourUpdateRequest;
+use App\Models\TourCategory;
+use App\Models\TourType;
+use App\Models\TourTheme;
+use App\Models\Country;
+use App\Models\Destination;
 use App\Models\Tour;
 use App\Models\TourImage;
 use App\Models\DayItinerary;
@@ -133,11 +138,11 @@ class TourController extends Controller
 
     public function create()
     {
-        $categories = \App\Models\TourCategory::where('status',1)->get();
-        $types = \App\Models\TourType::where('status',1)->get();
-        $themes = \App\Models\TourTheme::where('status',1)->get();
-        $countries = \App\Models\Country::where('status',1)->get();
-        $destinations = \App\Models\Destination::where('status',1)->get();
+        $categories = TourCategory::where('status',1)->get();
+        $types = TourType::where('status',1)->get();
+        $themes = TourTheme::where('status',1)->get();
+        $countries = Country::where('status',1)->get();
+        $destinations = Destination::where('status',1)->get();
 
         return view('backend.tours.create', compact('categories','types','themes','countries','destinations'));
     }
@@ -149,11 +154,11 @@ class TourController extends Controller
         $data['destinations'] = $data['destinations'] ?? [];
         $data['features'] = $this->formatFeatures($data['features'] ?? null) ?? [];
         $data['highlight_activities'] = $this->formatHighlightActivities($data['highlight_activities'] ?? null);
+        $data['status'] = $request->has('status') ? 1 : 0;
+
         if ($request->hasFile('banner_img')) {
             $data['banner_img_path'] = $request->file('banner_img')->store('tours/banners', 'public');
         }
-
-        $data['status'] = 0; // default inactive
 
         $tour = Tour::create($data);
 
@@ -175,11 +180,11 @@ class TourController extends Controller
 
     public function edit(Tour $tour)
     {
-        $categories = \App\Models\TourCategory::where('status',1)->get();
-        $types = \App\Models\TourType::where('status',1)->get();
-        $themes = \App\Models\TourTheme::where('status',1)->get();
-        $countries = \App\Models\Country::where('status',1)->get();
-        $destinations = \App\Models\Destination::where('status',1)->get();
+        $categories = TourCategory::where('status',1)->get();
+        $types = TourType::where('status',1)->get();
+        $themes = TourTheme::where('status',1)->get();
+        $countries = Country::where('status',1)->get();
+        $destinations = Destination::where('status',1)->get();
 
         $tour->load(['images','itineraries']);
 
@@ -194,6 +199,9 @@ class TourController extends Controller
         $data['features'] = $this->formatFeatures($data['features'] ?? null) ?? [];
         $data['highlight_activities'] = $this->formatHighlightActivities($data['highlight_activities'] ?? null);
 
+        // Explicitly handle status
+        $data['status'] = $request->has('status') ? 1 : 0;
+
         if ($request->hasFile('banner_img')) {
             $data['banner_img_path'] = $request->file('banner_img')->store('tours/banners', 'public');
         }
@@ -207,7 +215,6 @@ class TourController extends Controller
             }
         }
 
-        // replace itineraries
         $tour->itineraries()->delete();
         if (!empty($data['itineraries']) && is_array($data['itineraries'])) {
             foreach ($data['itineraries'] as $it) {

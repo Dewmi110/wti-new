@@ -271,6 +271,54 @@
             {{-- ── 6. HIGHLIGHT ACTIVITIES ── --}}
             <div class="card">
                 <div class="card-header" style="padding:18px 22px 0;">
+                    <div class="card-header-title">
+                        <i class="fas fa-users" style="color:var(--purple);margin-right:6px;"></i>
+                        Group & Policies
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="form-grid-3">
+                        <div class="form-group">
+                            <label class="form-label">Group Size</label>
+                            <div class="input-icon-wrap">
+                                <i class="fas fa-user-friends input-icon"></i>
+                                <input type="number" name="group_size" class="form-input {{ $errors->has('group_size') ? 'is-error' : '' }}"
+                                    placeholder="e.g. 10" value="{{ old('group_size', $tour->group_size) }}">
+                            </div>
+                            @error('group_size')<div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>@enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Guide</label>
+                            <div class="input-icon-wrap">
+                                <i class="fas fa-user-tie input-icon"></i>
+                                <input type="text" name="guide" class="form-input" placeholder="Guide name or info"
+                                    value="{{ old('guide', $tour->guide) }}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Price Includes</label>
+                            <div class="input-icon-wrap">
+                                <i class="fas fa-list input-icon"></i>
+                                <textarea name="price_include" class="form-input" rows="4" placeholder="Use line breaks for bullets, **bold**, or *italic* formatting">{{ old('price_include', $tour->price_include) }}</textarea>
+                            </div>
+                            <div class="form-hint">Use one entry per line. Prefix list items with -, *, or + for bullet formatting.</div>
+                        </div>
+
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label">Cancellation Policy</label>
+                            <div class="input-icon-wrap">
+                                <i class="fas fa-file-contract input-icon"></i>
+                                <textarea name="cancellation_policy" class="form-input" rows="4" placeholder="Use line breaks for bullets, **bold**, or *italic* formatting">{{ old('cancellation_policy', $tour->cancellation_policy) }}</textarea>
+                            </div>
+                            <div class="form-hint">Enter a full policy with paragraphs, bullets, and emphasis.</div>
+                        </div>
+                    </div>
+                </div>
+
+            <div class="card">
+                <div class="card-header" style="padding:18px 22px 0;">
                     <div style="display:flex; align-items:center; justify-content:space-between; width:100%;">
                         <div class="card-header-title">
                             <i class="fas fa-list-ul" style="color:var(--purple);margin-right:6px;"></i>
@@ -468,6 +516,46 @@
                         <div class="form-group">
                             <label class="form-label">Status</label>
                             <div style="display:flex; flex-direction:column; gap:10px; margin-top:6px;">
+                                @php
+                                    $canToggle = auth()->user()->isSuperAdmin() || auth()->user()->isAdmin();
+                                @endphp
+
+                                <div class="toggle-wrap">
+                                    <label class="toggle">
+                                        <input type="checkbox"
+                                            id="status"
+                                            name="status"
+                                            value="1"
+                                            {{ old('status', $tour->status) == 1 ? 'checked' : '' }}
+                                            {{ $canToggle ? '' : 'disabled' }}>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                    <span class="toggle-label" id="status-label">
+                                        {{ old('status', $tour->status) == 1 ? 'Active' : 'Inactive' }}
+                                    </span>
+                                </div>
+
+                                @if(!$canToggle)
+                                    <div class="form-hint">
+                                        You do not have permission to change the tour status.
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+
+                        @if($canToggle)
+                        <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            const toggle = document.getElementById('status');
+                            const label  = document.getElementById('status-label');
+                            const update = () => label.textContent = toggle.checked ? 'Active' : 'Inactive';
+                            toggle.addEventListener('change', update);
+                        });
+                        </script>
+                        @endif
+                        {{-- <div class="form-group">
+                            <label class="form-label">Status</label>
+                            <div style="display:flex; flex-direction:column; gap:10px; margin-top:6px;">
                                 <div class="toggle-wrap">
                                     <label class="toggle">
                                         <input type="checkbox" name="status" value="1"
@@ -477,7 +565,7 @@
                                     <span class="toggle-label">Active (visible to users)</span>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>

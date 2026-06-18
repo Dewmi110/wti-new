@@ -7,6 +7,8 @@
   $isDestinationsActive = request()->routeIs('admin.destinations.*');
   $isToursActive = request()->routeIs('admin.tours.*');
   $isBlogsActive = request()->routeIs('admin.blogs.*');
+  $isUsersActive = request()->routeIs('admin.users.*');
+  $isImageSliderActive = request()->routeIs('admin.image-slider.*');
 @endphp
 
 <aside class="sidebar">
@@ -48,7 +50,7 @@
     <span class="nav-icon"><i class="fas fa-blog"></i></span>
     Blogs
   </a>
-  <a class="nav-item" href="#">
+  <a class="nav-item {{ $isUsersActive ? 'active' : '' }}" href="{{ route('admin.users.index') }}">
     <span class="nav-icon"><i class="fas fa-users"></i></span>
     User Management
   </a>
@@ -62,5 +64,10 @@
   <a class="nav-item" href="#">
     <span class="nav-icon"><i class="fas fa-laptop"></i></span>
     Home Page
+  </a>
+
+  <a class="nav-item {{ $isImageSliderActive ? 'active' : '' }}" href="{{ route('admin.image-sliders.index') }}">
+    <span class="nav-icon"><i class="fas fa-laptop"></i></span>
+    Image Slider
   </a>
 </aside>

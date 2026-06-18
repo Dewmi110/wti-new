@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Destination;
 use App\Models\Tour;
 use App\Models\Blog;
+use App\Models\ImageSlider;
 use Illuminate\Http\Request;
 
 class FrontendController extends Controller
@@ -25,12 +26,21 @@ class FrontendController extends Controller
             ->take(4)
             ->get();
 
+        $featured_tours = Tour::with(['category', 'type', 'theme', 'countryModel', 'images'])
+            ->latest()
+            ->where('status', 1)
+            ->where('visibility', 0)
+            ->take(4)
+            ->get();
+
         $blogs = Blog::latest()
             ->where('status', 1)
             ->take(3)
             ->get();
 
-        return view('frontend.index', compact('destinations', 'tours', 'blogs'));
+        $imageSliders = ImageSlider::all();
+
+        return view('frontend.index', compact('destinations', 'tours', 'featured_tours', 'blogs', 'imageSliders'));
     }
 
     public function visit_to_srilanka(Tour $tour)
@@ -75,12 +85,14 @@ class FrontendController extends Controller
 
     public function singleTour(Tour $tour)
     {
+        $tour->load(['images', 'itineraries']);
+
         $coverImagePath = $tour->banner_img_path ?: $tour->images->first()?->img_path;
         $coverImageUrl = $coverImagePath ? \Illuminate\Support\Facades\Storage::url($coverImagePath) :
         asset('images/destination-1.jpg');
         $displayPrice = $tour->discount_price ?: $tour->price;
-        $locationName = optional($tour->countryModel)->country ?? 'Sri Lanka';
-        $features = is_array($tour->features) ? $tour->features : [];    
+        $locationName = optional($tour->countryModel)->name ?? 'Sri Lanka';
+        $features = is_array($tour->features) ? $tour->features : [];
 
         return view('frontend.single_tour', compact('tour', 'coverImageUrl', 'displayPrice', 'features', 'locationName'));
     }
@@ -95,6 +107,24 @@ class FrontendController extends Controller
     public function singleBlog(Blog $blog)
     {
         return view('frontend.single_blog', compact('blog'));
+    }
+
+    public function airTickets()
+    {
+        return view('frontend.air_tickets');
+    }
+    public function visaServices()
+    {
+        return view('frontend.visa_services');
+    }
+
+    public function miceTours()
+    {
+        return view('frontend.mice_tours');
+    }
+    public function corporate()
+    {
+        return view('frontend.corporate');
     }
 
     public function contact()
