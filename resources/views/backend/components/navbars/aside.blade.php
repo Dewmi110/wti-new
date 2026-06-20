@@ -8,7 +8,7 @@
   $isToursActive = request()->routeIs('admin.tours.*');
   $isBlogsActive = request()->routeIs('admin.blogs.*');
   $isUsersActive = request()->routeIs('admin.users.*');
-  $isImageSliderActive = request()->routeIs('admin.image-slider.*');
+  $isImageSliderActive = request()->routeIs('admin.image-sliders.*');
 @endphp
 
 <aside class="sidebar">
@@ -60,11 +60,6 @@
   </a>
 
   <div class="sidebar-label">Web Content Management</div>
-
-  <a class="nav-item" href="#">
-    <span class="nav-icon"><i class="fas fa-laptop"></i></span>
-    Home Page
-  </a>
 
   <a class="nav-item {{ $isImageSliderActive ? 'active' : '' }}" href="{{ route('admin.image-sliders.index') }}">
     <span class="nav-icon"><i class="fas fa-laptop"></i></span>

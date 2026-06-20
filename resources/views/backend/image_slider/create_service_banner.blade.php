@@ -10,8 +10,8 @@
             {{-- Header --}}
             <div class="card-header" style="padding:18px 22px 0;">
                 <div>
-                    <div class="card-header-title">Create Corporate Banner</div>
-                    <div class="card-header-sub">Add a new corporate banner to the system</div>
+                    <div class="card-header-title">Create Service Banner</div>
+                    <div class="card-header-sub">Add a new service banner to the system</div>
                 </div>
                 <a href="{{ route('admin.image-sliders.index') }}" class="btn btn-outline btn-sm">
                     <i class="fas fa-arrow-left"></i> Back
@@ -61,7 +61,7 @@
                             <i class="fas fa-times"></i> Cancel
                         </a>
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i> Create Corporate Banner
+                            <i class="fas fa-save"></i> Create Service Banner
                         </button>
                     </div>
                 </form>

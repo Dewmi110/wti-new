@@ -8,7 +8,7 @@
         <div class="overlay"></div>
         <div class="container">
             <div class="row no-gutters slider-text js-fullheight align-items-center" data-scrollax-parent="true">
-                <div class="col-md-7 ftco-animate">
+                <div class="col-md-12 ftco-animate text-center">
                     <span class="subheading"
                         style="background: rgba(255, 255, 255, 0.9); color: #e11d2e; display: inline-block; padding: 12px 24px; line-height: 1;">
                         {{ $slider->header ?? 'Explore Handpicked Tours' }}</span>

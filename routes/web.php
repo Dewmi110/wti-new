@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\TourTypeController;
 use App\Http\Controllers\Admin\ImageSliderController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FrontendController;
+use App\Http\Controllers\Admin\CorporateController;
 use App\Http\Middleware\AdminAuth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -72,4 +73,15 @@ Route::prefix('admin')->middleware(AdminAuth::class)->group(function () {
     Route::get('image-sliders/create-home', [ImageSliderController::class, 'createHomeSlider'])->name('admin.image_sliders.create_home');
     Route::get('image-sliders/{imageSlider}/edit-home', [ImageSliderController::class, 'editHomeSlider'])->name('admin.image_sliders.edit_home');
     Route::resource('image-sliders', ImageSliderController::class, ['as' => 'admin']);
+
+    // Corporate Banners
+    Route::prefix('corporate-banners')->name('admin.corporate_banners.')->group(function () {
+    Route::get('/',            [CorporateController::class, 'index'])   ->name('index');
+    Route::get('/create',      [CorporateController::class, 'create'])  ->name('create');
+    Route::post('/',           [CorporateController::class, 'store'])   ->name('store');
+    Route::get('/{corporateBanner}/edit',   [CorporateController::class, 'edit'])    ->name('edit');
+    Route::put('/{corporateBanner}',        [CorporateController::class, 'update'])  ->name('update');
+    Route::delete('/{corporateBanner}',     [CorporateController::class, 'destroy']) ->name('destroy');
+    });
+
 });

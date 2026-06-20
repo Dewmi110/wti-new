@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Destination;
 use App\Models\Tour;
 use App\Models\Blog;
+use App\Models\Corporate;
 use App\Models\ImageSlider;
 use Illuminate\Http\Request;
 
@@ -38,6 +39,8 @@ class FrontendController extends Controller
             ->take(3)
             ->get();
 
+        
+
         $imageSliders = ImageSlider::all();
 
         return view('frontend.index', compact('destinations', 'tours', 'featured_tours', 'blogs', 'imageSliders'));
@@ -47,7 +50,7 @@ class FrontendController extends Controller
     {
         $coverImagePath = $tour->banner_img_path ?: $tour->images->first()?->img_path;
         $coverImageUrl = $coverImagePath ? \Illuminate\Support\Facades\Storage::url($coverImagePath) :
-        asset('images/destination-1.jpg');
+        asset('images/hero-bg-1.jpg');
         $displayPrice = $tour->discount_price ?: $tour->price;
         $locationName = optional($tour->countryModel)->country ?? 'Sri Lanka';
         $features = is_array($tour->features) ? $tour->features : [];
@@ -67,7 +70,7 @@ class FrontendController extends Controller
     {
         $coverImagePath = $tour->banner_img_path ?: $tour->images->first()?->img_path;
         $coverImageUrl = $coverImagePath ? \Illuminate\Support\Facades\Storage::url($coverImagePath) :
-        asset('images/destination-1.jpg');
+        asset('images/hero-bg-1.jpg');
         $displayPrice = $tour->discount_price ?: $tour->price;
         $locationName = optional($tour->countryModel)->country ?? 'Sri Lanka';
         $features = is_array($tour->features) ? $tour->features : [];
@@ -89,7 +92,7 @@ class FrontendController extends Controller
 
         $coverImagePath = $tour->banner_img_path ?: $tour->images->first()?->img_path;
         $coverImageUrl = $coverImagePath ? \Illuminate\Support\Facades\Storage::url($coverImagePath) :
-        asset('images/destination-1.jpg');
+        asset('images/hero-bg-1.jpg');
         $displayPrice = $tour->discount_price ?: $tour->price;
         $locationName = optional($tour->countryModel)->name ?? 'Sri Lanka';
         $features = is_array($tour->features) ? $tour->features : [];
@@ -122,9 +125,11 @@ class FrontendController extends Controller
     {
         return view('frontend.mice_tours');
     }
+
     public function corporate()
     {
-        return view('frontend.corporate');
+        $corporateBanner = Corporate::latest()->first();
+        return view('frontend.corporate', compact('corporateBanner'));
     }
 
     public function contact()

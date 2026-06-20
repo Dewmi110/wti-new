@@ -40,7 +40,7 @@
     <div class="row justify-content-center mb-5">
       <div class="col-md-7 text-center ftco-animate">
         <span class="service-eyebrow">Our Services</span>
-        <h2 class="section-heading">Everything You Need in One Place</h2>
+        <h2 class="section-heading">Types of Visas We Offer</h2>
       </div>
     </div>
 
@@ -51,21 +51,29 @@
         <div class="sc-wrap">
           <div class="sc-inner">
             <div class="sc-icon-box"><i class="fa fa-plane"></i></div>
-            <h3 class="sc-title">Domestic Flights</h3>
-            <p class="sc-text">Quick connections across all major local airports. We compare dozens of airlines in seconds to get you the lowest available fare on your schedule.</p>
-            <a href="#" class="sc-link">Explore Routes <i class="fa fa-arrow-right"></i></a>
+            <h3 class="sc-title">Tourist Visas</h3>
+            <p class="sc-text">For leisure and short-term travel.</p>
+            {{-- <a href="#" class="sc-link">Explore Routes <i class="fa fa-arrow-right"></i></a> --}}
           </div>
         </div>
       </div>
-
-   
-      {{-- <div class="col-md-4 mb-4">
+      <div class="col-md-4 mb-4">
         <div class="sc-wrap sc-wrap--featured">
           <div class="sc-inner sc-inner--featured">
             <div class="sc-icon-box"><i class="fa fa-globe"></i></div>
-            <h3 class="sc-title">International Flights</h3>
-            <p class="sc-text">Fly to over 150 countries with premium carriers and budget airlines alike. Multi-city routing, stopovers, and open-jaw tickets — all in one booking.</p>
-            <a href="#" class="sc-link">View Destinations <i class="fa fa-arrow-right"></i></a>
+            <h3 class="sc-title">Business Visas</h3>
+            <p class="sc-text">For corporate travelers and conferences.</p>
+            {{-- <a href="#" class="sc-link">View Destinations <i class="fa fa-arrow-right"></i></a> --}}
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="sc-wrap sc-wrap--featured">
+          <div class="sc-inner sc-inner--featured">
+            <div class="sc-icon-box"><i class="fa fa-globe"></i></div>
+            <h3 class="sc-title">Student Visas</h3>
+            <p class="sc-text">For study and academic purposes.</p>
+            {{-- <a href="#" class="sc-link">View Destinations <i class="fa fa-arrow-right"></i></a> --}}
           </div>
         </div>
       </div>
@@ -75,15 +83,15 @@
         <div class="sc-wrap">
           <div class="sc-inner">
             <div class="sc-icon-box"><i class="fa fa-star"></i></div>
-            <h3 class="sc-title">Business & First Class</h3>
-            <p class="sc-text">Upgrade your journey with lie-flat seats, priority boarding, and premium lounges. We handle all the details so you can focus on what matters.</p>
+            <h3 class="sc-title">Transit Visas</h3>
+            <p class="sc-text">For stopovers between flights.</p>
             <a href="#" class="sc-link">Learn More <i class="fa fa-arrow-right"></i></a>
           </div>
         </div>
       </div>
 
     
-      <div class="col-md-4 mb-4">
+      {{-- <div class="col-md-4 mb-4">
         <div class="sc-wrap">
           <div class="sc-inner">
             <div class="sc-icon-box"><i class="fa fa-clock-o"></i></div>
