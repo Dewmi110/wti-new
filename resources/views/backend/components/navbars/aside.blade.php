@@ -61,7 +61,7 @@
 
   <div class="sidebar-label">Web Content Management</div>
 
-  <a class="nav-item {{ $isImageSliderActive ? 'active' : '' }}" href="{{ route('admin.image-sliders.index') }}">
+  <a class="nav-item {{ $isImageSliderActive ? 'active' : '' }}" href="{{ route('admin.image_sliders.index') }}">
     <span class="nav-icon"><i class="fas fa-laptop"></i></span>
     Image Slider
   </a>

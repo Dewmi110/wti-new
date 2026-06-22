@@ -2,7 +2,7 @@
 @section('content')
 
 <section class="hero-wrap hero-wrap-2"
-    style="background-image: url('images/bg_6.jpg'); min-height: 85vh; position: relative;">
+    style="background-image: url('{{ $coverImageUrl }}'); min-height: 85vh; position: relative;">
     <div class="overlay"></div>
     <div class="container">
         <div class="row no-gutters slider-text align-items-center justify-content-center" style="min-height: 85vh;">
@@ -85,7 +85,7 @@
                                 <div class="tour-card-v3__bottom">
                                     <div class="tour-card-v3__price-wrap">
                                         <span class="tour-card-v3__nights">{{ $tour->duration }} Nights</span>
-                                        <span class="tour-card-v3__price">From ${{ number_format((float) $displayPrice,
+                                        <span class="tour-card-v3__price">From Rs {{ number_format((float) $displayPrice,
                                             0) }} PP</span>
                                     </div>
                                     <a href="{{ route('frontend.single_tour', $tour) }}" class="tour-card-v3__btn">VIEW

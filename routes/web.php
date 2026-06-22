@@ -1,21 +1,22 @@
 <?php
 
 use App\Http\Controllers\Admin\AuthController;
-use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\BlogController;
+use App\Http\Controllers\Admin\CorporateController;
 use App\Http\Controllers\Admin\CountryController;
 use App\Http\Controllers\Admin\DestinationController;
+use App\Http\Controllers\Admin\ImageSliderController;
 use App\Http\Controllers\Admin\TourCategoryController;
 use App\Http\Controllers\Admin\TourController;
 use App\Http\Controllers\Admin\TourThemeController;
 use App\Http\Controllers\Admin\TourTypeController;
-use App\Http\Controllers\Admin\ImageSliderController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\BlogBannerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FrontendController;
-use App\Http\Controllers\Admin\CorporateController;
 use App\Http\Middleware\AdminAuth;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
 //     return view('frontend.index');
@@ -27,7 +28,8 @@ Route::controller(FrontendController::class)->group(function () {
     // Route::get('/about', 'about')->name('frontend.about');
     Route::get('/visit-to-srilanka', 'visit_to_srilanka')->name('frontend.visit_to_srilanka');
     Route::get('/outbound', 'outbound')->name('frontend.outbound');
-    Route::get('/tours/{tour}', 'singleTour')->name('frontend.single_tour');
+    Route::get('/tours/{tour:slug}', 'singleTour')->name('frontend.single_tour');
+    // Route::get('/tours/{tour}', 'singleTour')->name('frontend.single_tour');
     Route::get('/blog', 'blog')->name('frontend.blog');
     Route::get('/single-blog/{blog}', 'singleBlog')->name('frontend.blog-single');
     Route::get('/contact', 'contact')->name('frontend.contact');
@@ -72,16 +74,33 @@ Route::prefix('admin')->middleware(AdminAuth::class)->group(function () {
     // Image Slider
     Route::get('image-sliders/create-home', [ImageSliderController::class, 'createHomeSlider'])->name('admin.image_sliders.create_home');
     Route::get('image-sliders/{imageSlider}/edit-home', [ImageSliderController::class, 'editHomeSlider'])->name('admin.image_sliders.edit_home');
-    Route::resource('image-sliders', ImageSliderController::class, ['as' => 'admin']);
+    Route::post('image-sliders', [ImageSliderController::class, 'store'])->name('admin.image_sliders.store');
+    Route::put('image-sliders/{imageSlider}', [ImageSliderController::class, 'update'])->name('admin.image_sliders.update');
+    Route::delete('image-sliders/{imageSlider}', [ImageSliderController::class, 'destroy'])->name('admin.image_sliders.destroy');
+    Route::get('image-sliders', [ImageSliderController::class, 'index'])->name('admin.image_sliders.index');
 
     // Corporate Banners
     Route::prefix('corporate-banners')->name('admin.corporate_banners.')->group(function () {
-    Route::get('/',            [CorporateController::class, 'index'])   ->name('index');
-    Route::get('/create',      [CorporateController::class, 'create'])  ->name('create');
-    Route::post('/',           [CorporateController::class, 'store'])   ->name('store');
-    Route::get('/{corporateBanner}/edit',   [CorporateController::class, 'edit'])    ->name('edit');
-    Route::put('/{corporateBanner}',        [CorporateController::class, 'update'])  ->name('update');
-    Route::delete('/{corporateBanner}',     [CorporateController::class, 'destroy']) ->name('destroy');
+        Route::get('/', [CorporateController::class, 'index'])->name('index');
+        Route::get('/create', [CorporateController::class, 'create'])->name('create');
+        Route::post('/', [CorporateController::class, 'store'])->name('store');
+        Route::get('/{corporateBanner}/edit', [CorporateController::class, 'edit'])->name('edit');
+        Route::put('/{corporateBanner}', [CorporateController::class, 'update'])->name('update');
+        Route::delete('/{corporateBanner}', [CorporateController::class, 'destroy'])->name('destroy');
     });
+
+    // Tour Banner (select existing tour type, set its banner_image)
+    Route::get('tour-banners', [TourTypeController::class, 'indexBanner'])->name('admin.tour_banners.index');
+    Route::get('tour-banners/create', [TourTypeController::class, 'createBanner'])->name('admin.tour_banners.create');
+    Route::post('tour-banners', [TourTypeController::class, 'storeBanner'])->name('admin.tour_banners.store');
+
+Route::prefix('blog-banners')->name('admin.blog_banners.')->group(function () {
+    Route::get('/',                          [BlogBannerController::class, 'index'])   ->name('index');
+    Route::get('/create',                    [BlogBannerController::class, 'create'])  ->name('create');
+    Route::post('/',                         [BlogBannerController::class, 'store'])   ->name('store');
+    Route::get('/{blogBanner}/edit',         [BlogBannerController::class, 'edit'])    ->name('edit');
+    Route::put('/{blogBanner}',              [BlogBannerController::class, 'update'])  ->name('update');
+    Route::delete('/{blogBanner}',           [BlogBannerController::class, 'destroy']) ->name('destroy');
+});
 
 });

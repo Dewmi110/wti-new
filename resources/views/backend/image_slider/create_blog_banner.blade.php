@@ -10,10 +10,10 @@
             {{-- Header --}}
             <div class="card-header" style="padding:18px 22px 0;">
                 <div>
-                    <div class="card-header-title">Create Blog Banner</div>
-                    <div class="card-header-sub">Add a new blog banner to the system</div>
+                    <div class="card-header-title">Add Blog Banner</div>
+                    <div class="card-header-sub">Upload a new blog banner image</div>
                 </div>
-                <a href="{{ route('admin.image-sliders.index') }}" class="btn btn-outline btn-sm">
+                <a href="{{ route('admin.blog_banners.index') }}" class="btn btn-outline btn-sm">
                     <i class="fas fa-arrow-left"></i> Back
                 </a>
             </div>
@@ -31,7 +31,7 @@
                     </div>
                 @endif
 
-                <form action="{{ route('admin.image-sliders.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('admin.blog_banners.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     {{-- Image --}}
@@ -57,7 +57,7 @@
                     {{-- Actions --}}
                     <div style="display:flex; justify-content:flex-end; gap:10px;
                                 padding-top:16px; border-top:1px solid var(--border);">
-                        <a href="{{ route('admin.image-sliders.index') }}" class="btn btn-outline">
+                        <a href="{{ route('admin.blog_banners.index') }}" class="btn btn-outline">
                             <i class="fas fa-times"></i> Cancel
                         </a>
                         <button type="submit" class="btn btn-primary">

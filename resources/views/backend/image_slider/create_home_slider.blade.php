@@ -13,7 +13,7 @@
                     <div class="card-header-title">Create Home Slider Item</div>
                     <div class="card-header-sub">Add a new home slider item to the system</div>
                 </div>
-                <a href="{{ route('admin.image-sliders.index') }}" class="btn btn-outline btn-sm">
+                <a href="{{ route('admin.image_sliders.index') }}" class="btn btn-outline btn-sm">
                     <i class="fas fa-arrow-left"></i> Back
                 </a>
             </div>
@@ -117,7 +117,7 @@
                     {{-- Actions --}}
                     <div style="display:flex; justify-content:flex-end; gap:10px;
                                 padding-top:16px; border-top:1px solid var(--border);">
-                        <a href="{{ route('admin.image-sliders.index') }}" class="btn btn-outline">
+                        <a href="{{ route('admin.image_sliders.index') }}" class="btn btn-outline">
                             <i class="fas fa-times"></i> Cancel
                         </a>
                         <button type="submit" class="btn btn-primary">

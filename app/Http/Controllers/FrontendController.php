@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Destination;
 use App\Models\Tour;
+use App\Models\TourType;
 use App\Models\Blog;
 use App\Models\Corporate;
 use App\Models\ImageSlider;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class FrontendController extends Controller
 {
@@ -46,44 +48,42 @@ class FrontendController extends Controller
         return view('frontend.index', compact('destinations', 'tours', 'featured_tours', 'blogs', 'imageSliders'));
     }
 
-    public function visit_to_srilanka(Tour $tour)
+    public function visit_to_srilanka()
+{
+    $tourType = TourType::where('type_name', 'Visit to Sri Lanka')->first();
+    
+    $coverImageUrl = $tourType && $tourType->banner_image
+        ? \Illuminate\Support\Facades\Storage::url($tourType->banner_image)
+        : asset('images/hero-bg-1.jpg');
+ 
+    $tours = Tour::query()
+        ->whereHas('countryModel', static function ($query): void {
+            $query->where('t_type', 1);
+        })
+        ->with(['countryModel', 'images'])
+        ->where('status', 1)
+        ->paginate(9);
+ 
+    return view('frontend.inbound', compact('tours', 'coverImageUrl'));
+}
+
+    public function outbound()
     {
-        $coverImagePath = $tour->banner_img_path ?: $tour->images->first()?->img_path;
-        $coverImageUrl = $coverImagePath ? \Illuminate\Support\Facades\Storage::url($coverImagePath) :
-        asset('images/hero-bg-1.jpg');
-        $displayPrice = $tour->discount_price ?: $tour->price;
-        $locationName = optional($tour->countryModel)->country ?? 'Sri Lanka';
-        $features = is_array($tour->features) ? $tour->features : [];
+        $tourType = TourType::where('type_name', 'Outbound')->first();
+    
+    $coverImageUrl = $tourType && $tourType->banner_image
+        ? \Illuminate\Support\Facades\Storage::url($tourType->banner_image)
+        : asset('images/hero-bg-1.jpg');
 
-        $tours = Tour::query()
-            ->whereHas('countryModel', static function ($query): void {
-                $query->where('t_type', 1);
-            })
-            ->with(['countryModel', 'images'])
-            ->where('status', 1)
-            ->paginate(9);
+    $tours = Tour::query()
+        ->whereHas('countryModel', static function ($query): void {
+            $query->where('t_type', 2);
+        })
+        ->with(['countryModel', 'images'])
+        ->where('status', 1)
+        ->paginate(9);
 
-        return view('frontend.inbound', compact('tours', 'coverImageUrl', 'displayPrice', 'features', 'locationName'));
-    }
-
-    public function outbound(Tour $tour)
-    {
-        $coverImagePath = $tour->banner_img_path ?: $tour->images->first()?->img_path;
-        $coverImageUrl = $coverImagePath ? \Illuminate\Support\Facades\Storage::url($coverImagePath) :
-        asset('images/hero-bg-1.jpg');
-        $displayPrice = $tour->discount_price ?: $tour->price;
-        $locationName = optional($tour->countryModel)->country ?? 'Sri Lanka';
-        $features = is_array($tour->features) ? $tour->features : [];
-
-         $tours = Tour::query()
-            ->whereHas('countryModel', static function ($query): void {
-                $query->where('t_type', 2);
-            })
-            ->with(['countryModel', 'images'])
-            ->where('status', 1)
-            ->paginate(9);
-            
-        return view('frontend.outbound', compact('tours', 'coverImageUrl', 'displayPrice', 'features', 'locationName'));
+    return view('frontend.outbound', compact('tours', 'coverImageUrl'));
     }
 
     public function singleTour(Tour $tour)

@@ -26,6 +26,11 @@ class Tour extends Model
         return $this->belongsTo(TourCategory::class, 't_category');
     }
 
+    public function getRouteKeyName(): string
+{
+    return 'slug';
+}
+
     public function type()
     {
         return $this->belongsTo(TourType::class, 't_type');

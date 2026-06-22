@@ -1,7 +1,7 @@
   <!-- TOPBAR -->
   <header class="topbar">
     <div class="topbar-greeting">
-      <h1>Hello, Joy 👋</h1>
+      <h1>Hello, {{ auth()->user()->name }}</h1>
       <p>Welcome back and explore the world</p>
     </div>
     <div class="search-box">

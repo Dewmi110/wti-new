@@ -20,6 +20,11 @@ class ImageSliderController extends Controller
         return view('backend.image_slider.create_home_slider');
     }
 
+    public function editHomeSlider(ImageSlider $imageSlider)
+    {
+        return view('backend.image_slider.edit_home_slider', compact('imageSlider'));
+    }
+
    public function store(Request $request)
 {
     $validated = $request->validate([
@@ -35,7 +40,7 @@ class ImageSliderController extends Controller
 
     ImageSlider::create($validated);
 
-    return redirect()->route('admin.image-sliders.index')  // was: admin.image-sliders.index
+    return redirect()->route('admin.image_sliders.index')  // was: admin.image-sliders.index
         ->with('success', 'Image slider created successfully.');
 }
 

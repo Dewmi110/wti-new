@@ -2,7 +2,7 @@
 @section('content')
 
 <section class="hero-wrap hero-wrap-2"
-    style="background-image: url('images/bg_6.jpg'); min-height: 85vh; position: relative;">
+    style="background-image: url('{{ $coverImageUrl }}'); min-height: 85vh; position: relative;">
     <div class="overlay"></div>
     <div class="container">
         <div class="row no-gutters slider-text align-items-center justify-content-center" style="min-height: 85vh;">
@@ -10,7 +10,7 @@
                 <p class="breadcrumbs"><span class="mr-2"><a href="{{ route('frontend.index') }}">Home <i
                                 class="fa fa-chevron-right"></i></a></span> <span>Tour List <i
                             class="fa fa-chevron-right"></i></span></p>
-                <h1 class="mb-0 bread">Visit to Sri Lanka List</h1>
+                <h1 class="mb-0 bread">{{ $type_name ?? 'Tour List' }}</h1>
             </div>
         </div>
     </div>
@@ -44,16 +44,9 @@
 
                     <div class="col-md-4 ftco-animate mb-4">
                         <div class="tour-card-v3">
-
-                            {{-- Full-bleed background image --}}
                             <div class="tour-card-v3__img" style="background-image: url('{{ $coverImageUrl }}');"></div>
-
-                            {{-- White slide-up panel --}}
                             <div class="tour-card-v3__footer">
-
-                                {{-- Scrollable content inside panel --}}
                                 <div class="tour-card-v3__footer-inner">
-
                                     <div class="tour-card-v3__footer-top">
                                         <div style="min-width: 0;">
                                             <h3 class="tour-card-v3__title">
@@ -91,7 +84,7 @@
                                 <div class="tour-card-v3__bottom">
                                     <div class="tour-card-v3__price-wrap">
                                         <span class="tour-card-v3__nights">{{ $tour->duration }} Nights</span>
-                                        <span class="tour-card-v3__price">From ${{ number_format((float) $displayPrice,
+                                        <span class="tour-card-v3__price">From $ {{ number_format((float) $displayPrice,
                                             0) }} PP</span>
                                     </div>
                                     <a href="{{ route('frontend.single_tour', $tour) }}" class="tour-card-v3__btn">VIEW
@@ -100,23 +93,6 @@
                             </div>{{-- end footer --}}
                         </div>
                     </div>
-
-                    {{-- <div class="col-md-4 ftco-animate mb-4">
-                        <div class="project-wrap">
-                            <a href="{{ route('frontend.single_tour', $tour) }}" class="img"
-                                style="background-image: url('{{ $coverImageUrl }}');">
-                                <span class="price">${{ number_format((float) $displayPrice, 0) }}.00/person</span>
-                            </a>
-                            <div class="text p-4">
-                                <span class="days">{{ $tour->duration }} Days Tour</span>
-                                <a href="{{ route('frontend.single_tour', $tour) }}" class="tour-title"
-                                    title="{{ $tour->title }}"
-                                    style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;">{{
-                                    $tour->title }}</a>
-                                <p class="location"><span class="fa fa-map-marker"></span> {{ $locationName }}</p>
-                            </div>
-                        </div>
-                    </div> --}}
                     @endforeach
                     @else
                     <div class="col-12">
