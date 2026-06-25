@@ -126,7 +126,7 @@ style="background-image: url('{{ $miceToursBanner && $miceToursBanner->banner_im
 {{-- ═══════════════════════════════════════════
      AIRLINE PARTNERS LOGO SLIDER
 ═══════════════════════════════════════════ --}}
-<section class="ftco-section ftco-section--partners bg-white">
+{{-- <section class="ftco-section ftco-section--partners bg-white">
   <div class="container">
     <div class="row justify-content-center mb-5">
       <div class="col-md-7 text-center ftco-animate">
@@ -167,7 +167,7 @@ style="background-image: url('{{ $miceToursBanner && $miceToursBanner->banner_im
       </div>
     </div>
   </div>
-</section>
+</section> --}}
 
 {{-- ═══════════════════════════════════════════
      SUB BANNER / CTA

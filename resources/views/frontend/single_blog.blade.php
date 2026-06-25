@@ -7,7 +7,7 @@
         <div class="row no-gutters slider-text align-items-center justify-content-center" style="min-height: 85vh;">
             <div class="col-md-9 ftco-animate pb-5 text-center">
                 <p class="breadcrumbs"><span class="mr-2"><a href="{{ route('frontend.index') }}">Home <i
-                                class="fa fa-chevron-right"></i></a></span> <span>Tour List <i
+                                class="fa fa-chevron-right"></i></a></span> <span>Blog List <i
                             class="fa fa-chevron-right"></i></span></p>
                 <h1 class="mb-0 bread">{{ $blog->name }}</h1>
             </div>
