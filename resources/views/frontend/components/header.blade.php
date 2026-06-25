@@ -29,7 +29,7 @@
 					</li>
 					<li class="nav-item"><a href="{{ route('frontend.corporate') }}" class="nav-link">Corporate</a></li>
 					<li class="nav-item"><a href="{{ route('frontend.blog') }}" class="nav-link">Blog</a></li>
-					<li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+					<li class="nav-item"><a href="{{ route('frontend.contact') }}" class="nav-link">Contact</a></li>
 				</ul>
 			</div>
 		</div>

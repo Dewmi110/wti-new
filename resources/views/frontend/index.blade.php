@@ -20,53 +20,6 @@
         </div>
     </div>
     @endforeach
-    {{-- <div class="hero-slide js-fullheight"
-        style="background-image: url('{{ asset('images/hero-slider/slider7.jpg') }}'); background-position: center; background-size: cover;">
-        <div class="overlay"></div>
-        <div class="container">
-            <div class="row no-gutters slider-text js-fullheight align-items-center" data-scrollax-parent="true">
-                <div class="col-md-7 ftco-animate">
-                    <span class="subheading"
-                        style="background: rgba(255, 255, 255, 0.9); color: #e11d2e; display: inline-block; padding: 12px 24px; line-height: 1;">Explore
-                        Handpicked Tours</span>
-                    <h1 class="mb-4">Unforgettable Journeys Await</h1>
-                    <p class="caps">Find curated packages and authentic experiences.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="hero-slide js-fullheight"
-        style="background-image: url('{{ asset('images/hero-slider/slider3.jpg') }}'); background-position: center; background-size: cover;">
-        <div class="overlay"></div>
-        <div class="container">
-            <div class="row no-gutters slider-text js-fullheight align-items-center" data-scrollax-parent="true">
-                <div class="col-md-7 ftco-animate">
-                    <span class="subheading"
-                        style="background: rgba(255, 255, 255, 0.9); color: #e11d2e; display: inline-block; padding: 12px 24px; line-height: 1;">Travel
-                        With Confidence</span>
-                    <h1 class="mb-4">Safe, Seamless & Memorable</h1>
-                    <p class="caps">Let us handle the details while you make memories.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="hero-slide js-fullheight"
-        style="background-image: url('{{ asset('images/hero-slider/slider4.jpg') }}'); background-position: center; background-size: cover;">
-        <div class="overlay"></div>
-        <div class="container">
-            <div class="row no-gutters slider-text js-fullheight align-items-center" data-scrollax-parent="true">
-                <div class="col-md-7 ftco-animate">
-                    <span class="subheading"
-                        style="background: rgba(255, 255, 255, 0.9); color: #e11d2e; display: inline-block; padding: 12px 24px; line-height: 1;">Amazing
-                        Destinations</span>
-                    <h1 class="mb-4">Create Lasting Memories</h1>
-                    <p class="caps">Experience the beauty and culture of the world.</p>
-                </div>
-            </div>
-        </div>
-    </div> --}}
 </div>
 
 <section class="ftco-section ftco-no-pb ftco-no-pt">
@@ -78,12 +31,6 @@
                         <div class="col-md-12 nav-link-wrap">
                             <div class="nav nav-pills text-center" id="v-pills-tab" role="tablist"
                                 aria-orientation="vertical">
-                                {{-- <a class="nav-link active mr-md-1" id="v-pills-1-tab" data-toggle="pill"
-                                    href="#v-pills-1" role="tab" aria-controls="v-pills-1" aria-selected="true">Search
-                                    Tour</a>
-
-                                <a class="nav-link" id="v-pills-2-tab" data-toggle="pill" href="#v-pills-2" role="tab"
-                                    aria-controls="v-pills-2" aria-selected="false">Hotel</a> --}}
                             </div>
                         </div>
                         <div class="col-md-12 tab-wrap">
@@ -528,7 +475,7 @@
                                 <p>Far far away, behind the word mountains, far from the countries Vokalia and
                                     Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right
                                     at the coast of the Semantics, a large language ocean.</p>
-                                <p><a href="#" class="btn btn-primary">Book Your Destination</a></p>
+                                <p><a href="{{ route('frontend.contact') }}" class="btn btn-primary">Book Your Destination</a></p>
                             </div>
                         </div>
                     </div>
@@ -657,69 +604,15 @@
             {{-- <div class="tour-card-v2__price">
               price: <span class="tour-card-v2__old">$1300</span> <span class="tour-card-v2__new">$1105</span>
             </div> --}}
-            <a href="{{ route('frontend.blog-single', $blog->id) }}" class="tour-card-v2__btn">Read More</a>
+            <a href="{{ route('single.blog', $blog->id) }}" class="tour-card-v2__btn">Read More</a>
           </div>
         </div>
       </div>
       @endforeach
-      {{-- <div class="col-md-4 d-flex ftco-animate mb-4">
-        <div class="tour-card-v2 w-100">
-          <div class="tour-card-v2__img" style="background-image: url('images/image_2.jpg');"></div>
-          <span class="tour-card-v2__discount">UPTO 17% off</span>
-          <div class="tour-card-v2__body">
-            <div class="tour-card-v2__meta">
-              <span><i class="fa fa-clock-o"></i> 5D/4N</span>
-              <span><i class="fa fa-group"></i> pax: 10</span>
-              <span><i class="fa fa-map-marker"></i> Malaysia</span>
-            </div>
-            <h3 class="tour-card-v2__title">Weekend To Paris</h3>
-            <p class="tour-card-v2__desc">Fusce hic augue velit wisi ips quibus dam pariatur, iusto.</p>
-            <div class="tour-card-v2__price">
-              price: <span class="tour-card-v2__old">$1100</span> <span class="tour-card-v2__new">$900</span>
-            </div>
-            <a href="blog-single.html" class="tour-card-v2__btn">BOOK NOW</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-4 d-flex ftco-animate mb-4">
-        <div class="tour-card-v2 w-100">
-          <div class="tour-card-v2__img" style="background-image: url('images/image_3.jpg');"></div>
-          <span class="tour-card-v2__discount">UPTO 20% off</span>
-          <div class="tour-card-v2__body">
-            <div class="tour-card-v2__meta">
-              <span><i class="fa fa-clock-o"></i> 6D/5N</span>
-              <span><i class="fa fa-group"></i> pax: 8</span>
-              <span><i class="fa fa-map-marker"></i> Sri Lanka</span>
-            </div>
-            <h3 class="tour-card-v2__title">Most Popular Place In This World</h3>
-            <p class="tour-card-v2__desc">Fusce hic augue velit wisi ips quibus dam pariatur, iusto.</p>
-            <div class="tour-card-v2__price">
-              price: <span class="tour-card-v2__old">$950</span> <span class="tour-card-v2__new">$760</span>
-            </div>
-            <a href="blog-single.html" class="tour-card-v2__btn">BOOK NOW</a>
-          </div>
-        </div>
-      </div> --}}
 
     </div>
     </div>
 </section>
-
-{{-- <section class="ftco-intro ftco-section ftco-no-pt">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-12 text-center">
-                <div class="img" style="background-image: url(images/bg_2.jpg);">
-                    <div class="overlay"></div>
-                    <h2>We Are Pacific A Travel Agency</h2>
-                    <p>We can manage your dream building A small river named Duden flows by their place</p>
-                    <p class="mb-0"><a href="#" class="btn btn-primary px-4 py-3">Ask For A Quote</a></p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section> --}}
 <style>
     /* --- Parallax Section --- */
 .ftco-section--parallax {

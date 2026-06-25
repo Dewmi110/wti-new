@@ -10,10 +10,10 @@
             {{-- Header --}}
             <div class="card-header" style="padding:18px 22px 0;">
                 <div>
-                    <div class="card-header-title">Add Contact Banner</div>
-                    <div class="card-header-sub">Upload a new contact page banner image</div>
+                    <div class="card-header-title">Edit Blog Slider Item</div>
+                    <div class="card-header-sub">Update the details of the blog slider item</div>
                 </div>
-                <a href="{{ route('admin.contact_banners.index') }}" class="btn btn-outline btn-sm">
+                <a href="{{ route('admin.blog_sliders.index') }}" class="btn btn-outline btn-sm">
                     <i class="fas fa-arrow-left"></i> Back
                 </a>
             </div>
@@ -31,29 +31,41 @@
                     </div>
                 @endif
 
-                <form action="{{ route('admin.contact_banners.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('admin.blog_sliders.update', $blogSlider->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
+                    @method('PUT')
 
                     {{-- Image --}}
                     <div class="form-group" style="margin-bottom:18px;">
                         <label class="form-label">
-                            Image <span class="required">*</span>
+                            Image
+                            <span style="font-size:12px; color:#888; font-weight:400;">(leave blank to keep current)</span>
                         </label>
 
-                        {{-- Live preview --}}
+                        {{-- Current image preview --}}
+                        @if($blogSlider->image_path)
+                        <div style="margin-bottom:12px;">
+                            <div style="font-size:12px; color:#888; margin-bottom:6px;">Current image:</div>
+                            <img id="image-preview"
+                                 src="{{ asset('storage/' . $blogSlider->image_path) }}"
+                                 alt="{{ $blogSlider->title }}"
+                                 style="max-width:100%; max-height:220px; border-radius:10px; object-fit:cover; border:0.5px solid #e5e3f0; display:block;">
+                        </div>
+                        @else
                         <div id="image-preview-wrap" style="display:none; margin-bottom:12px;">
                             <img id="image-preview" src="#" alt="Preview"
-                                style="max-width:100%; max-height:220px; border-radius:10px; object-fit:cover; border:0.5px solid #e5e3f0; display:block;">
+                                 style="max-width:100%; max-height:220px; border-radius:10px; object-fit:cover; border:0.5px solid #e5e3f0; display:block;">
                         </div>
+                        @endif
 
                         <div class="input-icon-wrap">
                             <i class="fas fa-image input-icon"></i>
                             <input type="file"
                                    name="image"
+                                   id="image-input"
                                    class="form-input {{ $errors->has('image') ? 'is-error' : '' }}"
                                    accept="image/*"
-                                   onchange="previewImage(event)"
-                                   required>
+                                   onchange="previewImage(event)">
                         </div>
                         @error('image')
                             <div class="form-error">
@@ -65,11 +77,11 @@
                     {{-- Actions --}}
                     <div style="display:flex; justify-content:flex-end; gap:10px;
                                 padding-top:16px; border-top:1px solid var(--border);">
-                        <a href="{{ route('admin.contact_banners.index') }}" class="btn btn-outline">
+                        <a href="{{ route('admin.blog_sliders.index') }}" class="btn btn-outline">
                             <i class="fas fa-times"></i> Cancel
                         </a>
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i> Create Contact Banner
+                            <i class="fas fa-save"></i> Update Blog Slider Item
                         </button>
                     </div>
                 </form>
@@ -84,8 +96,11 @@ function previewImage(event) {
     if (!file) return;
     const reader = new FileReader();
     reader.onload = function(e) {
-        document.getElementById('image-preview').src = e.target.result;
-        document.getElementById('image-preview-wrap').style.display = 'block';
+        const preview = document.getElementById('image-preview');
+        preview.src = e.target.result;
+        preview.style.display = 'block';
+        const wrap = document.getElementById('image-preview-wrap');
+        if (wrap) wrap.style.display = 'block';
     };
     reader.readAsDataURL(file);
 }

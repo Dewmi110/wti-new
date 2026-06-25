@@ -14,10 +14,10 @@
                         <i class="fas fa-home"></i>
                         Home Slider
                     </a>
-                    {{-- <div class="transport-btn">
-                        <i class="fas fa-globe-asia"></i>
-                        Destination Banner
-                    </div> --}}
+                    <a href="{{ route('admin.blog_sliders.index') }}" class="transport-btn {{ request()->routeIs('admin.blog_sliders.*') ? 'active' : '' }}">
+                        <i class="fas fa-image"></i>
+                        Blog Slider
+                    </a>
                     <a href="{{ route('admin.tour_banners.index') }}" class="transport-btn {{ request()->routeIs('admin.tour_banners.*') ? 'active' : '' }}">
                         <i class="fas fa-route"></i>
                         Tour Banner
@@ -30,10 +30,10 @@
                         <i class="fas fa-blog"></i>
                         Blog Banner
                     </a>
-                    <div class="transport-btn">
+                    <a href="{{ route('admin.contact_banners.index') }}" class="transport-btn {{ request()->routeIs('admin.contact_banners.*') ? 'active' : '' }}">
                         <i class="fas fa-address-book"></i>
                         Contact Banner
-                    </div>
+                    </a>
                 </div>
             </div>
         </div>
@@ -63,7 +63,7 @@
                 @if(isset($sliders) && $sliders->isEmpty())
                 <div class="empty-state">
                     <i class="fas fa-image"></i>
-                    <p>No image sliders found. <a href="{{ route('admin.image_sliders.create_home') }}">Create one now</a>.</p>
+                    <p>No image sliders found.</p>
                 </div>
                 @elseif(isset($sliders))
                 <div style="overflow-x:auto;">
@@ -99,6 +99,91 @@
                                             style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;font-size:13px;border-radius:7px;border:0.5px solid #d0ccea;background:transparent;color:#6d5cce;text-decoration:none;">
                                             <i class="fas fa-edit"></i> Edit
                                         </a>
+                                        <form action="{{ route('admin.image_sliders.destroy', $slider) }}" method="POST"
+                                            style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this slider?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;font-size:13px;border-radius:7px;border:0.5px solid #f09595;background:transparent;color:#a32d2d;cursor:pointer;">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                @endif
+            </div>
+        </div>
+        @endif
+
+        {{-- ═══════════════════════════════════════════════════════════════ --}}
+        {{-- BLOG SLIDERS SECTION --}}
+        {{-- ═══════════════════════════════════════════════════════════════ --}}
+        @if(request()->routeIs('admin.blog_sliders.*'))
+        <div class="card" style="margin-top:24px;">
+            <div class="card-header" style="padding:18px 22px 0;">
+                <div>
+                    <div class="card-header-title">Blog Sliders</div>
+                    <div class="card-header-sub">Manage blog page sliders</div>
+                </div>
+                <a href="{{ route('admin.blog_sliders.create') }}" class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus"></i> Add New Slider
+                </a>
+            </div>
+            <div class="card-body">
+                @if(session('success'))
+                <div class="alert alert-success" style="margin-bottom:18px;">
+                    <i class="fas fa-check-circle alert-icon"></i>
+                    <div class="alert-body">{{ session('success') }}</div>
+                </div>
+                @endif
+
+                @if(isset($sliders) && $sliders->isEmpty())
+                <div class="empty-state">
+                    <i class="fas fa-image"></i>
+                    <p>No image sliders found.</p>
+                </div>
+                @elseif(isset($sliders))
+                <div style="overflow-x:auto;">
+                    <table style="width:100%; border-collapse:collapse; min-width:700px;">
+                        <thead>
+                            <tr style="background:#f8f7fe; border-bottom:0.5px solid #e5e3f0;">
+                                <th style="padding:11px 16px; font-size:11px; font-weight:500; color:#888; text-transform:uppercase; letter-spacing:0.06em; text-align:left; width:80px;">Image</th>
+                                <th style="padding:11px 16px; font-size:11px; font-weight:500; color:#888; text-transform:uppercase; letter-spacing:0.06em; text-align:right; width:160px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($sliders as $slider)
+                            <tr style="border-bottom:0.5px solid #eeecf8;">
+                                <td style="padding:13px 16px; vertical-align:middle;">
+                                    @if($slider->image_path)
+                                    <img src="{{ asset('storage/' . $slider->image_path) }}" alt="{{ $slider->title }}"
+                                        style="width:52px;height:52px;object-fit:cover;border-radius:8px;display:block;">
+                                    @else
+                                    <div style="width:52px;height:52px;border-radius:8px;background:#f0f0f6;display:flex;align-items:center;justify-content:center;">
+                                        <i class="fas fa-image" style="color:#aaa;"></i>
+                                    </div>
+                                    @endif
+                                </td>
+                                <td style="padding:13px 16px; vertical-align:middle;">
+                                    <div style="display:flex;gap:8px;justify-content:flex-end;">
+                                        <a href="{{ route('admin.blog_sliders.edit', $slider) }}"
+                                            style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;font-size:13px;border-radius:7px;border:0.5px solid #d0ccea;background:transparent;color:#6d5cce;text-decoration:none;">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </a>
+                                        <form action="{{ route('admin.blog_sliders.destroy', $slider) }}" method="POST"
+                                            style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this slider?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;font-size:13px;border-radius:7px;border:0.5px solid #f09595;background:transparent;color:#a32d2d;cursor:pointer;">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>
@@ -360,6 +445,87 @@
             </div>
         </div>
         @endif
+
+                {{-- ═══════════════════════════════════════════════════════════════ --}}
+        {{-- CONTACT BANNERS SECTION --}}
+        {{-- ═══════════════════════════════════════════════════════════════ --}}
+        @if(request()->routeIs('admin.contact_banners.*'))
+        <div class="card" style="margin-top:24px;">
+            <div class="card-header" style="padding:18px 22px 0;">
+                <div>
+                    <div class="card-header-title">Contact Banners</div>
+                    <div class="card-header-sub">Manage contact page banner images</div>
+                </div>
+                <a href="{{ route('admin.contact_banners.create') }}" class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus"></i> Add New Banner
+                </a>
+            </div>
+            <div class="card-body">
+                @if(session('success'))
+                <div class="alert alert-success" style="margin-bottom:18px;">
+                    <i class="fas fa-check-circle alert-icon"></i>
+                    <div class="alert-body">{{ session('success') }}</div>
+                </div>
+                @endif
+
+                @if(isset($contactBanners) && $contactBanners->isEmpty())
+                <div class="empty-state">
+                    <i class="fas fa-address-book"></i>
+                    <p>No contact banners found.</p>
+                </div>
+                @elseif(isset($contactBanners))
+                <div style="overflow-x:auto;">
+                    <table style="width:100%; border-collapse:collapse; min-width:500px;">
+                        <thead>
+                            <tr style="background:#f8f7fe; border-bottom:0.5px solid #e5e3f0;">
+                                <th style="padding:11px 16px; font-size:11px; font-weight:500; color:#888; text-transform:uppercase; letter-spacing:0.06em; text-align:left; width:100px;">Banner</th>
+                                <th style="padding:11px 16px; font-size:11px; font-weight:500; color:#888; text-transform:uppercase; letter-spacing:0.06em; text-align:left;">Added</th>
+                                <th style="padding:11px 16px; font-size:11px; font-weight:500; color:#888; text-transform:uppercase; letter-spacing:0.06em; text-align:right; width:180px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($contactBanners as $contactBanner)
+                            <tr style="border-bottom:0.5px solid #eeecf8;">
+                                <td style="padding:13px 16px; vertical-align:middle;">
+                                    @if($contactBanner->banner_image)
+                                    <img src="{{ asset('storage/' . $contactBanner->banner_image) }}" alt="Contact banner"
+                                        style="width:64px;height:64px;object-fit:cover;border-radius:8px;display:block;">
+                                    @else
+                                    <div style="width:64px;height:64px;border-radius:8px;background:#f0f0f6;display:flex;align-items:center;justify-content:center;">
+                                        <i class="fas fa-address-book" style="color:#aaa;"></i>
+                                    </div>
+                                    @endif
+                                </td>
+                                <td style="padding:13px 16px; vertical-align:middle; font-size:14px; color:#6c757d;">
+                                    {{ $contactBanner->created_at->format('M d, Y') }}
+                                </td>
+                                <td style="padding:13px 16px; vertical-align:middle;">
+                                    <div style="display:flex;gap:8px;justify-content:flex-end;">
+                                        <a href="{{ route('admin.contact_banners.edit', $contactBanner) }}"
+                                            style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;font-size:13px;border-radius:7px;border:0.5px solid #d0ccea;background:transparent;color:#6d5cce;text-decoration:none;">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </a>
+                                        {{-- <form action="{{ route('admin.contact_banners.destroy', $contactBanner) }}" method="POST"
+                                            style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this banner?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;font-size:13px;border-radius:7px;border:0.5px solid #f09595;background:transparent;color:#a32d2d;cursor:pointer;">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </button>
+                                        </form> --}}
+                                    </div>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                @endif
+            </div>
+        </div>
+        @endif
+
 
     </div>
 </div>

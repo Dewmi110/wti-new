@@ -567,6 +567,53 @@
                             </div>
                         </div> --}}
                     </div>
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label class="form-label">
+                                OneSnap Price
+                            </label>
+                            <input type="number"
+                                step="0.01"
+                                min="0"
+                                name="os_price"
+                                class="form-input"
+                                value="{{ old('os_price', $tour->os_price) }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                OneSnap Visibility
+                            </label>
+
+                            <select name="os_visibility" class="form-input">
+                                <option value="1"
+                                    {{ old('os_visibility', $tour->os_visibility) == 1 ? 'selected' : '' }}>
+                                    Visible
+                                </option>
+
+                                <option value="0"
+                                    {{ old('os_visibility', $tour->os_visibility) == 0 ? 'selected' : '' }}>
+                                    Hidden
+                                </option>
+                            </select>
+                        </div>
+                        {{-- onesnap currency select $ or Rs --}}
+                        <div class="form-group">
+                            <label class="form-label">
+                                OneSnap Currency
+                            </label>
+                            <select name="os_currency" class="form-input">
+                                <option value="USD"
+                                    {{ old('os_currency', $tour->os_currency) == 'USD' ? 'selected' : '' }}>
+                                    USD
+                                </option>
+                                <option value="Rs"
+                                    {{ old('os_currency', $tour->os_currency) == 'Rs' ? 'selected' : '' }}>
+                                    Rs
+                                </option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
             </div>
 

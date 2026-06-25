@@ -1,13 +1,14 @@
   <!-- TOPBAR -->
   <header class="topbar">
-    <div class="topbar-greeting">
+    <div class="topbar-greeting ">
       <h1>Hello, {{ auth()->user()->name }}</h1>
-      <p>Welcome back and explore the world</p>
+      <p>{{ auth()->user()->email }}</p>
+      {{-- <p>Welcome back and explore the world</p> --}}
     </div>
-    <div class="search-box">
+    {{-- <div class="search-box">
       <i class="fas fa-search"></i>
       <input type="text" placeholder="Search destinations...">
-    </div>
+    </div> --}}
     <div class="topbar-icons">
       <button class="icon-btn"><i class="fas fa-bell"></i></button>
       <button class="icon-btn"><i class="fas fa-envelope"></i></button>

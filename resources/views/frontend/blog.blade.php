@@ -2,7 +2,7 @@
 
 @section('content')
 <section class="hero-wrap hero-wrap-2"
-  style="background-image: url('images/bg_6.jpg'); min-height: 85vh; position: relative;">
+  style="background-image: url('{{ $blogBanner && $blogBanner->banner_image ? \Illuminate\Support\Facades\Storage::url($blogBanner->banner_image) : asset('images/hero-bg-1.jpg') }}'); min-height: 85vh; position: relative;">
   <div class="overlay"></div>
   <div class="container">
     <div class="row no-gutters slider-text align-items-center justify-content-center" style="min-height: 85vh;">
@@ -13,6 +13,61 @@
       </div>
     </div>
   </div>
+  </div>
+</section>
+
+{{-- Blog Image Carousel --}}
+<section class="blog-carousel-section py-5">
+  <div class="container">
+    <div id="blogCarousel" class="carousel slide" data-ride="carousel">
+
+      <ol class="carousel-indicators">
+        @foreach($sliders->take(5) as $key => $slider)
+        <li data-target="#blogCarousel" data-slide-to="{{ $key }}" class="{{ $key == 0 ? 'active' : '' }}">
+        </li>
+        @endforeach
+      </ol>
+
+      <div class="carousel-inner">
+        @foreach($sliders->take(5) as $key => $slider)
+        @php
+        $image = $slider->image_path
+        ? \Illuminate\Support\Facades\Storage::url($slider->image_path)
+        : asset('images/destination-1.jpg');
+        @endphp
+
+        <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
+          <div class="carousel-slide-image" style="background-image:url('{{ $image  }}')">
+
+            <div class="carousel-overlay">
+              {{-- <div class="carousel-content text-center">
+                <span class="badge badge-warning mb-3">
+                  Latest Article
+                </span>
+
+                <h2>{{ $blog->name }}</h2>
+
+                <a href="{{ route('single.blog', $blog->id) }}" class="btn btn-primary mt-3">
+                  Read More
+                </a>
+              </div> --}}
+            </div>
+
+          </div>
+        </div>
+
+        @endforeach
+      </div>
+
+      <a class="carousel-control-prev" href="#blogCarousel" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+      </a>
+
+      <a class="carousel-control-next" href="#blogCarousel" role="button" data-slide="next">
+        <span class="carousel-control-next-icon"></span>
+      </a>
+
+    </div>
   </div>
 </section>
 
@@ -47,7 +102,7 @@
             {{-- <div class="tour-card-v2__price">
               price: <span class="tour-card-v2__old">$1300</span> <span class="tour-card-v2__new">$1105</span>
             </div> --}}
-            <a href="{{ route('frontend.blog-single', $blog->id) }}" class="tour-card-v2__btn">Read More</a>
+            <a href="{{ route('single.blog', $blog->id) }}" class="tour-card-v2__btn">Read More</a>
           </div>
         </div>
       </div>

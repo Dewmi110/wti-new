@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('contact_banners', function (Blueprint $table) {
+        Schema::create('blog_sliders', function (Blueprint $table) {
             $table->id();
-            $table->string('banner_image');
+            $table->string('image_path')->nullable();
             $table->timestamps();
         });
     }
@@ -23,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('contact_banners');
+        Schema::dropIfExists('blog_sliders');
     }
 };

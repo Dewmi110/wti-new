@@ -29,7 +29,7 @@ class AuthController extends Controller
         $user = Auth::user();
 
         // Only super_admin and admin can access the panel
-        if (! $user->role || ! in_array($user->role->slug, ['super_admin', 'admin'])) {
+        if (! $user->role || ! in_array($user->role->slug, ['super_admin', 'admin','user'])) {
             Auth::logout();
             return back()->withErrors([
                 'email' => 'You do not have permission to access the admin panel.',

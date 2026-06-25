@@ -10,8 +10,8 @@
             {{-- Header --}}
             <div class="card-header" style="padding:18px 22px 0;">
                 <div>
-                    <div class="card-header-title">Add Contact Banner</div>
-                    <div class="card-header-sub">Upload a new contact page banner image</div>
+                    <div class="card-header-title">Edit Contact Banner</div>
+                    <div class="card-header-sub">Replace the contact page banner image</div>
                 </div>
                 <a href="{{ route('admin.contact_banners.index') }}" class="btn btn-outline btn-sm">
                     <i class="fas fa-arrow-left"></i> Back
@@ -31,8 +31,9 @@
                     </div>
                 @endif
 
-                <form action="{{ route('admin.contact_banners.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('admin.contact_banners.update', $contactBanner) }}" method="POST" enctype="multipart/form-data">
                     @csrf
+                    @method('PUT')
 
                     {{-- Image --}}
                     <div class="form-group" style="margin-bottom:18px;">
@@ -40,11 +41,21 @@
                             Image <span class="required">*</span>
                         </label>
 
-                        {{-- Live preview --}}
+                        {{-- Current image preview --}}
+                        @if($contactBanner->banner_image)
+                        <div style="margin-bottom:12px;">
+                            <div style="font-size:12px; color:#888; margin-bottom:6px;">Current image:</div>
+                            <img id="image-preview"
+                                 src="{{ asset('storage/' . $contactBanner->banner_image) }}"
+                                 alt="Contact banner"
+                                 style="max-width:100%; max-height:220px; border-radius:10px; object-fit:cover; border:0.5px solid #e5e3f0; display:block;">
+                        </div>
+                        @else
                         <div id="image-preview-wrap" style="display:none; margin-bottom:12px;">
                             <img id="image-preview" src="#" alt="Preview"
-                                style="max-width:100%; max-height:220px; border-radius:10px; object-fit:cover; border:0.5px solid #e5e3f0; display:block;">
+                                 style="max-width:100%; max-height:220px; border-radius:10px; object-fit:cover; border:0.5px solid #e5e3f0; display:block;">
                         </div>
+                        @endif
 
                         <div class="input-icon-wrap">
                             <i class="fas fa-image input-icon"></i>
@@ -69,7 +80,7 @@
                             <i class="fas fa-times"></i> Cancel
                         </a>
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i> Create Contact Banner
+                            <i class="fas fa-save"></i> Update Contact Banner
                         </button>
                     </div>
                 </form>
@@ -84,8 +95,11 @@ function previewImage(event) {
     if (!file) return;
     const reader = new FileReader();
     reader.onload = function(e) {
-        document.getElementById('image-preview').src = e.target.result;
-        document.getElementById('image-preview-wrap').style.display = 'block';
+        const preview = document.getElementById('image-preview');
+        preview.src = e.target.result;
+        preview.style.display = 'block';
+        const wrap = document.getElementById('image-preview-wrap');
+        if (wrap) wrap.style.display = 'block';
     };
     reader.readAsDataURL(file);
 }

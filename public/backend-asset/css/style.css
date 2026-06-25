@@ -181,7 +181,7 @@
   }
 
   /* ── TOPBAR ── */
-  .topbar {
+  /* .topbar {
     height: var(--topbar-h);
     background: white;
     display: flex;
@@ -192,7 +192,7 @@
     position: sticky;
     top: 0;
     z-index: 50;
-  }
+  } */
 
   .topbar-greeting {
     flex: 1;
@@ -956,7 +956,7 @@
 
   /* ── TOPBAR ── */
   .topbar {
-    height: 64px;
+    height: 80px;
     background: white;
     display: flex;
     align-items: center;

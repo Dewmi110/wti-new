@@ -5,9 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Destination;
 use App\Models\Tour;
 use App\Models\TourType;
+use App\Models\Country;
+use App\Models\ServiceType;
+use App\Models\Service;
+use App\Models\ContactBanner;
 use App\Models\Blog;
 use App\Models\Corporate;
+use App\Models\BlogBanner;
 use App\Models\ImageSlider;
+use App\Models\BlogSlider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -102,28 +108,43 @@ class FrontendController extends Controller
 
     public function blog()
     {
-        $blogs = Blog::all()
-            ->where('status', 1);
-        return view('frontend.blog', compact('blogs'));
+        $blogs = Blog::all()->where('status', 1);
+        $sliders = BlogSlider::all();
+        $blogBanner = BlogBanner::latest()->first();
+        return view('frontend.blog', compact('blogs', 'sliders', 'blogBanner'));
     }
 
     public function singleBlog(Blog $blog)
-    {
-        return view('frontend.single_blog', compact('blog'));
-    }
+{
+    $coverImageUrl = $blog->image 
+        ? asset('storage/' . $blog->image) 
+        : asset('images/hero-bg-1.jpg');
+
+    return view('frontend.single_blog', compact('blog', 'coverImageUrl'));
+}
 
     public function airTickets()
     {
-        return view('frontend.air_tickets');
+        $airTicketsBanner = Service::where('s_id', 1)->latest()->first();
+        $airTickets = Service::where('s_id', 1)->latest()->first();
+        
+        return view('frontend.air_tickets', compact('airTicketsBanner', 'airTickets'));
     }
+
     public function visaServices()
     {
-        return view('frontend.visa_services');
+        $visaServicesBanner = Service::where('s_id', 2)->latest()->first();
+        $visaServices = Service::where('s_id', 2)->latest()->first();
+        
+        return view('frontend.visa_services', compact('visaServicesBanner', 'visaServices'));
     }
 
     public function miceTours()
     {
-        return view('frontend.mice_tours');
+        $miceToursBanner = Service::where('s_id', 5)->latest()->first();
+        $miceTours = Service::where('s_id', 5)->latest()->first();
+        
+        return view('frontend.mice_tours', compact('miceToursBanner', 'miceTours'));
     }
 
     public function corporate()
@@ -134,7 +155,10 @@ class FrontendController extends Controller
 
     public function contact()
     {
-        return view('frontend.contact');
+        $contactBanner = ContactBanner::latest()->first();
+        $destinations  = \App\Models\Country::where('status', 1)->orderBy('name')->get();
+        $serviceTypes  = \App\Models\ServiceType::where('status', 1)->orderBy('name')->get();
+        return view('frontend.contact', compact('destinations', 'serviceTypes', 'contactBanner') );
     }
 
      public function sendInquiry(Request $request)

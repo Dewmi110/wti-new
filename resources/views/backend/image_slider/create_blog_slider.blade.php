@@ -10,10 +10,10 @@
             {{-- Header --}}
             <div class="card-header" style="padding:18px 22px 0;">
                 <div>
-                    <div class="card-header-title">Create Home Slider Item</div>
-                    <div class="card-header-sub">Add a new home slider item to the system</div>
+                    <div class="card-header-title">Create Blog Slider Item</div>
+                    <div class="card-header-sub">Add a new blog slider item to the system</div>
                 </div>
-                <a href="{{ route('admin.image_sliders.index') }}" class="btn btn-outline btn-sm">
+                <a href="{{ route('admin.blog_sliders.index') }}" class="btn btn-outline btn-sm">
                     <i class="fas fa-arrow-left"></i> Back
                 </a>
             </div>
@@ -31,7 +31,7 @@
                     </div>
                 @endif
 
-                <form action="{{ route('admin.image_sliders.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('admin.blog_sliders.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     {{-- Image --}}
@@ -55,7 +55,7 @@
                     </div>
 
                     {{-- Header --}}
-                    <div class="form-group" style="margin-bottom:18px;">
+                    {{-- <div class="form-group" style="margin-bottom:18px;">
                         <label class="form-label">
                             Header
                         </label>
@@ -72,10 +72,10 @@
                                 <i class="fas fa-exclamation-circle"></i> {{ $message }}
                             </div>
                         @enderror
-                    </div>
+                    </div> --}}
 
                     {{-- Title --}}
-                    <div class="form-group" style="margin-bottom:18px;">
+                    {{-- <div class="form-group" style="margin-bottom:18px;">
                         <label class="form-label">
                             Title <span class="required">*</span>
                         </label>
@@ -93,10 +93,10 @@
                                 <i class="fas fa-exclamation-circle"></i> {{ $message }}
                             </div>
                         @enderror
-                    </div>
+                    </div> --}}
 
                     {{-- Description --}}
-                    <div class="form-group" style="margin-bottom:18px;">
+                    {{-- <div class="form-group" style="margin-bottom:18px;">
                         <label class="form-label">
                             Description
                         </label>
@@ -112,16 +112,16 @@
                                 <i class="fas fa-exclamation-circle"></i> {{ $message }}
                             </div>
                         @enderror
-                    </div>
+                    </div> --}}
 
                     {{-- Actions --}}
                     <div style="display:flex; justify-content:flex-end; gap:10px;
                                 padding-top:16px; border-top:1px solid var(--border);">
-                        <a href="{{ route('admin.image_sliders.index') }}" class="btn btn-outline">
+                        <a href="{{ route('admin.blog_sliders.index') }}" class="btn btn-outline">
                             <i class="fas fa-times"></i> Cancel
                         </a>
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i> Create Home Slider Item
+                            <i class="fas fa-save"></i> Create Blog Slider Item
                         </button>
                     </div>
 

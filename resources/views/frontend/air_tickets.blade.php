@@ -2,7 +2,7 @@
 
 @section('content')
 <section class="hero-wrap hero-wrap-2"
-  style="background-image: url('images/bg_6.jpg'); min-height: 85vh; position: relative;">
+  style="background-image: url('{{ $airTicketsBanner && $airTicketsBanner->banner_image ? \Illuminate\Support\Facades\Storage::url($airTicketsBanner->banner_image) : asset('images/hero-bg-1.jpg') }}'); min-height: 85vh; position: relative;">
   <div class="overlay"></div>
   <div class="container">
     <div class="row no-gutters slider-text align-items-center justify-content-center" style="min-height: 85vh;">
@@ -17,19 +17,22 @@
 </section>
 
 <section class="ftco-section ftco-section--intro bg-white">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-8 text-center ftco-animate">
-        <span class="service-eyebrow">What We Offer</span>
-        <h2 class="service-title">Fly Anywhere, <span class="service-title__accent">Hassle-Free</span></h2>
-        <p class="service-description">
-          We take the stress out of booking air travel. Whether you're planning a business trip, a family holiday,
-          or a solo adventure, our team finds the best routes and fares so you arrive relaxed — before the journey even begins.
-          Enjoy flexible booking, 24/7 support, and competitive prices on thousands of destinations worldwide.
-        </p>
-      </div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center ftco-animate">
+                <span class="service-eyebrow">What We Offer</span>
+
+                @if($airTickets)
+                    <h2 class="service-title">{{ $airTickets->title }}</h2>
+
+                    <p class="service-description">
+                        {{ $airTickets->description }}
+                    </p>
+                @endif
+
+            </div>
+        </div>
     </div>
-  </div>
 </section>
  
 {{-- ═══════════════════════════════════════════
