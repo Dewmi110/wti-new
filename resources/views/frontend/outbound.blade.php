@@ -10,7 +10,7 @@
                 <p class="breadcrumbs"><span class="mr-2"><a href="{{ route('frontend.index') }}">Home <i
                                 class="fa fa-chevron-right"></i></a></span> <span>Tour List <i
                             class="fa fa-chevron-right"></i></span></p>
-                <h1 class="mb-0 bread">Out Bound Tours</h1>
+                <h1 class="mb-0 bread">{{ $type_name }}</h1>
             </div>
         </div>
     </div>

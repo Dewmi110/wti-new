@@ -209,10 +209,7 @@
                         <label class="form-label">Destinations</label>
 
                         <div class="tour-destination-picker">
-                            <button
-                                type="button"
-                                id="destinationsDropdownToggle"
-                                class="destination-dropdown-btn">
+                            <button type="button" id="destinationsDropdownToggle" class="destination-dropdown-btn">
 
                                 <span id="destinationsSelectedText" class="destination-selected-text">
                                     {{ implode(', ', $selectedDestinationNames) ?: 'Select destinations...' }}
@@ -313,6 +310,13 @@
                 </div>
                 <div class="card-body">
                     <div class="form-grid-3">
+                        <div class="form-group">
+                            <label class="form-label">Currency</label>
+                            <select name="currency" class="form-input">
+                                <option value="USD" {{ old('currency', 'USD') == 'USD' ? 'selected' : '' }}>USD</option>
+                                <option value="Rs"  {{ old('currency', 'USD') == 'Rs'  ? 'selected' : '' }}>Rs</option>
+                            </select>
+                        </div>
                         <div class="form-group">
                             <label class="form-label">Price <span class="required">*</span></label>
                             <div class="input-icon-wrap">
@@ -620,6 +624,8 @@
 
 </div> {{-- End page --}}
 
+<link rel="stylesheet" href="{{ asset('backend-asset/css/single-tour.css') }}">
+
 {{-- ── SCRIPTS ── --}}
 <script>
     // Banner preview
@@ -719,445 +725,11 @@
         itineraryIndex++;
     }
 
-    // Destinations dropdown toggle
-    // document.getElementById('destinationsDropdownToggle')?.addEventListener('click', function () {
-    //     const menu = document.getElementById('destinationsDropdownMenu');
-    //     menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
-    // });
-    // document.addEventListener('click', function (e) {
-    //     if (!e.target.closest('.tour-destination-picker')) {
-    //         const menu = document.getElementById('destinationsDropdownMenu');
-    //         if (menu) menu.style.display = 'none';
-    //     }
-    // });
 </script>
 
-@endsection
-
-<style>
-    /* Destination Multi Select */
-.tour-destination-picker {
-    position: relative;
-    width: 100%;
-}
-
-.destination-dropdown-btn {
-    width: 100%;
-    height: 46px;
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm);
-    background: #fff;
-    padding: 0 14px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-    transition: all .2s ease;
-    text-align: left;
-}
-
-.destination-dropdown-btn:hover {
-    border-color: var(--purple);
-}
-
-.destination-dropdown-btn.active {
-    border-color: var(--purple);
-    box-shadow: 0 0 0 3px rgba(108, 92, 231, .12);
-}
-
-.destination-selected-text {
-    flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    color: var(--text-muted);
-    font-size: 14px;
-}
-
-.destination-dropdown-icon {
-    font-size: 11px;
-    color: var(--text-muted);
-    transition: transform .2s ease;
-}
-
-.destination-dropdown-btn.active .destination-dropdown-icon {
-    transform: rotate(180deg);
-}
-
-.destination-dropdown-menu {
-    display: none;      /* hidden by default */
-    position: absolute;
-    top: calc(100% + 6px);
-    left: 0;
-    right: 0;
-    z-index: 200;
-    background: #fff;
-    border: 1.5px solid var(--purple);
-    border-radius: var(--radius-sm);
-    max-height: 280px;
-    overflow-y: auto;
-    box-shadow: 0 12px 30px rgba(108, 92, 231, .15);
-}
-
-.destination-dropdown-menu.show {
-    display: block;
-}
-
-.destination-option {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 11px 14px;
-    cursor: pointer;
-    transition: background .15s ease;
-    border-bottom: 1px solid #f1f3f5;
-}
-
-.destination-option:last-child {
-    border-bottom: none;
-}
-
-.destination-option:hover {
-    background: rgba(108, 92, 231, .06);
-}
-
-.destination-option input[type="checkbox"] {
-    accent-color: var(--purple);
-    width: 16px;
-    height: 16px;
-}
-
-.destination-option span {
-    font-size: 14px;
-    color: var(--text-color);
-}
-
-/* Selected destination tags */
-.destination-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-}
-
-.destination-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(108, 92, 231, .12);
-    color: var(--purple);
-    border-radius: 20px;
-    padding: 4px 10px;
-    font-size: 12px;
-    font-weight: 500;
-}
-
-    .tour-destination-picker .destination-select-toggle {
-        min-height: 48px;
-        padding: 0.75rem 1rem;
-        border: 1px solid #d2d6da;
-        border-radius: 0.75rem;
-        background-color: #fff;
-        box-shadow: none;
-    }
-
-    .tour-destination-picker .destination-select-toggle:focus,
-    .tour-destination-picker .destination-select-toggle:focus-visible {
-        border-color: #5e72e4;
-        box-shadow: 0 0 0 3px rgba(94, 114, 228, 0.12);
-        outline: none;
-    }
-
-    /* .destination-dropdown-menu {
-        display: none;
-        z-index: 1080;
-        border-radius: 0.875rem;
-        border: 1px solid #e9ecef;
-        box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.12);
-    } */
-
-    .destination-dropdown-menu.is-open {
-        display: block !important;
-    }
-
-    .destination-dropdown-menu .custom-control {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        padding: 0.7rem 1rem;
-        margin-bottom: 0;
-    }
-
-    .destination-dropdown-menu .custom-control:hover {
-        background: #f8f9fa;
-    }
-
-    .destination-search-wrap {
-        position: sticky;
-        top: 0;
-        z-index: 1;
-        padding: 0.75rem;
-        background: #fff;
-        border-bottom: 1px solid #eef1f4;
-    }
-
-    .destination-search-input {
-        width: 100%;
-        border: 1px solid #d2d6da;
-        border-radius: 0.6rem;
-        padding: 0.45rem 0.75rem;
-        font-size: 0.875rem;
-    }
-
-    .destination-search-input:focus {
-        border-color: #5e72e4;
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(94, 114, 228, 0.12);
-    }
-
-    .destination-options-list {
-        max-height: 220px;
-        overflow-y: auto;
-    }
-
-    .destination-empty-message {
-        padding: 0.65rem 1rem;
-        font-size: 0.85rem;
-        color: #8392ab;
-    }
-
-    .feature-picker {
-        position: relative;
-    }
-
-    .feature-search-input {
-        min-height: 48px;
-    }
-
-    .feature-suggestions {
-        position: absolute;
-        top: calc(100% + 0.5rem);
-        left: 0;
-        right: 0;
-        display: none;
-        max-height: 320px;
-        overflow-y: auto;
-        border: 1px solid #e9ecef;
-        border-radius: 0.9rem;
-        background: #fff;
-        box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.12);
-        z-index: 1085;
-    }
-
-    .feature-suggestion-item {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        gap: 0.85rem;
-        padding: 0.8rem 1rem;
-        border: 0;
-        background: #fff;
-        text-align: left;
-    }
-
-    .feature-suggestion-item:hover,
-    .feature-suggestion-item:focus {
-        background: #f8f9fa;
-        outline: none;
-    }
-
-    .feature-suggestion-icon,
-    .feature-card-icon {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 2.5rem;
-        height: 2.5rem;
-        border-radius: 0.85rem;
-        background: rgba(94, 114, 228, 0.12);
-        color: #5e72e4;
-        flex-shrink: 0;
-    }
-
-    .feature-suggestion-emoji,
-    .feature-card-icon {
-        font-size: 1.45rem;
-        line-height: 1;
-    }
-
-    .feature-suggestion-label,
-    .feature-card-title {
-        font-weight: 600;
-        color: #344767;
-    }
-
-    .feature-suggestion-subtext {
-        font-size: 0.78rem;
-        color: #8392ab;
-    }
-
-    .feature-suggestion-empty,
-    .feature-selected-empty {
-        padding: 0.85rem 1rem;
-        font-size: 0.875rem;
-        color: #8392ab;
-    }
-
-    .feature-selected-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-        gap: 0.85rem;
-    }
-
-    .feature-card {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1rem;
-        padding: 0.9rem 1rem;
-        border: 1px solid #e9ecef;
-        border-radius: 1rem;
-        background: #fff;
-        box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.05);
-    }
-
-    .feature-card-main {
-        display: flex;
-        align-items: center;
-        gap: 0.85rem;
-        min-width: 0;
-    }
-
-    .feature-card-text {
-        min-width: 0;
-    }
-
-    .feature-card-text .feature-suggestion-subtext {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .feature-card-remove {
-        border: 0;
-        background: transparent;
-        color: #f5365c;
-        font-size: 0.95rem;
-        line-height: 1;
-    }
-
-    .feature-card-remove:hover {
-        color: #d81b60;
-    }
-
-    .tour-upload-trigger {
-        position: relative;
-        display: block;
-        padding: 1rem 1.15rem;
-        border: 1px dashed #ced4da;
-        border-radius: 1rem;
-        background: linear-gradient(180deg, #ffffff 0%, #fbfcfe 100%);
-        cursor: pointer;
-        transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
-    }
-
-    .tour-upload-trigger:hover {
-        border-color: #5e72e4;
-        box-shadow: 0 0.75rem 1.5rem rgba(94, 114, 228, 0.08);
-        transform: translateY(-1px);
-    }
-
-    .tour-upload-input {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        opacity: 0;
-        cursor: pointer;
-    }
-
-    .tour-upload-icon {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 3.25rem;
-        height: 3.25rem;
-        border-radius: 0.95rem;
-        background: rgba(94, 114, 228, 0.12);
-        color: #5e72e4;
-        font-size: 1.2rem;
-        flex-shrink: 0;
-    }
-
-    .tour-upload-icon-gallery {
-        background: rgba(45, 206, 137, 0.12);
-        color: #2dce89;
-    }
-
-    .tour-upload-title {
-        font-weight: 600;
-        color: #344767;
-    }
-
-    .tour-upload-hint {
-        color: #8392ab;
-        font-size: 0.875rem;
-    }
-
-    .tour-preview-card {
-        min-height: 180px;
-        border: 1px solid #e9ecef;
-        border-radius: 1rem;
-        background: #f8f9fa;
-        overflow: hidden;
-    }
-
-    .tour-preview-card img {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .tour-preview-empty {
-        min-height: 180px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .tour-preview-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 1rem;
-    }
-
-    .tour-preview-tile {
-        border: 1px solid #e9ecef;
-        border-radius: 1rem;
-        overflow: hidden;
-        background: #fff;
-        box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.05);
-    }
-
-    .tour-preview-tile .tour-preview-thumb {
-        width: 100%;
-        aspect-ratio: 4 / 3;
-        object-fit: cover;
-        display: block;
-    }
-
-    .tour-preview-meta {
-        padding: 0.75rem;
-        font-size: 0.8rem;
-        color: #8392ab;
-        word-break: break-word;
-    }
-</style>
-
 <script>
-    let idx = 1;
-    let highlightIdx = {{ count($highlightActivities) }};
+    // let idx = 1;
+    // let highlightIdx = {{ count($highlightActivities) }};
     let selectedDestinationIds = @json($selectedDestinationIds);
     const destinationsByCountryUrlTemplate = @json(route('admin.countries.destinations', ['id' => '__COUNTRY__']));
     const initialDestinations = @json(
@@ -1165,17 +737,7 @@
             return [
                 'id' => $destination -> id,
                     'name' => $destination -> name,
-        ];
-    }) -> values()
-);
-
-    const destinationBtn = document.getElementById('destinationsDropdownToggle');
-    const destinationMenu = document.getElementById('destinationsDropdownMenu');
-
-    destinationBtn.addEventListener('click', () => {
-        destinationMenu.classList.toggle('show');
-        destinationBtn.classList.toggle('active');
-    });
+            ];}) -> values());
 
     function getDestinationMenu() {
         return document.getElementById('destinationsDropdownMenu');
@@ -1487,25 +1049,22 @@
         const menu = getDestinationMenu();
         const toggle = getDestinationToggle();
 
-        if (!menu) {
-            return;
-        }
+        if (!menu) return;
 
-        menu.classList.toggle('is-open', isVisible);
+        menu.classList.toggle('show', isVisible);      // ← was 'is-open'
+        menu.classList.toggle('is-open', isVisible);   // keep if needed elsewhere
 
         if (toggle) {
+            toggle.classList.toggle('active', isVisible);
             toggle.setAttribute('aria-expanded', isVisible ? 'true' : 'false');
         }
     }
 
     function toggleDestinationMenu() {
         const menu = getDestinationMenu();
+        if (!menu) return;
 
-        if (!menu) {
-            return;
-        }
-
-        setDestinationMenuVisibility(!menu.classList.contains('is-open'));
+        setDestinationMenuVisibility(!menu.classList.contains('show')); // ← was 'is-open'
     }
 
     function createPreviewImage(file, className) {
@@ -1677,57 +1236,18 @@
         }
     }
 
-    function addItinerary() {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'row itinerary-row mb-3';
-        wrapper.innerHTML = `
-        <div class="col-md-2">
-            <div class="input-group input-group-outline is-filled">
-                <label class="form-label">Day</label>
-                <input type="number" name="itineraries[${idx}][day]" class="form-control">
-            </div>
-        </div>
-        <div class="col-md-10">
-            <div class="input-group input-group-outline is-filled">
-                <label class="form-label">Description</label>
-                <textarea name="itineraries[${idx}][description]" class="form-control" rows="2"></textarea>
-            </div>
-        </div>
-    `;
-        document.getElementById('itineraries').appendChild(wrapper);
-        idx++;
-    }
+    // function removeHighlightActivity(button) {
+    //     const row = button.closest('.highlight-activity-row');
+    //     const container = document.getElementById('highlight-activities');
 
-    function addHighlightActivity() {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'row highlight-activity-row mb-3 align-items-start';
-        wrapper.innerHTML = `
-        <div class="col-md-11">
-            <div class="input-group input-group-outline is-filled">
-                <label class="form-label">Point</label>
-                <input type="text" name="highlight_activities[${highlightIdx}]" class="form-control">
-            </div>
-        </div>
-        <div class="col-md-1 d-flex align-items-center pt-2">
-            <button type="button" class="btn btn-link text-danger p-0" onclick="removeHighlightActivity(this)">Remove</button>
-        </div>
-    `;
-        document.getElementById('highlight-activities').appendChild(wrapper);
-        highlightIdx++;
-    }
+    //     if (row) {
+    //         row.remove();
+    //     }
 
-    function removeHighlightActivity(button) {
-        const row = button.closest('.highlight-activity-row');
-        const container = document.getElementById('highlight-activities');
-
-        if (row) {
-            row.remove();
-        }
-
-        if (container && container.querySelectorAll('.highlight-activity-row').length === 0) {
-            addHighlightActivity();
-        }
-    }
+    //     if (container && container.querySelectorAll('.highlight-activity-row').length === 0) {
+    //         addHighlightActivity();
+    //     }
+    // }
 
     document.addEventListener('DOMContentLoaded', function () {
         const countrySelect = document.getElementById('country-select');
@@ -1813,3 +1333,5 @@
         }
     });
 </script>
+
+@endsection

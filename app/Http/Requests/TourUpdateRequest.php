@@ -45,6 +45,10 @@ class TourUpdateRequest extends FormRequest
             'itineraries.*.day' => 'required_with:itineraries|integer|min:1',
             'itineraries.*.description' => 'required_with:itineraries|string',
             'visibility' => 'nullable|in:0,1',
+            'currency'     => 'nullable', 'string', 'in:USD,Rs',
+            'os_currency'  => 'nullable', 'string', 'in:USD,Rs',
+            'os_price'     => 'nullable', 'numeric', 'min:0',
+            'os_visibility'=> 'nullable', 'in:0,1',
         ];
     }
 }

@@ -57,31 +57,35 @@ class FrontendController extends Controller
     }
 
     public function visit_to_srilanka()
-{
-    $tourType = TourType::where('type_name', 'Visit to Sri Lanka')->first();
+    {
+        $tourType = TourType::find(1);
+        
+        $coverImageUrl = $tourType && $tourType->banner_image
+            ? \Illuminate\Support\Facades\Storage::url($tourType->banner_image)
+            : asset('images/hero-bg-1.jpg');
+
+        $type_name = $tourType->type_name ?? 'Tour List';
     
-    $coverImageUrl = $tourType && $tourType->banner_image
-        ? \Illuminate\Support\Facades\Storage::url($tourType->banner_image)
-        : asset('images/hero-bg-1.jpg');
- 
-    $tours = Tour::query()
-        ->whereHas('countryModel', static function ($query): void {
-            $query->where('t_type', 1);
-        })
-        ->with(['countryModel', 'images'])
-        ->where('status', 1)
-        ->paginate(9);
- 
-    return view('frontend.inbound', compact('tours', 'coverImageUrl'));
-}
+        $tours = Tour::query()
+            ->whereHas('countryModel', static function ($query): void {
+                $query->where('t_type', 1);
+            })
+            ->with(['countryModel', 'images'])
+            ->where('status', 1)
+            ->paginate(9);
+    
+        return view('frontend.inbound', compact('tours', 'coverImageUrl', 'type_name')); 
+    }
 
     public function outbound()
     {
-        $tourType = TourType::where('type_name', 'Outbound')->first();
+        $tourType = TourType::find(2);
     
     $coverImageUrl = $tourType && $tourType->banner_image
         ? \Illuminate\Support\Facades\Storage::url($tourType->banner_image)
         : asset('images/hero-bg-1.jpg');
+    
+    $type_name = $tourType->type_name ?? 'Tour List';
 
     $tours = Tour::query()
         ->whereHas('countryModel', static function ($query): void {
@@ -91,7 +95,7 @@ class FrontendController extends Controller
         ->where('status', 1)
         ->paginate(9);
 
-    return view('frontend.outbound', compact('tours', 'coverImageUrl'));
+    return view('frontend.outbound', compact('tours', 'coverImageUrl', 'type_name'));
     }
 
     public function singleTour(Tour $tour)
