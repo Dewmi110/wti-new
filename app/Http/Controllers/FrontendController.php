@@ -14,6 +14,8 @@ use App\Models\Corporate;
 use App\Models\BlogBanner;
 use App\Models\ImageSlider;
 use App\Models\BlogSlider;
+use App\Models\Booking;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -102,8 +104,9 @@ class FrontendController extends Controller
         $displayPrice = $tour->discount_price ?: $tour->price;
         $locationName = optional($tour->countryModel)->name ?? 'Sri Lanka';
         $features = is_array($tour->features) ? $tour->features : [];
+        $destinations  = Country::where('status', 1)->orderBy('name')->get();
 
-        return view('frontend.single_tour', compact('tour', 'coverImageUrl', 'displayPrice', 'features', 'locationName'));
+        return view('frontend.single_tour', compact('tour', 'coverImageUrl', 'displayPrice', 'features', 'locationName', 'destinations'));
     }
 
     public function blog()
@@ -201,4 +204,24 @@ class FrontendController extends Controller
 
         return redirect()->back()->with('success', 'Booking request submitted! Please check your email for confirmation.');
     }
+
+    public function storeBooking(Request $request)
+{
+    $request->validate([
+        'tour_id'          => 'required|exists:tours,id',
+        'full_name'        => 'required|string|max:255',
+        'email'            => 'required|email|max:255',
+        'phone'            => 'required|string|max:30',
+        'travelers'        => 'required|integer|min:1',
+        'travel_date'      => 'nullable|date|after_or_equal:today',
+        'special_requests' => 'nullable|string|max:1000',
+    ]);
+
+    Booking::create($request->only([
+        'tour_id', 'full_name', 'email', 'phone',
+        'travelers', 'travel_date', 'special_requests',
+    ]));
+
+    return redirect()->back()->with('booking_success', true);
+}
 }

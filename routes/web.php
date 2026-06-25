@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\BlogSliderController;
 use App\Http\Controllers\Admin\ContactBannerController;
 use App\Http\Controllers\Admin\ServiceBannerController;
 use App\Http\Controllers\Admin\ServiceController;
+use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Middleware\AdminAuth;
@@ -36,6 +37,7 @@ Route::controller(FrontendController::class)->group(function () {
     Route::get('/visa-services', 'visaServices')->name('frontend.visa_services');
     Route::get('/mice-tours', 'miceTours')->name('frontend.mice_tours');
     Route::get('/corporate', 'corporate')->name('frontend.corporate');
+    Route::post('/booking', 'storeBooking')->name('frontend.booking.store');
     Route::get('/contact', 'contact')->name('frontend.contact');
 });
 
@@ -109,5 +111,10 @@ Route::controller(FrontendController::class)->group(function () {
             Route::get('/create', 'createBanner')->name('create');
             Route::post('/', 'storeBanner')->name('store');
         });
+//Booking Routes
+        Route::get('bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
+        Route::patch('bookings/{booking}/status', [BookingController::class, 'updateStatus'])->name('bookings.updateStatus');
+        Route::delete('bookings/{booking}', [BookingController::class, 'destroy'])->name('bookings.destroy');
+        Route::resource('bookings', BookingController::class)->only(['index']);
     });
 

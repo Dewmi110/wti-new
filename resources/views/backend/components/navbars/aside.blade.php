@@ -10,6 +10,7 @@
   $isUsersActive = request()->routeIs('admin.users.*');
   $isImageSliderActive = request()->routeIs('admin.image-sliders.*');
   $isServicesActive = request()->routeIs('admin.services.*');
+   $isBookingsActive = request()->routeIs('admin.bookings.*');
 @endphp
 
 <aside class="sidebar">
@@ -51,6 +52,10 @@
     <span class="nav-icon"><i class="fas fa-blog"></i></span>
     Blogs
   </a>
+  <a class="nav-item {{ $isBookingsActive ? 'active' : '' }}" href="{{ route('admin.bookings.index') }}">
+    <span class="nav-icon"><i class="fas fa-calendar-check"></i></span>
+    Bookings
+</a>
   {{-- User Management — super_admin and admin only --}}
   @if(in_array(Auth::user()->role?->slug, ['super_admin', 'admin']))
   <a class="nav-item {{ $isUsersActive ? 'active' : '' }}" href="{{ route('admin.users.index') }}">
