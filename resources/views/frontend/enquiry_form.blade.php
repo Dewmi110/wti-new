@@ -26,6 +26,8 @@
                         <option>Corporate Travel</option>
                         <option>Air Tickets</option>
                         <option>Visa Services</option>
+                        <option>Corporate Travel</option>
+                        <option>Ancillaries</option>
                     </select>
                     <i class="fa fa-chevron-down cf-select-icon"></i>
                 </div>
@@ -132,9 +134,19 @@
 <script>
     (function () {
         'use strict';
-        var PUBLIC_KEY = 'AEtk6G0jza9YlVh0I';
-        var SERVICE_ID = 'service_hntkmgc';
-        var TEMPLATE_ID = 'template_8uuaccs';
+        var PUBLIC_KEY  = 'AEtk6G0jza9YlVh0I';
+        var SERVICE_ID  = 'service_hntkmgc';
+        var TEMPLATE_ID = 'template_8uuaccs'; // your single existing template
+
+        var EMAIL_MAP = {
+            'Visit to Sri Lanka': 'inbound@wti.lk',
+            'Outbound Tours':     'outboundtours@wti.lk',
+            'MICE Tours':         'hello@wti.lk',
+            'Corporate Travel':   'hello@wti.lk',
+            'Air Tickets':        'ticketing@wti.lk',
+            'Visa Services':      'visa@wti.lk',
+            'Ancillaries':        'hello@wti.lk',
+        };
 
         emailjs.init({ publicKey: PUBLIC_KEY });
 
@@ -167,22 +179,32 @@
         g('cf-submit').addEventListener('click', function () {
             if (!validate()) return;
 
+            var selectedService = v('cf-service');
+            var toEmail = EMAIL_MAP[selectedService];
+
+            if (!toEmail) {
+                g('cf-error').style.display = 'block';
+                console.error('No email mapped for service:', selectedService);
+                return;
+            }
+
             g('cf-btn-text').style.display = 'none';
             g('cf-btn-loading').style.display = 'inline';
             g('cf-submit').disabled = true;
 
             var params = {
-                service_type: v('cf-service'),
-                travel_date: v('cf-date'),
-                destination: v('cf-destination'),
-                num_people: v('cf-people'),
-                full_name: v('cf-name'),
-                city: v('cf-city'),
-                email: v('cf-email'),
-                phone: v('cf-phone'),
-                whatsapp: v('cf-whatsapp') || 'Not provided',
-                comments: v('cf-comments') || 'None',
-                reply_to: v('cf-email'),
+                to_email:     toEmail,          // ← drives the recipient
+                service_type: selectedService,
+                travel_date:  v('cf-date'),
+                destination:  v('cf-destination'),
+                num_people:   v('cf-people'),
+                full_name:    v('cf-name'),
+                city:         v('cf-city'),
+                email:        v('cf-email'),
+                phone:        v('cf-phone'),
+                whatsapp:     v('cf-whatsapp') || 'Not provided',
+                comments:     v('cf-comments') || 'None',
+                reply_to:     v('cf-email'),
             };
 
             emailjs.send(SERVICE_ID, TEMPLATE_ID, params)
@@ -190,10 +212,10 @@
                     g('cf-success').style.display = 'block';
                     g('cf-error').style.display = 'none';
                     ['cf-service', 'cf-date', 'cf-destination', 'cf-people',
-                        'cf-name', 'cf-city', 'cf-email', 'cf-phone',
-                        'cf-whatsapp', 'cf-comments'].forEach(function (id) {
-                            var el = g(id); if (el) el.value = '';
-                        });
+                     'cf-name', 'cf-city', 'cf-email', 'cf-phone',
+                     'cf-whatsapp', 'cf-comments'].forEach(function (id) {
+                        var el = g(id); if (el) el.value = '';
+                    });
                     g('cf-success').scrollIntoView({ behavior: 'smooth', block: 'center' });
                 })
                 .catch(function (err) {

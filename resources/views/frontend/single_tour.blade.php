@@ -367,12 +367,25 @@ MAIN TWO-COLUMN LAYOUT
                 <h4 class="td-sidebar-section-title">Image Gallery</h4>
                 <p class="td-sidebar-section-sub">Explore the beautiful destinations on this tour.</p>
                 <div class="td-related-grid">
-                    @foreach (array_slice($tourImages, 0, 4) as $img)
-                    <img src="{{ $img }}" alt="Related" class="td-related-img">
+                    @foreach (array_slice($tourImages, 0, 4) as $index => $img)
+                    <div class="td-related-img-wrap" onclick="openLightbox('{{ $img }}', {{ $index }})">
+                        <img src="{{ $img }}" alt="Related" class="td-related-img">
+                        <div class="td-related-overlay"><i class="fa fa-search-plus"></i></div>
+                    </div>
                     @endforeach
                 </div>
             </div>
             @endif
+
+            {{-- ── Lightbox ── --}}
+            <div id="sc-lightbox" class="sc-lightbox-backdrop" onclick="closeLightbox()">
+                <button class="sc-lightbox-close" onclick="closeLightbox()">&times;</button>
+                <button class="sc-lightbox-prev" onclick="event.stopPropagation(); changeImage(-1)">&#10094;</button>
+                <button class="sc-lightbox-next" onclick="event.stopPropagation(); changeImage(1)">&#10095;</button>
+                <div class="sc-lightbox-content" onclick="event.stopPropagation()">
+                    <img id="sc-lightbox-img" src="" alt="Tour Image">
+                </div>
+            </div>
 
             {{-- ── Tour Details ── --}}
             <div class="td-card td-tour-details-card">
@@ -490,6 +503,83 @@ STYLES
 ============================================================ --}}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
 <style>
+    /* Thumbnail wrap */
+.td-related-img-wrap {
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    border-radius: 8px;
+}
+.td-related-img-wrap:hover .td-related-overlay {
+    opacity: 1;
+}
+.td-related-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    color: #fff;
+    font-size: 22px;
+}
+
+/* Lightbox */
+.sc-lightbox-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.88);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+}
+.sc-lightbox-backdrop.sc-active {
+    display: flex !important;
+}
+.sc-lightbox-content img {
+    max-width: 90vw;
+    max-height: 85vh;
+    border-radius: 6px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+    display: block;
+}
+.sc-lightbox-close {
+    position: fixed;
+    top: 18px;
+    right: 28px;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 42px;
+    cursor: pointer;
+    line-height: 1;
+    z-index: 10000;
+}
+.sc-lightbox-prev,
+.sc-lightbox-next {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: #fff;
+    font-size: 28px;
+    padding: 12px 18px;
+    cursor: pointer;
+    border-radius: 4px;
+    z-index: 10000;
+    transition: background 0.2s;
+}
+.sc-lightbox-prev:hover,
+.sc-lightbox-next:hover {
+    background: rgba(255,255,255,0.3);
+}
+.sc-lightbox-prev { left: 16px; }
+.sc-lightbox-next { right: 16px; }
+
     /* ── Reset helpers ── */
     *,
     *::before,
@@ -1363,6 +1453,32 @@ SCRIPTS
 ============================================================ --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 <script>
+    const scImages = @json(array_slice($tourImages, 0, 4));
+    let scCurrentIndex = 0;
+
+    function openLightbox(src, index) {
+        scCurrentIndex = index;
+        document.getElementById('sc-lightbox-img').src = src;
+        document.getElementById('sc-lightbox').classList.add('sc-active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+        document.getElementById('sc-lightbox').classList.remove('sc-active');
+        document.body.style.overflow = '';
+    }
+
+    function changeImage(direction) {
+        scCurrentIndex = (scCurrentIndex + direction + scImages.length) % scImages.length;
+        document.getElementById('sc-lightbox-img').src = scImages[scCurrentIndex];
+    }
+
+    // Close on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') changeImage(-1);
+        if (e.key === 'ArrowRight') changeImage(1);
+    });
     $(document).ready(function () {
         // Gallery carousel
         var $oc = $('#tdCarousel').owlCarousel({
