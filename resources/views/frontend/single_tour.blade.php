@@ -93,7 +93,7 @@ MAIN TWO-COLUMN LAYOUT
 </div>
 
 <!-- Related Tours Section -->
-<section class="ftco-section bg-light">
+{{-- <section class="ftco-section bg-light">
     <div class="container">
         <div class="row mb-5">
             <div class="col-12 text-center">
@@ -108,7 +108,88 @@ MAIN TWO-COLUMN LAYOUT
             </div>
         </div>
     </div>
+</section> --}}
+<section class="ftco-section bg-light">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <h2 style="font-size:32px; font-weight:800; color:#333; margin-bottom:10px;">
+                    More Tours in {{ $locationName }}
+                </h2>
+                <p style="color:#999; font-size:16px;">Explore other amazing tours in the same destination</p>
+            </div>
+        </div>
+
+        @if($relatedTours->isEmpty())
+            <div class="row">
+                <div class="col-12 text-center py-5">
+                    <p style="color:#999;">No other tours available in {{ $locationName }} yet.</p>
+                </div>
+            </div>
+        @else
+            <div class="row">
+                @foreach($relatedTours as $related)
+                @php
+                    $relFeatures = is_array($related->features) ? $related->features : [];
+                @endphp
+                <div class="col-md-3 ftco-animate mb-4">
+                    <div class="tour-card-v3">
+                        <div class="tour-card-v3__img"
+                             style="background-image: url('{{ $related->cover_url }}');"></div>
+                        <div class="tour-card-v3__footer">
+                            <div class="tour-card-v3__footer-inner">
+                                <div class="tour-card-v3__footer-top">
+                                    <div style="min-width:0;">
+                                        <h3 class="tour-card-v3__title">
+                                            <a href="{{ route('frontend.single_tour', $related) }}">
+                                                {{ $related->title }}
+                                            </a>
+                                        </h3>
+                                        <p class="tour-card-v3__subtitle">
+                                            {{ $related->duration }} Nights, {{ $locationName }}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="tour-card-v3__icons">
+                                    <span title="Accommodation"><i class="fa fa-building-o"></i></span>
+                                    <span title="Flights"><i class="fa fa-plane"></i></span>
+                                    <span title="Transport"><i class="fa fa-car"></i></span>
+                                    <span title="WiFi"><i class="fa fa-wifi"></i></span>
+                                </div>
+
+                                <div class="tour-card-v3__details">
+                                    @if(!empty($relFeatures))
+                                        @foreach($relFeatures as $feature)
+                                            @if(!empty($feature['label']))
+                                                <p>- {{ strtoupper($feature['label']) }}</p>
+                                            @endif
+                                        @endforeach
+                                    @else
+                                        <p>No features listed.</p>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="tour-card-v3__bottom">
+                                <div class="tour-card-v3__price-wrap">
+                                    <span class="tour-card-v3__nights">{{ $related->duration }} Nights</span>
+                                    <span class="tour-card-v3__price">
+                                        From {{ $related->currency ?? 'USD' }} {{ number_format((float) $related->display_price, 0) }} PP
+                                    </span>
+                                </div>
+                                <a href="{{ route('frontend.single_tour', $related) }}"
+                                   class="tour-card-v3__btn">VIEW DEAL</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        @endif
+    </div>
 </section>
+
 
 {{-- Booking Modal --}}
 @include('frontend.components.booking_modal')

@@ -32,9 +32,9 @@
                 </div>
                 <div class="td-package-header__price">
                     @if ($tour->discount_price)
-                    <div class="td-price__old">${{ number_format((float)$tour->price, 0) }}</div>
+                    <div class="td-price__old">{{ $tour->currency }} {{ number_format((float)$tour->price, 0) }}</div>
                     @endif
-                    <div class="td-price__main">${{ number_format((float)$displayPrice, 0) }}</div>
+                    <div class="td-price__main">{{ $tour->currency }} {{ number_format((float)$displayPrice, 0) }}</div>
                     <div class="td-price__label">per person</div>
                 </div>
             </div>

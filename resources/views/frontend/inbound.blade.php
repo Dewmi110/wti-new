@@ -84,8 +84,7 @@
                                 <div class="tour-card-v3__bottom">
                                     <div class="tour-card-v3__price-wrap">
                                         <span class="tour-card-v3__nights">{{ $tour->duration }} Nights</span>
-                                        <span class="tour-card-v3__price">From $ {{ number_format((float) $displayPrice,
-                                            0) }} PP</span>
+                                        <span class="tour-card-v3__price">From {{ $tour->currency }} {{ number_format((float) $displayPrice, 0) }} PP</span>
                                     </div>
                                     <a href="{{ route('frontend.single_tour', $tour) }}" class="tour-card-v3__btn">VIEW
                                         DEAL</a>

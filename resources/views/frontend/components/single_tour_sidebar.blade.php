@@ -50,7 +50,7 @@
                 @endif
                 <div class="td-detail-row">
                     <span class="td-detail-label"><i class="fa fa-dollar"></i> Price</span>
-                    <span class="td-detail-value td-detail-value--price">${{ number_format((float)$displayPrice, 0) }} /
+                    <span class="td-detail-value td-detail-value--price">{{ $tour->currency }} {{ number_format((float)$displayPrice, 0) }} /
                         person</span>
                 </div>
 

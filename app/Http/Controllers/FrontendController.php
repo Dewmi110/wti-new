@@ -31,9 +31,9 @@ class FrontendController extends Controller
             ->get();
 
         $tours = Tour::with(['category', 'type', 'theme', 'countryModel', 'images'])
-            ->latest()
             ->where('status', 1)
             ->where('visibility', 1)
+            ->inRandomOrder()
             ->take(4)
             ->get();
 
@@ -103,14 +103,36 @@ class FrontendController extends Controller
         $tour->load(['images', 'itineraries']);
 
         $coverImagePath = $tour->banner_img_path ?: $tour->images->first()?->img_path;
-        $coverImageUrl = $coverImagePath ? \Illuminate\Support\Facades\Storage::url($coverImagePath) :
-        asset('images/hero-bg-1.jpg');
-        $displayPrice = $tour->discount_price ?: $tour->price;
-        $locationName = optional($tour->countryModel)->name ?? 'Sri Lanka';
-        $features = is_array($tour->features) ? $tour->features : [];
+        $coverImageUrl = $coverImagePath
+            ? \Illuminate\Support\Facades\Storage::url($coverImagePath)
+            : asset('images/hero-bg-1.jpg');
+
+        $displayPrice  = $tour->discount_price ?: $tour->price;
+        $locationName  = optional($tour->countryModel)->name ?? 'Sri Lanka';
+        $features      = is_array($tour->features) ? $tour->features : [];
         $destinations  = Country::where('status', 1)->orderBy('name')->get();
 
-        return view('frontend.single_tour', compact('tour', 'coverImageUrl', 'displayPrice', 'features', 'locationName', 'destinations'));
+        // Related tours: same country, excluding current, max 3
+        $relatedTours = Tour::where('country', $tour->country)
+            ->where('id', '!=', $tour->id)
+            ->where('status', 1)
+            ->with('images')
+            ->latest()
+            ->take(4)
+            ->get()
+            ->map(function ($related) {
+                $path = $related->banner_img_path ?: $related->images->first()?->img_path;
+                $related->cover_url = $path
+                    ? \Illuminate\Support\Facades\Storage::url($path)
+                    : asset('images/hero-bg-1.jpg');
+                $related->display_price = $related->discount_price ?: $related->price;
+                return $related;
+            });
+
+        return view('frontend.single_tour', compact(
+            'tour', 'coverImageUrl', 'displayPrice', 'features',
+            'locationName', 'destinations', 'relatedTours'
+        ));
     }
 
     public function blog()
