@@ -90,43 +90,6 @@
           </div>
         </div>
       </div>
-
-    
-      {{-- <div class="col-md-4 mb-4">
-        <div class="sc-wrap">
-          <div class="sc-inner">
-            <div class="sc-icon-box"><i class="fa fa-clock-o"></i></div>
-            <h3 class="sc-title">Last-Minute Deals</h3>
-            <p class="sc-text">Spontaneous traveller? We track flash sales and unsold seats daily, so you get the best price even when you book 24 hours before departure.</p>
-            <a href="#" class="sc-link">See Today's Deals <i class="fa fa-arrow-right"></i></a>
-          </div>
-        </div>
-      </div>
-
-     
-      <div class="col-md-4 mb-4">
-        <div class="sc-wrap">
-          <div class="sc-inner">
-            <div class="sc-icon-box"><i class="fa fa-users"></i></div>
-            <h3 class="sc-title">Group Bookings</h3>
-            <p class="sc-text">Travelling with 10 or more? Our group specialists negotiate block-rate seats, manage name changes, and keep your whole party together.</p>
-            <a href="#" class="sc-link">Request a Quote <i class="fa fa-arrow-right"></i></a>
-          </div>
-        </div>
-      </div>
-
-      
-      <div class="col-md-4 mb-4">
-        <div class="sc-wrap">
-          <div class="sc-inner">
-            <div class="sc-icon-box"><i class="fa fa-shield"></i></div>
-            <h3 class="sc-title">Flexible & Refundable</h3>
-            <p class="sc-text">Plans change. We offer fully refundable fares and free date-change options so you can book with confidence no matter what comes up.</p>
-            <a href="#" class="sc-link">Check Policy <i class="fa fa-arrow-right"></i></a>
-          </div>
-        </div>
-      </div> --}}
-
     </div>{{-- /.row --}}
   </div>
 </section>
@@ -147,30 +110,44 @@
         <div class="partner-slider owl-carousel">
 
           <div class="partner-logo">
-            <img src="{{ asset('images/airlines/emirates.png') }}" alt="Emirates">
+            <img src="{{ asset('images/country/aus.webp') }}" alt="Emirates">
           </div>
           <div class="partner-logo">
-            <img src="{{ asset('images/airlines/qatar.png') }}" alt="Qatar Airways">
+            <img src="{{ asset('images/country/canada.svg') }}" alt="Qatar Airways">
           </div>
           <div class="partner-logo">
-            <img src="{{ asset('images/airlines/singapore.png') }}" alt="Singapore Airlines">
+            <img src="{{ asset('images/country/india.webp') }}" alt="Singapore Airlines">
           </div>
           <div class="partner-logo">
-            <img src="{{ asset('images/airlines/etihad.png') }}" alt="Etihad Airways">
+            <img src="{{ asset('images/country/iran.png') }}" alt="Etihad Airways">
           </div>
           <div class="partner-logo">
-            <img src="{{ asset('images/airlines/lufthansa.png') }}" alt="Lufthansa">
+            <img src="{{ asset('images/country/kuwait.png') }}" alt="Lufthansa">
           </div>
           <div class="partner-logo">
-            <img src="{{ asset('images/airlines/turkish.png') }}" alt="Turkish Airlines">
+            <img src="{{ asset('images/country/oman.png') }}" alt="Turkish Airlines">
           </div>
           <div class="partner-logo">
-            <img src="{{ asset('images/airlines/british.png') }}" alt="British Airways">
+            <img src="{{ asset('images/country/qatar.svg') }}" alt="British Airways">
           </div>
           <div class="partner-logo">
-            <img src="{{ asset('images/airlines/airasia.png') }}" alt="AirAsia">
+            <img src="{{ asset('images/country/saudi.webp') }}" alt="AirAsia">
           </div>
-
+          <div class="partner-logo">
+            <img src="{{ asset('images/country/Singapore.png') }}" alt="AirAsia">
+          </div>
+          <div class="partner-logo">
+            <img src="{{ asset('images/country/turkey.webp') }}" alt="AirAsia">
+          </div>
+          <div class="partner-logo">
+            <img src="{{ asset('images/country/uae.png') }}" alt="AirAsia">
+          </div>
+          <div class="partner-logo">
+            <img src="{{ asset('images/country/uk.webp') }}" alt="AirAsia">
+          </div>
+          <div class="partner-logo">
+            <img src="{{ asset('images/country/usa.webp') }}" alt="AirAsia">
+          </div>
         </div>
       </div>
     </div>

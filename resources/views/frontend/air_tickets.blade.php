@@ -135,23 +135,23 @@
             <img src="{{ asset('images/airlines/qatar.png') }}" alt="Qatar Airways">
           </div>
           <div class="partner-logo">
-            <img src="{{ asset('images/airlines/singapore.png') }}" alt="Singapore Airlines">
+            <img src="{{ asset('images/airlines/aa.jpeg') }}" alt="Singapore Airlines">
           </div>
           <div class="partner-logo">
-            <img src="{{ asset('images/airlines/etihad.png') }}" alt="Etihad Airways">
+            <img src="{{ asset('images/airlines/logo.png') }}" alt="Etihad Airways">
           </div>
           <div class="partner-logo">
-            <img src="{{ asset('images/airlines/lufthansa.png') }}" alt="Lufthansa">
+            <img src="{{ asset('images/airlines/logolot.png') }}" alt="Lufthansa">
           </div>
           <div class="partner-logo">
-            <img src="{{ asset('images/airlines/turkish.png') }}" alt="Turkish Airlines">
+            <img src="{{ asset('images/airlines/slair.png') }}" alt="Turkish Airlines">
           </div>
           <div class="partner-logo">
-            <img src="{{ asset('images/airlines/british.png') }}" alt="British Airways">
+            <img src="{{ asset('images/airlines/uk.jpeg') }}" alt="British Airways">
           </div>
-          <div class="partner-logo">
+          {{-- <div class="partner-logo">
             <img src="{{ asset('images/airlines/airasia.png') }}" alt="AirAsia">
-          </div>
+          </div> --}}
 
         </div>
       </div>

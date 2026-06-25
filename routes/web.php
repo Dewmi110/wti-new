@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Middleware\AdminAuth;
+use App\Http\View\Composers\SearchComposer;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -27,6 +28,7 @@ use Illuminate\Support\Facades\Route;
 //Frontend routes
 Route::controller(FrontendController::class)->group(function () {
     Route::get('/', 'index')->name('frontend.index');
+    Route::get('/tours/search', 'searchTours')->name('frontend.tours.search');
     Route::get('/visit-to-srilanka', 'visit_to_srilanka')->name('frontend.visit_to_srilanka');
     Route::get('/outbound', 'outbound')->name('frontend.outbound');
     Route::get('/tours/{tour:slug}', 'singleTour')->name('frontend.single_tour');

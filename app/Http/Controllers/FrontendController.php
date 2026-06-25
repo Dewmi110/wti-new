@@ -56,47 +56,137 @@ class FrontendController extends Controller
         return view('frontend.index', compact('destinations', 'tours', 'featured_tours', 'blogs', 'imageSliders'));
     }
 
-    public function visit_to_srilanka()
+    public function searchTours(Request $request)
+    {
+        $tourTypeId = $request->tour_type;
+        $selectedType = TourType::find($tourTypeId);
+        $typeName = $selectedType ? strtolower($selectedType->type_name) : '';
+
+        $params = array_filter([
+            'destination' => $request->destination,
+            'max_price'   => $request->max_price,
+            'tour_type'   => $tourTypeId,
+        ]);
+
+        if (str_contains($typeName, 'inbound') || str_contains($typeName, 'sri lanka')) {
+            return redirect()->route('frontend.visit_to_srilanka', $params);
+        }
+
+        if (str_contains($typeName, 'outbound')) {
+            return redirect()->route('frontend.outbound', $params);
+        }
+
+        // No type / unrecognised — default to inbound
+        return redirect()->route('frontend.visit_to_srilanka', $params);
+    }
+
+    public function visit_to_srilanka(Request $request)
     {
         $tourType = TourType::find(1);
-        
+
         $coverImageUrl = $tourType && $tourType->banner_image
-            ? \Illuminate\Support\Facades\Storage::url($tourType->banner_image)
+            ? Storage::url($tourType->banner_image)
             : asset('images/hero-bg-1.jpg');
 
         $type_name = $tourType->type_name ?? 'Tour List';
-    
-        $tours = Tour::query()
-            ->whereHas('countryModel', static function ($query): void {
-                $query->where('t_type', 1);
-            })
+        $types     = TourType::where('status', 1)->get();
+
+        $query = Tour::query()
+            ->where('t_type', 1)
             ->with(['countryModel', 'images'])
-            ->where('status', 1)
-            ->paginate(9);
-    
-        return view('frontend.inbound', compact('tours', 'coverImageUrl', 'type_name')); 
+            ->where('status', 1);
+
+        if ($request->filled('destination')) {
+            $search = $request->destination;
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                ->orWhereHas('countryModel', fn($q) => $q->where('name', 'like', "%{$search}%"));
+            });
+        }
+
+        if ($request->filled('max_price')) {
+            $query->where('price', '<=', $request->max_price);
+        }
+
+        $tours = $query->latest()->paginate(9)->withQueryString();
+
+        return view('frontend.inbound', compact('tours', 'coverImageUrl', 'type_name', 'types'));
     }
 
-    public function outbound()
+    public function outbound(Request $request)
     {
         $tourType = TourType::find(2);
-    
-    $coverImageUrl = $tourType && $tourType->banner_image
-        ? \Illuminate\Support\Facades\Storage::url($tourType->banner_image)
-        : asset('images/hero-bg-1.jpg');
-    
-    $type_name = $tourType->type_name ?? 'Tour List';
 
-    $tours = Tour::query()
-        ->whereHas('countryModel', static function ($query): void {
-            $query->where('t_type', 2);
-        })
-        ->with(['countryModel', 'images'])
-        ->where('status', 1)
-        ->paginate(9);
+        $coverImageUrl = $tourType && $tourType->banner_image
+            ? Storage::url($tourType->banner_image)
+            : asset('images/hero-bg-1.jpg');
 
-    return view('frontend.outbound', compact('tours', 'coverImageUrl', 'type_name'));
+        $type_name = $tourType->type_name ?? 'Tour List';
+        $types     = TourType::where('status', 1)->get();
+
+        $query = Tour::query()
+            ->where('t_type', 2)
+            ->with(['countryModel', 'images'])
+            ->where('status', 1);
+
+        if ($request->filled('destination')) {
+            $search = $request->destination;
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                ->orWhereHas('countryModel', fn($q) => $q->where('name', 'like', "%{$search}%"));
+            });
+        }
+
+        if ($request->filled('max_price')) {
+            $query->where('price', '<=', $request->max_price);
+        }
+
+        $tours = $query->latest()->paginate(9)->withQueryString();
+
+        return view('frontend.outbound', compact('tours', 'coverImageUrl', 'type_name', 'types'));
     }
+
+    // public function visit_to_srilanka()
+    // {
+    //     $tourType = TourType::find(1);
+        
+    //     $coverImageUrl = $tourType && $tourType->banner_image
+    //         ? \Illuminate\Support\Facades\Storage::url($tourType->banner_image)
+    //         : asset('images/hero-bg-1.jpg');
+
+    //     $type_name = $tourType->type_name ?? 'Tour List';
+    
+    //     $tours = Tour::query()
+    //         ->whereHas('countryModel', static function ($query): void {
+    //             $query->where('t_type', 1);
+    //         })
+    //         ->with(['countryModel', 'images'])
+    //         ->where('status', 1)
+    //         ->paginate(9);
+    
+    //     return view('frontend.inbound', compact('tours', 'coverImageUrl', 'type_name')); 
+    // }
+
+    // public function outbound()
+    // {
+    //     $tourType = TourType::find(2);
+    
+    // $coverImageUrl = $tourType && $tourType->banner_image
+    //     ? \Illuminate\Support\Facades\Storage::url($tourType->banner_image)
+    //     : asset('images/hero-bg-1.jpg');
+    
+    // $type_name = $tourType->type_name ?? 'Tour List';
+
+    // $tours = Tour::query()
+    //     ->whereHas('countryModel', static function ($query): void {
+    //         $query->where('t_type', 2);
+    //     })
+    //     ->with(['countryModel', 'images'])
+    //     ->where('status', 1)
+    //     ->paginate(9);
+
+    // return view('frontend.outbound', compact('tours', 'coverImageUrl', 'type_name'));
+    // }
 
     public function singleTour(Tour $tour)
     {
