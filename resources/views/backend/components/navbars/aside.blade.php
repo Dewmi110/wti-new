@@ -10,7 +10,9 @@
   $isUsersActive = request()->routeIs('admin.users.*');
   $isImageSliderActive = request()->routeIs('admin.image-sliders.*');
   $isServicesActive = request()->routeIs('admin.services.*');
-   $isBookingsActive = request()->routeIs('admin.bookings.*');
+  $isBookingsActive = request()->routeIs('admin.bookings.*');
+  $isProfileActive = request()->routeIs('admin.profile.*');
+
 @endphp
 
 <aside class="sidebar">
@@ -76,6 +78,14 @@
 
   <a class="nav-item {{ $isImageSliderActive ? 'active' : '' }}" href="{{ route('admin.image_sliders.index') }}">
     <span class="nav-icon"><i class="fas fa-laptop"></i></span>
-    Image Slider
+    Image Banners
+  </a>
+
+  {{-- Profile & Account --}}
+  <div class="sidebar-label">Account</div>
+
+  <a class="nav-item {{ request()->routeIs('admin.profile.*') ? 'active' : '' }}" href="{{ route('admin.profile.edit') }}">
+    <span class="nav-icon"><i class="fas fa-user-circle"></i></span>
+    My Profile
   </a>
 </aside>

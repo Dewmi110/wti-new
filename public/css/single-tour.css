@@ -230,6 +230,7 @@
 
     .td-price__main {
         font-size: 30px;
+        text-align: end;
         font-weight: 900;
         color: #DB1A1A;
         line-height: 1;

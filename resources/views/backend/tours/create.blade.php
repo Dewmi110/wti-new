@@ -322,7 +322,7 @@
                             <div class="input-icon-wrap">
                                 <i class="fas fa-dollar-sign input-icon"></i>
                                 <input type="text" name="price"
-                                    class="form-input {{ $errors->has('price') ? 'is-error' : '' }}" placeholder="0.00"
+                                    class="form-input" placeholder="0.00"
                                     value="{{ old('price') }}">
                             </div>
                             @error('price')

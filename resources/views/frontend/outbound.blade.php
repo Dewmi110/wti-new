@@ -40,7 +40,10 @@
                     $features = is_array($tour->features) ? $tour->features : [];
                     @endphp
              
-                    <div class="col-md-4 ftco-animate mb-4">
+                    <div class="col-md-4 ftco-animate mb-4 tour-card" data-title="{{ strtolower($tour->title) }}"
+                        data-destination="{{ strtolower($locationName) }}"
+                        data-duration="{{ (int) $tour->duration }}"
+                        data-category="{{ $tour->category_id }}">
                         <div class="tour-card-v3">
                             {{-- Full-bleed background image --}}
                             <div class="tour-card-v3__img" style="background-image: url('{{ $coverImageUrl }}');"></div>
@@ -106,4 +109,89 @@
         </div>
     </div>
 </section>
+<script>
+(function () {
+    let activeDuration = 'any';
+    let activeCategory = 'all';
+    let searchQuery    = '';
+
+    const cards = document.querySelectorAll('.tour-card');
+
+    // ── Helpers ────────────────────────────────────────────────
+    function durationMatch(days, range) {
+        days = parseInt(days) || 0;
+        if (range === 'any')  return true;
+        if (range === '1-3')  return days >= 1  && days <= 3;
+        if (range === '4-7')  return days >= 4  && days <= 7;
+        if (range === '8-14') return days >= 8  && days <= 14;
+        if (range === '15+')  return days >= 15;
+        return true;
+    }
+
+    function applyFilters() {
+        let visible = 0;
+
+        cards.forEach(card => {
+            const title       = card.dataset.title       || '';
+            const destination = card.dataset.destination || '';
+            const duration    = card.dataset.duration    || 0;
+            const category    = card.dataset.category    || '';
+
+            const matchesSearch   = !searchQuery ||
+                                    title.includes(searchQuery) ||
+                                    destination.includes(searchQuery);
+            const matchesDuration = durationMatch(duration, activeDuration);
+            const matchesCategory = activeCategory === 'all' ||
+                                    String(category) === String(activeCategory);
+
+            if (matchesSearch && matchesDuration && matchesCategory) {
+                card.style.display = '';
+                visible++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        const emptyMsg = document.getElementById('filter-empty');
+        if (emptyMsg) emptyMsg.style.display = visible === 0 ? 'block' : 'none';
+    }
+
+    // ── Search ─────────────────────────────────────────────────
+    const searchInput = document.getElementById('filter-search');
+    if (searchInput) {
+        searchInput.addEventListener('input', function () {
+            searchQuery = this.value.toLowerCase().trim();
+            applyFilters();
+        });
+    }
+
+    // ── Duration ───────────────────────────────────────────────
+    document.querySelectorAll('.filter-sidebar__duration-item').forEach(item => {
+        item.addEventListener('click', function () {
+            activeDuration = this.dataset.duration;
+
+            document.querySelectorAll('.filter-sidebar__duration-item').forEach(i => {
+                i.classList.remove('active');
+                i.innerHTML = i.dataset.label;
+            });
+
+            this.classList.add('active');
+            this.innerHTML = `<span class="filter-sidebar__check">✓</span> ${this.dataset.label}`;
+
+            applyFilters();
+        });
+    });
+
+    // ── Category ───────────────────────────────────────────────
+    document.querySelectorAll('.filter-sidebar__tag').forEach(tag => {
+        tag.addEventListener('click', function () {
+            activeCategory = this.dataset.category;
+            document.querySelectorAll('.filter-sidebar__tag').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            applyFilters();
+        });
+    });
+
+})();
+</script>
 @endsection

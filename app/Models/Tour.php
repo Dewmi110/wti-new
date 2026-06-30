@@ -70,4 +70,9 @@ class Tour extends Model
 
         return Destination::whereIn('id', $this->destinations)->get();
     }
+
+    public function destinations()
+{
+    return $this->belongsToMany(Destination::class, 'tour_destination'); // adjust pivot table name
+}
 }

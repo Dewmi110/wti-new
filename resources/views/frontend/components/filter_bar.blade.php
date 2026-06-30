@@ -1,45 +1,80 @@
-<div class="filter-sidebar">
-  <h6 class="filter-sidebar__heading">FILTERS</h6>
+<form method="GET" action="{{ request()->url() }}" id="filter-form">
+    <div class="filter-sidebar">
+        <h6 class="filter-sidebar__heading">FILTERS</h6>
 
-  {{-- Search --}}
-  <div class="filter-sidebar__group">
-    <label class="filter-sidebar__label">SEARCH</label>
-    <div class="filter-sidebar__search-wrap">
-      <span class="filter-sidebar__search-icon">🔍</span>
-      <input type="text" class="filter-sidebar__search" placeholder="Title, destination...">
+        {{-- Search --}}
+        <div class="filter-sidebar__group">
+            <label class="filter-sidebar__label">SEARCH</label>
+            <div class="filter-sidebar__search-wrap">
+                <span class="filter-sidebar__search-icon">🔍</span>
+                <input type="text" name="search" id="filter-search"
+                       class="filter-sidebar__search"
+                       placeholder="Title, destination..."
+                       value="{{ request('search') }}">
+            </div>
+        </div>
+
+        {{-- Duration --}}
+        <div class="filter-sidebar__group">
+            <label class="filter-sidebar__label">DURATION</label>
+            <ul class="filter-sidebar__duration-list">
+                @foreach(['any' => 'Any Duration', '1-3' => '1 – 3 days', '4-7' => '4 – 7 days', '8-14' => '8 – 14 days', '15+' => '15+ days'] as $val => $label)
+                <li class="filter-sidebar__duration-item {{ request('duration', 'any') === $val ? 'active' : '' }}"
+                    data-duration="{{ $val }}" data-label="{{ $label }}">
+                    @if(request('duration', 'any') === $val)
+                        <span class="filter-sidebar__check">✓</span>
+                    @endif
+                    {{ $label }}
+                </li>
+                @endforeach
+            </ul>
+            <input type="hidden" name="duration" id="duration-input" value="{{ request('duration', 'any') }}">
+        </div>
+
+        {{-- Category --}}
+        <div class="filter-sidebar__group">
+            <label class="filter-sidebar__label">CATEGORY</label>
+            <div class="filter-sidebar__tags">
+                <button type="button" class="filter-sidebar__tag {{ request('category', 'all') === 'all' ? 'active' : '' }}"
+                        data-category="all">All</button>
+                @foreach($categories as $category)
+                    <button type="button"
+                            class="filter-sidebar__tag {{ request('category') == $category->id ? 'active' : '' }}"
+                            data-category="{{ $category->id }}">
+                        {{ $category->category_name }}
+                    </button>
+                @endforeach
+            </div>
+            <input type="hidden" name="category" id="category-input" value="{{ request('category', 'all') }}">
+        </div>
     </div>
-  </div>
+</form>
 
-  {{-- Duration --}}
-  <div class="filter-sidebar__group">
-    <label class="filter-sidebar__label">DURATION</label>
-    <ul class="filter-sidebar__duration-list">
-      <li class="filter-sidebar__duration-item active">
-        <span class="filter-sidebar__check">✓</span> Any Duration
-      </li>
-      <li class="filter-sidebar__duration-item">1 – 3 days</li>
-      <li class="filter-sidebar__duration-item">4 – 7 days</li>
-      <li class="filter-sidebar__duration-item">8 – 14 days</li>
-      <li class="filter-sidebar__duration-item">15+ days</li>
-    </ul>
-  </div>
+<script>
+    // Duration click → update hidden input → submit
+    document.querySelectorAll('.filter-sidebar__duration-item').forEach(item => {
+        item.addEventListener('click', function () {
+            document.getElementById('duration-input').value = this.dataset.duration;
+            document.getElementById('filter-form').submit();
+        });
+    });
 
-  {{-- Category --}}
-  <div class="filter-sidebar__group">
-    <label class="filter-sidebar__label">CATEGORY</label>
-    <div class="filter-sidebar__tags">
-      <button class="filter-sidebar__tag active">All</button>
-      <button class="filter-sidebar__tag">Beach</button>
-      <button class="filter-sidebar__tag">Adventure</button>
-      <button class="filter-sidebar__tag">Cultural</button>
-      <button class="filter-sidebar__tag">Wildlife</button>
-      <button class="filter-sidebar__tag">Honeymoon</button>
-      <button class="filter-sidebar__tag">Family</button>
-      <button class="filter-sidebar__tag">Business</button>
-      <button class="filter-sidebar__tag">Pilgrimage</button>
-    </div>
-  </div>
-</div>
+    // Category click → update hidden input → submit
+    document.querySelectorAll('.filter-sidebar__tag').forEach(tag => {
+        tag.addEventListener('click', function () {
+            document.getElementById('category-input').value = this.dataset.category;
+            document.getElementById('filter-form').submit();
+        });
+    });
+
+    // Search → submit on Enter (input already has name="search" so form submit handles it)
+    document.getElementById('filter-search').addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            document.getElementById('filter-form').submit();
+        }
+    });
+</script>
 
 <style>
     /* =============================================
@@ -190,25 +225,3 @@
   color: #fff;
 }
 </style>
-
-{{-- <script>
-    // Duration filter
-document.querySelectorAll('.filter-sidebar__duration-item').forEach(item => {
-  item.addEventListener('click', function () {
-    document.querySelectorAll('.filter-sidebar__duration-item').forEach(i => {
-      i.classList.remove('active');
-      i.querySelector('.filter-sidebar__check') && (i.innerHTML = i.textContent.trim());
-    });
-    this.classList.add('active');
-    this.innerHTML = `<span class="filter-sidebar__check">✓</span> ${this.textContent.trim()}`;
-  });
-});
-
-// Category tags
-document.querySelectorAll('.filter-sidebar__tag').forEach(tag => {
-  tag.addEventListener('click', function () {
-    document.querySelectorAll('.filter-sidebar__tag').forEach(t => t.classList.remove('active'));
-    this.classList.add('active');
-  });
-});
-</script> --}}

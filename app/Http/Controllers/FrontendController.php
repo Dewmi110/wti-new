@@ -11,6 +11,7 @@ use App\Models\Service;
 use App\Models\ContactBanner;
 use App\Models\Blog;
 use App\Models\Corporate;
+use App\Models\TourCategory;
 use App\Models\BlogBanner;
 use App\Models\ImageSlider;
 use App\Models\BlogSlider;
@@ -83,7 +84,7 @@ class FrontendController extends Controller
     public function visit_to_srilanka(Request $request)
     {
         $tourType = TourType::find(1);
-
+        $categories = TourCategory::orderBy('category_name')->get();
         $coverImageUrl = $tourType && $tourType->banner_image
             ? Storage::url($tourType->banner_image)
             : asset('images/hero-bg-1.jpg');
@@ -110,13 +111,13 @@ class FrontendController extends Controller
 
         $tours = $query->latest()->paginate(9)->withQueryString();
 
-        return view('frontend.inbound', compact('tours', 'coverImageUrl', 'type_name', 'types'));
+        return view('frontend.inbound', compact('tours', 'coverImageUrl', 'type_name', 'types','categories'));
     }
 
     public function outbound(Request $request)
     {
         $tourType = TourType::find(2);
-
+        $categories = TourCategory::orderBy('category_name')->get();
         $coverImageUrl = $tourType && $tourType->banner_image
             ? Storage::url($tourType->banner_image)
             : asset('images/hero-bg-1.jpg');
@@ -143,7 +144,7 @@ class FrontendController extends Controller
 
         $tours = $query->latest()->paginate(9)->withQueryString();
 
-        return view('frontend.outbound', compact('tours', 'coverImageUrl', 'type_name', 'types'));
+        return view('frontend.outbound', compact('tours', 'coverImageUrl', 'type_name', 'types','categories'));
     }
 
     // public function visit_to_srilanka()
@@ -200,7 +201,13 @@ class FrontendController extends Controller
         $displayPrice  = $tour->discount_price ?: $tour->price;
         $locationName  = optional($tour->countryModel)->name ?? 'Sri Lanka';
         $features      = is_array($tour->features) ? $tour->features : [];
-        $destinations  = Country::where('status', 1)->orderBy('name')->get();
+        $destinationIds = is_array($tour->destinations)
+        ? $tour->destinations
+        : json_decode($tour->destinations, true) ?? [];
+
+        $tourDestinations = Destination::whereIn('id', $destinationIds)->get();
+
+        $destinations = Destination::where('status', 1)->orderBy('name')->get();
 
         // Related tours: same country, excluding current, max 3
         $relatedTours = Tour::where('country', $tour->country)
@@ -221,7 +228,7 @@ class FrontendController extends Controller
 
         return view('frontend.single_tour', compact(
             'tour', 'coverImageUrl', 'displayPrice', 'features',
-            'locationName', 'destinations', 'relatedTours'
+            'locationName', 'relatedTours', 'tourDestinations','destinations'
         ));
     }
 
@@ -234,13 +241,13 @@ class FrontendController extends Controller
     }
 
     public function singleBlog(Blog $blog)
-{
-    $coverImageUrl = $blog->image 
-        ? asset('storage/' . $blog->image) 
-        : asset('images/hero-bg-1.jpg');
+    {
+        $coverImageUrl = $blog->image 
+            ? asset('storage/' . $blog->image) 
+            : asset('images/hero-bg-1.jpg');
 
-    return view('frontend.single_blog', compact('blog', 'coverImageUrl'));
-}
+        return view('frontend.single_blog', compact('blog', 'coverImageUrl'));
+    }
 
     public function airTickets()
     {
@@ -322,22 +329,22 @@ class FrontendController extends Controller
     }
 
     public function storeBooking(Request $request)
-{
-    $request->validate([
-        'tour_id'          => 'required|exists:tours,id',
-        'full_name'        => 'required|string|max:255',
-        'email'            => 'required|email|max:255',
-        'phone'            => 'required|string|max:30',
-        'travelers'        => 'required|integer|min:1',
-        'travel_date'      => 'nullable|date|after_or_equal:today',
-        'special_requests' => 'nullable|string|max:1000',
-    ]);
+    {
+        $request->validate([
+            'tour_id'          => 'required|exists:tours,id',
+            'full_name'        => 'required|string|max:255',
+            'email'            => 'required|email|max:255',
+            'phone'            => 'required|string|max:30',
+            'travelers'        => 'required|integer|min:1',
+            'travel_date'      => 'nullable|date|after_or_equal:today',
+            'special_requests' => 'nullable|string|max:1000',
+        ]);
 
-    Booking::create($request->only([
-        'tour_id', 'full_name', 'email', 'phone',
-        'travelers', 'travel_date', 'special_requests',
-    ]));
+        Booking::create($request->only([
+            'tour_id', 'full_name', 'email', 'phone',
+            'travelers', 'travel_date', 'special_requests',
+        ]));
 
-    return redirect()->back()->with('booking_success', true);
-}
+        return redirect()->back()->with('booking_success', true);
+    }
 }

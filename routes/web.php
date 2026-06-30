@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\ContactBannerController;
 use App\Http\Controllers\Admin\ServiceBannerController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\BookingController;
+use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Middleware\AdminAuth;
@@ -25,7 +26,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
-//Frontend routes
+// Frontend routes
 Route::controller(FrontendController::class)->group(function () {
     Route::get('/', 'index')->name('frontend.index');
     Route::get('/tours/search', 'searchTours')->name('frontend.tours.search');
@@ -43,14 +44,14 @@ Route::controller(FrontendController::class)->group(function () {
     Route::get('/contact', 'contact')->name('frontend.contact');
 });
 
-//  Authentication
+// Authentication
     Route::controller(AuthController::class)->group(function () {
         Route::get('/login', 'showLogin')->name('admin.login');
         Route::post('/login', 'login')->name('admin.login.post');
         Route::post('/logout', 'logout')->name('admin.logout');
     });
 
-//  Admin Routes
+// Admin Routes
     Route::prefix('admin')
         ->name('admin.')
         ->middleware(AdminAuth::class)
@@ -70,19 +71,19 @@ Route::controller(FrontendController::class)->group(function () {
             'services'         => ServiceController::class,
         ]);
 
-//Tour Custom Routes
+// Tour Custom Routes
         Route::get('tours/feature-icons', [TourController::class, 'featureIcons'])->name('tours.feature-icons');
 
-//Service Custom Routes
+// Service Custom Routes
         Route::resource('services', ServiceController::class)->names('services');
-//Country Custom Routes
+// Country Custom Routes
         Route::get('countries/{id}/destinations',[CountryController::class, 'destinations'])->name('countries.destinations');
 
-//Blog Custom Routes
+// Blog Custom Routes
         Route::get('blogs/{id}/image',[BlogController::class, 'image'])->name('blogs.image');
         Route::post('blogs/{id}/image',[BlogController::class, 'uploadImage'])->name('blogs.upload_image');
 
-//Image Sliders
+// Image Sliders
         Route::prefix('image-sliders')->name('image_sliders.')->controller(ImageSliderController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/create-home', 'createHomeSlider')->name('create_home');
@@ -92,7 +93,7 @@ Route::controller(FrontendController::class)->group(function () {
             Route::delete('/{imageSlider}', 'destroy')->name('destroy');
         });
 
-//Blog Sliders
+// Blog Sliders
         Route::prefix('blog-sliders')->name('blog_sliders.')->controller(BlogSliderController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/create-home', 'create')->name('create');
@@ -102,21 +103,25 @@ Route::controller(FrontendController::class)->group(function () {
             Route::delete('/{blogSlider}', 'destroy')->name('destroy');
         });
 
-//Banner Modules
+// Banner Modules
         Route::resource('corporate-banners', CorporateController::class )->except('show')->names('corporate_banners');
         Route::resource( 'blog-banners',BlogBannerController::class)->except('show')->names('blog_banners');
         Route::resource('contact-banners', ContactBannerController::class)->except('show')->names('contact_banners');
         Route::resource('service-banners', ServiceBannerController::class)->except('show')->names('service_banners');
-//Tour Banners
+// Tour Banners
         Route::prefix('tour-banners')->name('tour_banners.') ->controller(TourTypeController::class)->group(function () {
             Route::get('/', 'indexBanner')->name('index');
             Route::get('/create', 'createBanner')->name('create');
             Route::post('/', 'storeBanner')->name('store');
         });
-//Booking Routes
+// Booking Routes
         Route::get('bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
         Route::patch('bookings/{booking}/status', [BookingController::class, 'updateStatus'])->name('bookings.updateStatus');
         Route::delete('bookings/{booking}', [BookingController::class, 'destroy'])->name('bookings.destroy');
         Route::resource('bookings', BookingController::class)->only(['index']);
     });
 
+// Profile
+Route::get('profile', [ProfileController::class, 'edit'])->name('admin.profile.edit');
+Route::put('profile', [ProfileController::class, 'update'])->name('admin.profile.update');
+Route::put('profile/password', [ProfileController::class, 'updatePassword'])->name('admin.profile.password');

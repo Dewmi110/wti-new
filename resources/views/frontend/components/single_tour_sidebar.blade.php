@@ -33,8 +33,14 @@
                     <span class="td-detail-value">{{ $tour->duration }} Nights</span>
                 </div>
                 <div class="td-detail-row">
-                    <span class="td-detail-label"><i class="fa fa-map-marker"></i> Destination</span>
+                    <span class="td-detail-label"><i class="fa fa-map-marker"></i> Location</span>
                     <span class="td-detail-value">{{ $locationName }}</span>
+                </div>
+                <div class="td-detail-row">
+                    <span class="td-detail-label"><i class="fa fa-map-marker"></i> Destinations</span>
+                    <span class="td-detail-value">
+                        {{ $tourDestinations->pluck('name')->implode(', ') }}
+                    </span>
                 </div>
                 @if ($tour->type)
                 <div class="td-detail-row">
