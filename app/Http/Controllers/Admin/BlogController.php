@@ -12,7 +12,7 @@ class BlogController extends Controller
 {
     public function index()
     {
-        $items = Blog::orderByDesc('id')->paginate(20);
+        $items = Blog::orderByDesc('id')->paginate(10);
 
         return view('backend.blogs.index', compact('items'));
     }

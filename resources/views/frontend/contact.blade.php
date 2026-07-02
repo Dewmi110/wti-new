@@ -1,4 +1,9 @@
 @extends('frontend.components.layout')
+@php
+    $meta_title = 'Contact Us | WTI Holidays';
+    $meta_description = 'Get in touch with WTI Holidays for personalised tour packages, flight reservations, and hotel bookings. Reach us by phone, WhatsApp, or email — our travel experts respond within 24 hours.';
+    $meta_keywords = 'contact WTI Holidays, travel agency Colombo, tour enquiry, WTI contact number, WhatsApp travel booking';
+@endphp
 
 @section('content')
 

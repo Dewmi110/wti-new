@@ -8,7 +8,7 @@
   $isToursActive = request()->routeIs('admin.tours.*');
   $isBlogsActive = request()->routeIs('admin.blogs.*');
   $isUsersActive = request()->routeIs('admin.users.*');
-  $isImageSliderActive = request()->routeIs('admin.image-sliders.*');
+  $isImageSliderActive = request()->routeIs('admin.image_sliders.*','admin.blog_sliders.*','admin.tour_banners.*','admin.corporate_banners*','admin.blog_banners*','admin.contact_banners*');
   $isServicesActive = request()->routeIs('admin.services.*');
   $isBookingsActive = request()->routeIs('admin.bookings.*');
   $isProfileActive = request()->routeIs('admin.profile.*');
@@ -62,7 +62,7 @@
   @if(in_array(Auth::user()->role?->slug, ['super_admin', 'admin']))
   <a class="nav-item {{ $isUsersActive ? 'active' : '' }}" href="{{ route('admin.users.index') }}">
       <span class="nav-icon"><i class="fas fa-users"></i></span>
-      User Management
+      Users
   </a>
   @endif
   {{-- <a class="nav-item {{ $isUsersActive ? 'active' : '' }}" href="{{ route('admin.users.index') }}">

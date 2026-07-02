@@ -1,4 +1,9 @@
 @extends('frontend.components.layout')
+@php
+    $meta_title = 'WTI Holidays | Your Gateway to Unforgettable Travel Experiences';
+    $meta_description = 'Discover the world with WTI Holidays. Explore our exclusive tour packages, travel tips, and expert services for an unforgettable journey.';
+    $meta_keywords = 'WTI holidays, travel agency Colombo, tour packages, travel tips, travel services';
+@endphp
 
 @section('content')
 <div class="hero-wrap js-fullheight owl-carousel">
@@ -36,13 +41,13 @@
     </div>
     <div class="container container-2">
         <div class="row">
-            <div class="col-md-3 col-sm-12 ftco-animate">
+            {{-- <div class="col-md-3 col-sm-12 ftco-animate">
                 <div class="text-center mt-4">
-                    {{-- <p><a href="{{ route('frontend.visit_to_srilanka') }}" class="btn btn-primary py-3 px-5">Search
-                            Destination</a></p> --}}
+                    <p><a href="{{ route('frontend.visit_to_srilanka') }}" class="btn btn-primary py-3 px-5">Search
+                            Destination</a></p>
                 </div>
-            </div>
-            <div class="col-md-12 col-sm-12 ftco-animate">
+            </div> --}}
+            <div class="col-lg-12 col-md-12 col-sm-12 ftco-animate">
                 <div class="carousel-destination owl-carousel ftco-animate">
                     @php
                     $displayDestinations = $destinations->take(6);
@@ -258,7 +263,7 @@
                         <div class="tour-card-v3__bottom">
                             <div class="tour-card-v3__price-wrap">
                                 <span class="tour-card-v3__nights">{{ $featured_tour->duration }} Nights</span>
-                                <span class="tour-card-v3__price">From ${{ number_format((float) $displayPrice,
+                                <span class="tour-card-v3__price">From {{$featured_tour->currency}} {{ number_format((float) $displayPrice,
                                     0) }} PP</span>
                             </div>
                             <a href="{{ route('frontend.single_tour', $featured_tour) }}" class="tour-card-v3__btn">VIEW

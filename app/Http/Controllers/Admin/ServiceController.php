@@ -12,7 +12,7 @@ class ServiceController extends Controller
 {
     public function index()
     {
-        $items = Service::with('serviceType')->latest()->paginate(15);
+        $items = Service::with('serviceType')->latest()->paginate(10);
         return view('backend.services.index', compact('items'));
     }
 

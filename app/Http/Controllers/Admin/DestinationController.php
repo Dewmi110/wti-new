@@ -12,7 +12,7 @@ class DestinationController extends Controller
 {
     public function index()
     {
-        $items = Destination::with('country')->orderBy('name')->paginate(20);
+        $items = Destination::with('country')->orderBy('name')->paginate(10);
 
         return view('backend.destinations.index', compact('items'));
     }

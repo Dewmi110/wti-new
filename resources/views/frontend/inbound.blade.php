@@ -1,4 +1,9 @@
 @extends('frontend.components.layout')
+@php
+    $meta_title = 'Inbound Tours | WTI Holidays';
+    $meta_description = 'Discover our exciting inbound tour packages with WTI Holidays. Experience the best of Sri Lanka with our expertly curated travel experiences.';
+    $meta_keywords = 'inbound tours, travel packages, WTI holidays';
+@endphp
 @section('content')
 
 <section class="hero-wrap hero-wrap-2"

@@ -1,4 +1,9 @@
 @extends('frontend.components.layout')
+@php
+    $meta_title = 'Single Tour | WTI Holidays';
+    $meta_description = 'Explore our exclusive tour packages with WTI Holidays. Book your dream vacation today with our expert travel services.';
+    $meta_keywords = 'tour packages, travel agency Colombo, tour booking, WTI holidays';
+@endphp
 
 @section('content')
 
@@ -92,23 +97,6 @@ MAIN TWO-COLUMN LAYOUT
     </div>
 </div>
 
-<!-- Related Tours Section -->
-{{-- <section class="ftco-section bg-light">
-    <div class="container">
-        <div class="row mb-5">
-            <div class="col-12 text-center">
-                <h2 style="font-size: 32px; font-weight: 800; color: #333; margin-bottom: 10px;">More Tours in {{
-                    $locationName }}</h2>
-                <p style="color: #999; font-size: 16px;">Explore other amazing tours in the same destination</p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12 text-center py-5">
-                <p style="color: #999;">More tours coming soon...</p>
-            </div>
-        </div>
-    </div>
-</section> --}}
 <section class="ftco-section bg-light">
     <div class="container">
         <div class="row mb-5">

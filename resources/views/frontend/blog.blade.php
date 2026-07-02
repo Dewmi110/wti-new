@@ -1,5 +1,11 @@
 @extends('frontend.components.layout')
 
+@php
+    $meta_title = 'Blog | WTI Holidays';
+    $meta_description = 'Stay updated with the latest travel tips, destination guides, and industry news from WTI Holidays.';
+    $meta_keywords = 'travel blog, WTI holidays, travel tips, destination guides';
+@endphp
+
 @section('content')
 <section class="hero-wrap hero-wrap-2"
   style="background-image: url('{{ $blogBanner && $blogBanner->banner_image ? \Illuminate\Support\Facades\Storage::url($blogBanner->banner_image) : asset('images/hero-bg-1.jpg') }}'); min-height: 85vh; position: relative;">
@@ -38,7 +44,6 @@
 
         <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
           <div class="carousel-slide-image" style="background-image:url('{{ $image  }}')">
-
             <div class="carousel-overlay">
               {{-- <div class="carousel-content text-center">
                 <span class="badge badge-warning mb-3">
@@ -98,55 +103,11 @@
               {{-- <span><i class="fa fa-map-marker"></i> Malaysia</span> --}}
             </div>
             <h3 class="tour-card-v2__title">{{ $blog->name }}</h3>
-            {{-- <p class="tour-card-v2__desc">{{ $blog->content ?: 'No description available.' }}</p> --}}
-            {{-- <div class="tour-card-v2__price">
-              price: <span class="tour-card-v2__old">$1300</span> <span class="tour-card-v2__new">$1105</span>
-            </div> --}}
             <a href="{{ route('single.blog', $blog->id) }}" class="tour-card-v2__btn">Read More</a>
           </div>
         </div>
       </div>
       @endforeach
-      {{-- <div class="col-md-4 d-flex ftco-animate mb-4">
-        <div class="tour-card-v2 w-100">
-          <div class="tour-card-v2__img" style="background-image: url('images/image_2.jpg');"></div>
-          <span class="tour-card-v2__discount">UPTO 17% off</span>
-          <div class="tour-card-v2__body">
-            <div class="tour-card-v2__meta">
-              <span><i class="fa fa-clock-o"></i> 5D/4N</span>
-              <span><i class="fa fa-group"></i> pax: 10</span>
-              <span><i class="fa fa-map-marker"></i> Malaysia</span>
-            </div>
-            <h3 class="tour-card-v2__title">Weekend To Paris</h3>
-            <p class="tour-card-v2__desc">Fusce hic augue velit wisi ips quibus dam pariatur, iusto.</p>
-            <div class="tour-card-v2__price">
-              price: <span class="tour-card-v2__old">$1100</span> <span class="tour-card-v2__new">$900</span>
-            </div>
-            <a href="blog-single.html" class="tour-card-v2__btn">BOOK NOW</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-4 d-flex ftco-animate mb-4">
-        <div class="tour-card-v2 w-100">
-          <div class="tour-card-v2__img" style="background-image: url('images/image_3.jpg');"></div>
-          <span class="tour-card-v2__discount">UPTO 20% off</span>
-          <div class="tour-card-v2__body">
-            <div class="tour-card-v2__meta">
-              <span><i class="fa fa-clock-o"></i> 6D/5N</span>
-              <span><i class="fa fa-group"></i> pax: 8</span>
-              <span><i class="fa fa-map-marker"></i> Sri Lanka</span>
-            </div>
-            <h3 class="tour-card-v2__title">Most Popular Place In This World</h3>
-            <p class="tour-card-v2__desc">Fusce hic augue velit wisi ips quibus dam pariatur, iusto.</p>
-            <div class="tour-card-v2__price">
-              price: <span class="tour-card-v2__old">$950</span> <span class="tour-card-v2__new">$760</span>
-            </div>
-            <a href="blog-single.html" class="tour-card-v2__btn">BOOK NOW</a>
-          </div>
-        </div>
-      </div> --}}
-
     </div>
   </div>
 </section>

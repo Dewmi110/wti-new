@@ -79,7 +79,7 @@
                         </label>
                         <input type="file" class="form-input" name="banner_image" id="banner_image" onchange="previewEditImage(event)" />
                         @if($service->banner_image)
-                            <img id="editPreview" src="{{ asset($service->banner_image) }}" alt="Preview" style="max-width: 200px; margin-top: 10px; display: block;" />
+                            <img id="editPreview" src="{{ Storage::url($service->banner_image) }}" alt="Preview" style="max-width: 200px; margin-top: 10px; display: block;" />
                         @else
                             <img id="editPreview" src="#" alt="Preview" style="max-width: 200px; margin-top: 10px; display: none;" />
                         @endif

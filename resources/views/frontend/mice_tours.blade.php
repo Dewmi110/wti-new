@@ -1,5 +1,9 @@
 @extends('frontend.components.layout')
-
+@php
+    $meta_title = 'MICE Tours | WTI Holidays';
+    $meta_description = 'Explore our comprehensive MICE tour packages with WTI Holidays. Plan your next corporate event or incentive trip with our expert travel services.';
+    $meta_keywords = 'MICE tours, corporate travel, incentive travel, WTI holidays';
+@endphp
 @section('content')
 <section class="hero-wrap hero-wrap-2"
 style="background-image: url('{{ $miceToursBanner && $miceToursBanner->banner_image ? \Illuminate\Support\Facades\Storage::url($miceToursBanner->banner_image) : asset('images/hero-bg-1.jpg') }}'); min-height: 85vh; position: relative;">

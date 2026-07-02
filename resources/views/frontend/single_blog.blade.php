@@ -1,4 +1,9 @@
 @extends('frontend.components.layout')
+@php
+    $meta_title = 'Single Blog | WTI Holidays';
+    $meta_description = 'Read our latest blog posts about travel tips, destination guides, and exclusive offers from WTI Holidays.';
+    $meta_keywords = 'travel blog, destination guides, travel tips, WTI holidays';
+@endphp
 @section('content')
 <section class="hero-wrap hero-wrap-2"
     style="background-image: url('{{ $coverImageUrl }}'); min-height: 85vh; position: relative;">

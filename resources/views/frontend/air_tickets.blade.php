@@ -1,5 +1,11 @@
 @extends('frontend.components.layout')
 
+@php
+    $meta_title = 'Air Tickets | WTI Holidays';
+    $meta_description = 'Book your next flight with WTI Holidays. Enjoy competitive prices and seamless booking experience.';
+    $meta_keywords = 'air tickets, flight booking, WTI holidays';
+@endphp
+
 @section('content')
 <section class="hero-wrap hero-wrap-2"
   style="background-image: url('{{ $airTicketsBanner && $airTicketsBanner->banner_image ? \Illuminate\Support\Facades\Storage::url($airTicketsBanner->banner_image) : asset('images/hero-bg-1.jpg') }}'); min-height: 85vh; position: relative;">

@@ -1,4 +1,9 @@
 @extends('frontend.components.layout')
+@php
+    $meta_title = 'Visa Services | WTI Holidays';
+    $meta_description = 'Get in touch with WTI Holidays for personalised visa services, including tourist, business, and student visas. Apply for your travel documents with our expert assistance.';
+    $meta_keywords = 'visa services, travel documents, tourist visa, business visa, student visa, WTI holidays';
+@endphp
 
 @section('content')
 <section class="hero-wrap hero-wrap-2"
@@ -86,7 +91,7 @@
             <div class="sc-icon-box"><i class="fa fa-star"></i></div>
             <h3 class="sc-title">Transit Visas</h3>
             <p class="sc-text">For stopovers between flights.</p>
-            <a href="#" class="sc-link">Learn More <i class="fa fa-arrow-right"></i></a>
+            {{-- <a href="#" class="sc-link">Learn More <i class="fa fa-arrow-right"></i></a> --}}
           </div>
         </div>
       </div>

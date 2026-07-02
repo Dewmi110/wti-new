@@ -109,9 +109,13 @@ class FrontendController extends Controller
             $query->where('price', '<=', $request->max_price);
         }
 
+        if ($request->filled('category') && $request->category !== 'all') {
+            $query->where('t_category', $request->category);
+        }
+
         $tours = $query->latest()->paginate(9)->withQueryString();
 
-        return view('frontend.inbound', compact('tours', 'coverImageUrl', 'type_name', 'types','categories'));
+        return view('frontend.inbound', compact('tours', 'coverImageUrl', 'type_name', 'types', 'categories'));
     }
 
     public function outbound(Request $request)

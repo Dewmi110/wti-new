@@ -247,6 +247,13 @@
                 <div class="card-body">
                     <div class="form-grid-3">
                         <div class="form-group">
+                            <label class="form-label">Currency</label>
+                            <select name="currency" class="form-input">
+                                <option value="USD" {{ old('currency', 'USD') == 'USD' ? 'selected' : '' }}>USD</option>
+                                <option value="Rs"  {{ old('currency', 'USD') == 'Rs'  ? 'selected' : '' }}>Rs</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label class="form-label">Price <span class="required">*</span></label>
                             <div class="input-icon-wrap">
                                 <i class="fas fa-dollar-sign input-icon"></i>

@@ -1,58 +1,165 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# WTI New Laravel Project
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Project Setup
 
-## About Laravel
-
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
-
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+1. Install PHP dependencies
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+composer install
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+2. Copy environment file
 
-## Contributing
+```bash
+cp .env.example .env
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+3. Generate application key
 
-## Code of Conduct
+```bash
+php artisan key:generate
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+4. Configure `.env`
 
-## Security Vulnerabilities
+- Set `APP_NAME`, `APP_URL`, `DB_CONNECTION`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`
+- Configure mail and queue settings if needed
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+5. Run database migrations
 
-## License
+```bash
+php artisan migrate
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+6. Install frontend dependencies
+
+```bash
+npm install
+```
+
+7. Start local development
+
+```bash
+npm run dev
+```
+
+8. Open the app in your browser
+
+- Visit `http://127.0.0.1:5173` or `http://127.0.0.1:8000` depending on Vite and Laravel server setup.
+
+## Common Development Commands
+
+- Run backend server only:
+
+```bash
+php artisan serve
+```
+
+- Run frontend only:
+
+```bash
+npm run dev
+```
+
+- Publish pagination views for customization:
+
+```bash
+php artisan vendor:publish --tag=laravel-pagination
+```
+
+- Link public storage for uploaded files:
+
+```bash
+php artisan storage:link
+```
+
+- Run PHPUnit tests:
+
+```bash
+php artisan test
+```
+
+## Production / Go Live
+
+Use these commands when deploying to production.
+
+1. Install composer dependencies without dev packages
+
+```bash
+composer install --optimize-autoloader --no-dev
+```
+
+2. Install frontend dependencies and build assets
+
+```bash
+npm install
+npm run build
+```
+
+3. Set the production environment
+
+```bash
+cp .env.example .env
+```
+
+4. Update `.env` for production
+
+- Set `APP_ENV=production`
+- Set `APP_DEBUG=false`
+- Set `APP_URL` to your live URL
+- Configure production database and mail settings
+
+5. Generate the application key if not already set
+
+```bash
+php artisan key:generate
+```
+
+6. Run migrations
+
+```bash
+php artisan migrate --force
+```
+
+7. Cache configuration and routes
+
+```bash
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+```
+
+8. Create storage symlink if it is not already created
+
+```bash
+php artisan storage:link
+```
+
+## Optional Production Maintenance
+
+- Clear caches:
+
+```bash
+php artisan cache:clear
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+```
+
+- If you change Composer dependencies later:
+
+```bash
+composer update --optimize-autoloader --no-dev
+php artisan boost:update --ansi
+```
+
+- If you change frontend assets later:
+
+```bash
+npm run build
+```
+
+## Notes
+
+- This project uses Laravel 13 and Vite.
+- If you run into Vite asset errors, rebuild assets with `npm run build`.

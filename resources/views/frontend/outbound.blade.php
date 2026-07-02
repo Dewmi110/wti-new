@@ -1,4 +1,9 @@
 @extends('frontend.components.layout')
+@php
+    $meta_title = 'Outbound Tours | WTI Holidays';
+    $meta_description = 'Explore our exciting outbound tour packages with WTI Holidays. Discover new destinations and create unforgettable travel memories.';
+    $meta_keywords = 'outbound tours, travel packages, WTI holidays';
+@endphp
 @section('content')
 
 <section class="hero-wrap hero-wrap-2"

@@ -37,7 +37,7 @@
                 <tr>
                     <th width="70">#</th>
                     <th width="90">Image</th>
-                    <th>Tour</th>
+                    <th>Tour Package</th>
                     <th width="150">Type</th>
                     <th width="120">Status</th>
                     <th width="150" class="text-center">Actions</th>
@@ -57,7 +57,8 @@
                         <td>
 
                             @php
-                                $tourImagePath = $tour->images->first()?->img_path ?? $tour->banner_img_path;
+                                // $tourImagePath = $tour->images->first()?->img_path ?? $tour->banner_img_path;
+                                $tourImagePath = $tour->banner_img_path ?? $tour->images->first()?->img_path ;
                             @endphp
 
                             @if($tourImagePath)
@@ -75,10 +76,6 @@
                         <td>
                             <div class="avatar-info">
                                 <strong>{{ $tour->title }}</strong>
-
-                                <span>
-                                    {{ \Illuminate\Support\Str::limit(strip_tags($tour->description), 80) }}
-                                </span>
                             </div>
                         </td>
 
@@ -100,7 +97,7 @@
                                 </span>
                             @else
                                 <span class="td-badge badge-danger">
-                                    <span class="dot"></span>
+                                    <span class="dot dot-red"></span>
                                     Deleted
                                 </span>
                             @endif
@@ -111,12 +108,12 @@
 
                             <div class="td-actions justify-content-center">
 
-                                <button type="button"
+                                {{-- <button type="button"
                                         class="action-btn action-view"
                                         data-bs-toggle="modal"
                                         data-bs-target="#tourModal{{ $tour->id }}">
                                     <i class="fas fa-eye"></i>
-                                </button>
+                                </button> --}}
 
                                 <a href="{{ route('admin.tours.edit', $tour) }}"
                                    class="action-btn action-edit">

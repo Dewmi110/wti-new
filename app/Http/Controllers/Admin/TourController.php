@@ -132,7 +132,7 @@ class TourController extends Controller
 
     public function index()
     {
-        $tours = Tour::with(['category', 'type', 'theme', 'countryModel', 'images'])->paginate(20);
+        $tours = Tour::with(['category', 'type', 'theme', 'countryModel', 'images'])->paginate(10);
         return view('backend.tours.index', compact('tours'));
     }
 

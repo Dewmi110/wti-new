@@ -73,10 +73,10 @@
                         class="td-share-btn td-share-btn--fb">
                         <i class="fa fa-facebook"></i>
                     </a>
-                    <a href="https://twitter.com/intent/tweet?url={{ url()->current() }}&text={{ $tour->title }}"
+                    {{-- <a href="https://twitter.com/intent/tweet?url={{ url()->current() }}&text={{ $tour->title }}"
                         target="_blank" class="td-share-btn td-share-btn--tw">
                         <i class="fa fa-twitter"></i>
-                    </a>
+                    </a> --}}
                     <a href="https://wa.me/?text={{ $tour->title }}%20{{ url()->current() }}" target="_blank"
                         class="td-share-btn td-share-btn--wa">
                         <i class="fa fa-whatsapp"></i>

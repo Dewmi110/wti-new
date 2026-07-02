@@ -1,5 +1,11 @@
 @extends('frontend.components.layout')
 
+@php
+    $meta_title = 'Corporate Travel | WTI Holidays';
+    $meta_description = 'Explore our comprehensive corporate travel solutions with WTI Holidays. Plan your next business trip with our expert travel services.';
+    $meta_keywords = 'corporate travel, business trips, WTI holidays';
+@endphp
+
 @section('content')
 <section class="hero-wrap hero-wrap-2"
   style="background-image: url('{{ $corporateBanner && $corporateBanner->banner_image ? \Illuminate\Support\Facades\Storage::url($corporateBanner->banner_image) : asset('images/hero-bg-1.jpg') }}'); min-height: 85vh; position: relative;">

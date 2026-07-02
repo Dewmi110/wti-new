@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\View;
 use App\Http\View\Composers\SearchComposer;
 use App\Models\TourCategory;
@@ -25,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Blade::anonymousComponentPath(resource_path('views/backend/components'));
         View::composer('frontend.components.search', SearchComposer::class);
+        Paginator::defaultView('vendor.pagination.admin');
         View::composer('frontend.components.filter_bar', function ($view) {
         $view->with('categories', TourCategory::orderBy('category_name')->get());
     });
