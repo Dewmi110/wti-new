@@ -93,11 +93,14 @@
         </ul>
 
         <div class="contact-map-wrap">
-          <iframe
+          <iframe 
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31686.86963753897!2d79.83220890465385!3d6.907493847341114!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e0b443e7ca124ff%3A0xc52fbd55bc43a329!2sWTI%20-%20World%20Travel%20Island!5e0!3m2!1sen!2slk!4v1783059634895!5m2!1sen!2slk" 
+          width="100%" height="320" style="border:0;display:block;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+          {{-- <iframe
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.7985657974297!2d79.8560045!3d6.9218374!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae2591614f2f0db%3A0x3f8f3c2e5e5e5e5e!2sColombo!5e0!3m2!1sen!2slk!4v1680000000000"
             width="100%" height="320" style="border:0;display:block;" allowfullscreen="" loading="lazy"
             referrerpolicy="no-referrer-when-downgrade">
-          </iframe>
+          </iframe> --}}
         </div>
 
       </div>

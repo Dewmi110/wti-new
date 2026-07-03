@@ -130,25 +130,11 @@
     </div>{{-- /#cf-form --}}
 </div>{{-- /.cf-panel --}}
 
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
     (function () {
         'use strict';
-        var PUBLIC_KEY  = 'AEtk6G0jza9YlVh0I';
-        var SERVICE_ID  = 'service_hntkmgc';
-        var TEMPLATE_ID = 'template_8uuaccs'; // your single existing template
 
-        var EMAIL_MAP = {
-            'Visit to Sri Lanka': 'inbound@wti.lk',
-            'Outbound Tours':     'outboundtours@wti.lk',
-            'MICE Tours':         'hello@wti.lk',
-            'Corporate Travel':   'hello@wti.lk',
-            'Air Tickets':        'ticketing@wti.lk',
-            'Visa Services':      'visa@wti.lk',
-            'Ancillaries':        'hello@wti.lk',
-        };
-
-        emailjs.init({ publicKey: PUBLIC_KEY });
+        var CSRF_TOKEN = '{{ csrf_token() }}';
 
         function g(id) { return document.getElementById(id); }
         function v(id) { var el = g(id); return el ? el.value.trim() : ''; }
@@ -179,22 +165,12 @@
         g('cf-submit').addEventListener('click', function () {
             if (!validate()) return;
 
-            var selectedService = v('cf-service');
-            var toEmail = EMAIL_MAP[selectedService];
-
-            if (!toEmail) {
-                g('cf-error').style.display = 'block';
-                console.error('No email mapped for service:', selectedService);
-                return;
-            }
-
             g('cf-btn-text').style.display = 'none';
             g('cf-btn-loading').style.display = 'inline';
             g('cf-submit').disabled = true;
 
-            var params = {
-                to_email:     toEmail,          // ← drives the recipient
-                service_type: selectedService,
+            var payload = {
+                service_type: v('cf-service'),
                 travel_date:  v('cf-date'),
                 destination:  v('cf-destination'),
                 num_people:   v('cf-people'),
@@ -202,32 +178,41 @@
                 city:         v('cf-city'),
                 email:        v('cf-email'),
                 phone:        v('cf-phone'),
-                whatsapp:     v('cf-whatsapp') || 'Not provided',
-                comments:     v('cf-comments') || 'None',
-                reply_to:     v('cf-email'),
+                whatsapp:     v('cf-whatsapp') || '',
+                comments:     v('cf-comments') || '',
             };
 
-            emailjs.send(SERVICE_ID, TEMPLATE_ID, params)
-                .then(function () {
-                    g('cf-success').style.display = 'block';
-                    g('cf-error').style.display = 'none';
-                    ['cf-service', 'cf-date', 'cf-destination', 'cf-people',
-                     'cf-name', 'cf-city', 'cf-email', 'cf-phone',
-                     'cf-whatsapp', 'cf-comments'].forEach(function (id) {
-                        var el = g(id); if (el) el.value = '';
-                    });
-                    g('cf-success').scrollIntoView({ behavior: 'smooth', block: 'center' });
-                })
-                .catch(function (err) {
-                    console.error('EmailJS error', err);
-                    g('cf-error').style.display = 'block';
-                    g('cf-success').style.display = 'none';
-                })
-                .finally(function () {
-                    g('cf-btn-text').style.display = 'inline';
-                    g('cf-btn-loading').style.display = 'none';
-                    g('cf-submit').disabled = false;
+            fetch('{{ route('enquiry.submit') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': CSRF_TOKEN
+                },
+                body: JSON.stringify(payload)
+            }).then(function (res) {
+                if (!res.ok) return res.json().then(function (d) { throw d; });
+                return res.json();
+            }).then(function (json) {
+                console.log('Enquiry response:', json);
+                g('cf-success').style.display = 'block';
+                g('cf-error').style.display = 'none';
+                ['cf-service', 'cf-date', 'cf-destination', 'cf-people',
+                 'cf-name', 'cf-city', 'cf-email', 'cf-phone',
+                 'cf-whatsapp', 'cf-comments'].forEach(function (id) {
+                    var el = g(id); if (el) el.value = '';
                 });
+                g('cf-success').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }).catch(function (err) {
+                console.error('Enquiry error', err);
+                try { console.debug('Error body:', err); } catch(e) {}
+                g('cf-error').style.display = 'block';
+                g('cf-success').style.display = 'none';
+            }).finally(function () {
+                g('cf-btn-text').style.display = 'inline';
+                g('cf-btn-loading').style.display = 'none';
+                g('cf-submit').disabled = false;
+            });
         });
     })();
 </script>

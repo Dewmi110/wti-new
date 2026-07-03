@@ -24,6 +24,7 @@ use App\Http\Middleware\AdminAuth;
 use App\Http\View\Composers\SearchComposer;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\EnquiryController;
 
 
 // Frontend routes
@@ -36,6 +37,8 @@ Route::controller(FrontendController::class)->group(function () {
     Route::get('/blog', 'blog')->name('frontend.blog');
     Route::get('/single-blog/{blog}', 'singleBlog')->name('single.blog');
     Route::post('/send-inquiry', 'sendInquiry')->name('send.inquiry');
+        // Enquiry form submit (from frontend enquiry form)
+        Route::post('/enquiry', [EnquiryController::class, 'submit'])->name('enquiry.submit');
     Route::get('/air-tickets', 'airTickets')->name('frontend.air_tickets');
     Route::get('/visa-services', 'visaServices')->name('frontend.visa_services');
     Route::get('/mice-tours', 'miceTours')->name('frontend.mice_tours');
