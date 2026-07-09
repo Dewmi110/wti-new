@@ -95,7 +95,7 @@
                             <label class="form-label">Duration</label>
                             <div class="input-icon-wrap">
                                 <i class="fas fa-clock input-icon"></i>
-                                <input type="text" name="duration" class="form-input" placeholder="e.g. 7D / 6N"
+                                <input type="text" name="duration" class="form-input" placeholder="e.g. 6N / 7D"
                                     value="{{ old('duration') }}">
                             </div>
                         </div>
@@ -259,7 +259,28 @@
                     </div>
                 </div>
             </div>
-
+            {{-- ── TOUR MAP IMAGE ── --}}
+            <div class="card">
+                <div class="card-header" style="padding:18px 22px 0;">
+                    <div class="card-header-title">
+                        <i class="fas fa-map" style="color:var(--purple);margin-right:6px;"></i>
+                        Tour Map Image
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label class="form-label">Map Image</label>
+                        <label class="file-upload" for="map_img_input">
+                            <input id="map_img_input" type="file" name="map_img" accept="image/*">
+                            <div class="upload-icon"><i class="fas fa-map-marked-alt"></i></div>
+                            <div class="upload-text">Click to upload a route/map image</div>
+                            <div class="upload-hint">PNG, JPG, JPEG — max 5MB</div>
+                        </label>
+                        @error('map_img')<div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>@enderror
+                    </div>
+                    <div id="mapPreview" style="margin-top:12px;"></div>
+                </div>
+            </div>
             {{-- ── 5. COVER / BANNER IMAGE ── --}}
             <div class="card">
                 <div class="card-header" style="padding:18px 22px 0;">
@@ -272,8 +293,7 @@
                     <div class="form-group">
                         <label class="form-label">Banner Image <span class="required">*</span></label>
                         <label class="file-upload" for="banner_img_input">
-                            <input id="banner_img_input" type="file" name="banner_img" accept="image/*"
-                                onchange="previewBanner(event)">
+                            <input id="banner_img_input" type="file" name="banner_img" accept="image/*">
                             <div class="upload-icon"><i class="fas fa-image"></i></div>
                             <div class="upload-text">Click to upload a main cover image</div>
                             <div class="upload-hint">PNG, JPG, JPEG — max 5MB</div>
@@ -283,20 +303,7 @@
                         @enderror
                     </div>
 
-                    {{-- Preview (hidden until file chosen) --}}
-                    <div id="bannerPreview" style="display:none; margin-top:12px;">
-                        <label class="form-label">Preview</label>
-                        <div style="position:relative; display:inline-block; margin-top:6px;">
-                            <img id="bannerPreviewImg" src="" alt="Banner preview" style="height:140px; border-radius:10px; object-fit:cover;
-                                       border:1px solid var(--border);">
-                            <button type="button" onclick="clearBanner()" style="position:absolute; top:5px; right:5px; width:22px; height:22px;
-                                       background:var(--red); border:none; border-radius:50%;
-                                       color:white; font-size:9px; cursor:pointer;
-                                       display:flex; align-items:center; justify-content:center;">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                    </div>
+                    <div id="bannerPreview" style="margin-top:12px;"></div>
                 </div>
             </div>
 
@@ -313,12 +320,13 @@
                         <div class="form-group">
                             <label class="form-label">Currency</label>
                             <select name="currency" class="form-input">
-                                <option value="USD" {{ old('currency', 'USD') == 'USD' ? 'selected' : '' }}>USD</option>
-                                <option value="Rs"  {{ old('currency', 'USD') == 'Rs'  ? 'selected' : '' }}>Rs</option>
+                                <option value="" {{ old('currency', '') === '' ? 'selected' : '' }}>Select currency</option>
+                                <option value="USD" {{ old('currency', '') == 'USD' ? 'selected' : '' }}>USD</option>
+                                <option value="Rs"  {{ old('currency', '') == 'Rs'  ? 'selected' : '' }}>Rs</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Price <span class="required">*</span></label>
+                            <label class="form-label">Price</label>
                             <div class="input-icon-wrap">
                                 <i class="fas fa-dollar-sign input-icon"></i>
                                 <input type="text" name="price"
@@ -337,13 +345,13 @@
                                 <input type="text" name="discount_price" class="form-input" placeholder="0.00"
                                     value="{{ old('discount_price') }}">
                             </div>
-                            <div class="form-hint">Leave empty if no discount</div>
+                            <div class="form-hint">Leave empty if no price or discount</div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {{-- ── 7. HIGHLIGHT ACTIVITIES ── --}}
+            {{-- ── 7. POLICIES ── --}}
             <div class="card">
 
                 <div class="card-header" style="padding:18px 22px 0;">
@@ -362,8 +370,7 @@
                                     class="form-input {{ $errors->has('group_size') ? 'is-error' : '' }}"
                                     placeholder="e.g. 10" value="{{ old('group_size') }}">
                             </div>
-                            @error('group_size')<div class="form-error"><i class="fas fa-exclamation-circle"></i> {{
-                                $message }}</div>@enderror
+                            @error('group_size')<div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>@enderror
                         </div>
 
                         <div class="form-group">
@@ -375,28 +382,68 @@
                             </div>
                         </div>
 
+                        {{-- Price Includes --}}
                         <div class="form-group">
                             <label class="form-label">Price Includes</label>
-                            <div class="input-icon-wrap">
-                                <i class="fas fa-list input-icon"></i>
-                                <textarea name="price_include" class="form-input" rows="4"
-                                    placeholder="Use line breaks for bullets, **bold**, or *italic* formatting">{{ old('price_include') }}</textarea>
+                            @php
+                                $selectedInclusionIds = collect(old('inclusion_ids', []))->map(fn($v) => (int) $v)->all();
+                                $selectedInclusionNames = $inclusions->whereIn('id', $selectedInclusionIds)->pluck('title')->values()->all();
+                            @endphp
+                            <div class="tour-destination-picker">
+                                <button type="button" id="inclusionsDropdownToggle" class="destination-dropdown-btn">
+                                    <span id="inclusionsSelectedText" class="destination-selected-text">
+                                        {{ implode(', ', $selectedInclusionNames) ?: 'Select inclusions...' }}
+                                    </span>
+                                    <i class="fas fa-chevron-down destination-dropdown-icon"></i>
+                                </button>
+                                <div id="inclusionsDropdownMenu" class="destination-dropdown-menu"></div>
                             </div>
-                            <div class="form-hint">Use one entry per line. Prefix list items with -, *, or + for bullet
-                                formatting.</div>
+                            @error('inclusion_ids')<div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>@enderror
                         </div>
 
-                        <div class="form-group" style="grid-column: 1 / -1;">
-                            <label class="form-label">Cancellation Policy</label>
-                            <div class="input-icon-wrap">
-                                <i class="fas fa-file-contract input-icon"></i>
-                                <textarea name="cancellation_policy" class="form-input" rows="4"
-                                    placeholder="Use line breaks for bullets, **bold**, or *italic* formatting">{{ old('cancellation_policy') }}</textarea>
+                        {{-- Price Excludes --}}
+                        <div class="form-group">
+                            <label class="form-label">Price Excludes</label>
+                            @php
+                                $selectedExclusionIds = collect(old('exclusion_ids', []))->map(fn($v) => (int) $v)->all();
+                                $selectedExclusionNames = $exclusions->whereIn('id', $selectedExclusionIds)->pluck('title')->values()->all();
+                            @endphp
+                            <div class="tour-destination-picker">
+                                <button type="button" id="exclusionsDropdownToggle" class="destination-dropdown-btn">
+                                    <span id="exclusionsSelectedText" class="destination-selected-text">
+                                        {{ implode(', ', $selectedExclusionNames) ?: 'Select exclusions...' }}
+                                    </span>
+                                    <i class="fas fa-chevron-down destination-dropdown-icon"></i>
+                                </button>
+                                <div id="exclusionsDropdownMenu" class="destination-dropdown-menu"></div>
                             </div>
-                            <div class="form-hint">Enter a full policy with paragraphs, bullets, and emphasis.</div>
+                            @error('exclusion_ids')<div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>@enderror
+                        </div>
+
+                        {{-- Cancellation Policy --}}
+                        <div class="form-group">
+                            <label class="form-label">Cancellation Policy</label>
+                            @php
+                                $selectedPolicyIds = collect(old('cancellation_policy_ids', []))->map(fn($v) => (int) $v)->all();
+                                $selectedPolicyNames = $cancellationPolicies->whereIn('id', $selectedPolicyIds)->pluck('title')->values()->all();
+                            @endphp
+                            <div class="tour-destination-picker">
+                                <button type="button" id="policiesDropdownToggle" class="destination-dropdown-btn">
+                                    <span id="policiesSelectedText" class="destination-selected-text">
+                                        {{ implode(', ', $selectedPolicyNames) ?: 'Select cancellation policies...' }}
+                                    </span>
+                                    <i class="fas fa-chevron-down destination-dropdown-icon"></i>
+                                </button>
+                                <div id="policiesDropdownMenu" class="destination-dropdown-menu"></div>
+                            </div>
+                            @error('cancellation_policy_ids')<div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>@enderror
                         </div>
                     </div>
                 </div>
+            </div>
+
+            {{-- ── 7. HIGHLIGHT ACTIVITIES ── --}}
+            <div class="card">
                 <div class="card-header" style="padding:18px 22px 0;">
                     <div style="display:flex; align-items:center; justify-content:space-between; width:100%;">
                         <div class="card-header-title">
@@ -662,6 +709,183 @@
                 preview.appendChild(wrap);
             };
             reader.readAsDataURL(file);
+        });
+    }
+
+    const policyPickerData = {
+        inclusions: {
+            items: @json($inclusions->map(fn($i) => ['id' => $i->id, 'name' => $i->title])->values()),
+            selectedIds: @json($selectedInclusionIds),
+            inputName: 'inclusion_ids[]',
+            idPrefix: 'inclusion_',
+            placeholder: 'Select inclusions...',
+        },
+        exclusions: {
+            items: @json($exclusions->map(fn($e) => ['id' => $e->id, 'name' => $e->title])->values()),
+            selectedIds: @json($selectedExclusionIds),
+            inputName: 'exclusion_ids[]',
+            idPrefix: 'exclusion_',
+            placeholder: 'Select exclusions...',
+        },
+        policies: {
+            items: @json($cancellationPolicies->map(fn($p) => ['id' => $p->id, 'name' => $p->title])->values()),
+            selectedIds: @json($selectedPolicyIds),
+            inputName: 'cancellation_policy_ids[]',
+            idPrefix: 'policy_',
+            placeholder: 'Select cancellation policies...',
+        },
+    };
+
+    function getPickerToggle(key) {
+    return document.getElementById(key + 'DropdownToggle');
+    }
+
+    function getPickerMenu(key) {
+        return document.getElementById(key + 'DropdownMenu');
+    }
+
+    function getPickerDisplay(key) {
+        return document.getElementById(key + 'SelectedText');
+    }
+
+    function updatePickerDisplay(key) {
+        const display = getPickerDisplay(key);
+        if (!display) return;
+
+        const checked = Array.from(document.querySelectorAll('input.picker-checkbox[data-picker-key="' + key + '"]:checked'));
+        const labels = checked.map(function (cb) { return cb.dataset.label || ''; }).filter(Boolean);
+
+        display.textContent = labels.length ? labels.join(', ') : policyPickerData[key].placeholder;
+    }
+
+    function setPickerMenuVisibility(key, isVisible) {
+        const menu = getPickerMenu(key);
+        const toggle = getPickerToggle(key);
+        if (!menu) return;
+
+        menu.classList.toggle('show', isVisible);
+        if (toggle) {
+            toggle.classList.toggle('active', isVisible);
+            toggle.setAttribute('aria-expanded', isVisible ? 'true' : 'false');
+        }
+    }
+
+    function togglePickerMenu(key) {
+        const menu = getPickerMenu(key);
+        if (!menu) return;
+
+        const willOpen = !menu.classList.contains('show');
+
+        // close all other pickers so only one is open at a time
+        Object.keys(policyPickerData).forEach(function (otherKey) {
+            if (otherKey !== key) setPickerMenuVisibility(otherKey, false);
+        });
+
+        setPickerMenuVisibility(key, willOpen);
+    }
+
+    function renderPickerOptions(key) {
+        const menu = getPickerMenu(key);
+        const config = policyPickerData[key];
+        if (!menu || !config) return;
+
+        menu.innerHTML = '';
+
+        if (!config.items.length) {
+            menu.innerHTML = '<div class="destination-empty-message">No options available. Add some from Tour Policies.</div>';
+            updatePickerDisplay(key);
+            return;
+        }
+
+        const searchWrap = document.createElement('div');
+        searchWrap.className = 'destination-search-wrap';
+
+        const searchInput = document.createElement('input');
+        searchInput.type = 'search';
+        searchInput.className = 'destination-search-input';
+        searchInput.placeholder = 'Search...';
+        searchInput.setAttribute('aria-label', 'Search ' + key);
+        searchWrap.appendChild(searchInput);
+
+        const optionsList = document.createElement('div');
+        optionsList.className = 'destination-options-list';
+
+        menu.appendChild(searchWrap);
+        menu.appendChild(optionsList);
+
+        config.items.forEach(function (item) {
+            const option = document.createElement('div');
+            option.className = 'custom-control custom-checkbox px-3 py-1';
+            option.dataset.label = String(item.name || '').toLowerCase();
+
+            const checkbox = document.createElement('input');
+            checkbox.className = 'custom-control-input picker-checkbox';
+            checkbox.type = 'checkbox';
+            checkbox.id = config.idPrefix + item.id;
+            checkbox.name = config.inputName;
+            checkbox.value = item.id;
+            checkbox.dataset.label = item.name;
+            checkbox.dataset.pickerKey = key;
+            checkbox.checked = config.selectedIds.map(String).includes(String(item.id));
+            checkbox.addEventListener('change', function () { updatePickerDisplay(key); });
+
+            const label = document.createElement('label');
+            label.className = 'custom-control-label';
+            label.setAttribute('for', checkbox.id);
+            label.textContent = item.name;
+
+            option.appendChild(checkbox);
+            option.appendChild(label);
+            optionsList.appendChild(option);
+        });
+
+        const emptySearchState = document.createElement('div');
+        emptySearchState.className = 'destination-empty-message';
+        emptySearchState.textContent = 'No matches found.';
+        emptySearchState.style.display = 'none';
+        optionsList.appendChild(emptySearchState);
+
+        searchInput.addEventListener('input', function () {
+            const query = searchInput.value.trim().toLowerCase();
+            let visibleCount = 0;
+
+            Array.from(optionsList.querySelectorAll('.custom-control')).forEach(function (option) {
+                const label = option.dataset.label || '';
+                const isVisible = query === '' || label.includes(query);
+                option.style.display = isVisible ? '' : 'none';
+                if (isVisible) visibleCount++;
+            });
+
+            emptySearchState.style.display = visibleCount === 0 ? 'block' : 'none';
+        });
+
+        updatePickerDisplay(key);
+    }
+
+    function initPolicyPickers() {
+        Object.keys(policyPickerData).forEach(function (key) {
+            renderPickerOptions(key);
+
+            const toggle = getPickerToggle(key);
+            if (toggle) {
+                toggle.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    togglePickerMenu(key);
+                });
+            }
+        });
+
+        document.addEventListener('click', function (event) {
+            Object.keys(policyPickerData).forEach(function (key) {
+                const menu = getPickerMenu(key);
+                const toggle = getPickerToggle(key);
+                if (!menu || !toggle) return;
+
+                if (!menu.contains(event.target) && !toggle.contains(event.target)) {
+                    setPickerMenuVisibility(key, false);
+                }
+            });
         });
     }
 
@@ -1081,26 +1305,74 @@
         return image;
     }
 
+    // function renderBannerPreview(fileInput) {
+    //     const preview = document.getElementById('bannerPreview');
+
+    //     if (!preview) {
+    //         return;
+    //     }
+
+    //     const file = fileInput && fileInput.files ? fileInput.files[0] : null;
+    //     preview.innerHTML = '';
+
+    //     if (!file) {
+    //         preview.innerHTML = `
+    //         <div class="tour-preview-empty p-4 text-center text-secondary">
+    //             <i class="fas fa-image fa-2x mb-2"></i>
+    //             <div>No banner image selected yet.</div>
+    //         </div>
+    //     `;
+    //         return;
+    //     }
+
+    //     preview.appendChild(createPreviewImage(file, 'tour-preview-thumb'));
+    // }
     function renderBannerPreview(fileInput) {
         const preview = document.getElementById('bannerPreview');
-
-        if (!preview) {
-            return;
-        }
+        if (!preview) return;
 
         const file = fileInput && fileInput.files ? fileInput.files[0] : null;
         preview.innerHTML = '';
 
         if (!file) {
             preview.innerHTML = `
-            <div class="tour-preview-empty p-4 text-center text-secondary">
-                <i class="fas fa-image fa-2x mb-2"></i>
-                <div>No banner image selected yet.</div>
-            </div>
-        `;
+                <div class="tour-preview-empty p-4 text-center text-secondary">
+                    <i class="fas fa-image fa-2x mb-2"></i>
+                    <div>No banner image selected yet.</div>
+                </div>
+            `;
             return;
         }
 
+        const wrap = document.createElement('div');
+        wrap.style.cssText = 'position:relative; display:inline-block;';
+        wrap.appendChild(createPreviewImage(file, 'tour-preview-thumb'));
+
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.style.cssText = 'position:absolute; top:5px; right:5px; width:22px; height:22px; background:var(--red); border:none; border-radius:50%; color:white; font-size:9px; cursor:pointer; display:flex; align-items:center; justify-content:center;';
+        removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+        removeBtn.addEventListener('click', function () {
+            fileInput.value = '';
+            renderBannerPreview(fileInput);
+        });
+        wrap.appendChild(removeBtn);
+
+        preview.appendChild(wrap);
+    }
+
+    const mapInput = document.getElementById('map_img_input');
+if (mapInput) {
+    mapInput.addEventListener('change', function () { renderMapPreview(mapInput); });
+    renderMapPreview(mapInput);
+}
+
+    function renderMapPreview(fileInput) {
+        const preview = document.getElementById('mapPreview');
+        if (!preview) return;
+        const file = fileInput.files ? fileInput.files[0] : null;
+        preview.innerHTML = '';
+        if (!file) return;
         preview.appendChild(createPreviewImage(file, 'tour-preview-thumb'));
     }
 
@@ -1258,6 +1530,7 @@
 
         renderDestinationOptions(initialDestinations);
         renderFeatureSelectedCards();
+        initPolicyPickers();
         renderBannerPreview(bannerInput);
         renderGalleryPreview(galleryInput);
 

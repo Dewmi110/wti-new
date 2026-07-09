@@ -29,41 +29,42 @@
 
       <div class="col-md-4 ftco-animate mb-4">
         <div class="contact-info-box text-center">
-          <div class="cib-icon mx-auto mb-3">
-            <span class="fa fa-map-marker"></span>
-          </div>
-          <h5 class="cib-title">Our Location</h5>
-          <p class="cib-text">321-4/1, 4th Floor Galle road,<br>Colombo 03, Sri Lanka</p>
+            <div class="cib-icon mx-auto mb-3">
+                <span class="fa fa-map-marker"></span>
+            </div>
+            <h5 class="cib-title">Our Location</h5>
+            <p class="cib-text">{!! nl2br(e($contactDetail->location ?? '321-4/1, 4th Floor Galle road, Colombo 03, Sri Lanka')) !!}</p>
         </div>
-      </div>
+    </div>
 
       <div class="col-md-4 ftco-animate mb-4">
         <div class="contact-info-box text-center">
-          <div class="cib-icon mx-auto mb-3">
-            <span class="fa fa-phone"></span>
-          </div>
-          <h5 class="cib-title">Phone / WhatsApp</h5>
-          <p class="cib-text">
-            <a href="tel:+94777377956">+94 777 377 956</a><br>
-            <a href="https://wa.me/94777377956" target="_blank" style="color:#25D366;font-weight:700;">
-              <i class="fa fa-whatsapp"></i> WhatsApp Us
-            </a>
-          </p>
+            <div class="cib-icon mx-auto mb-3">
+                <span class="fa fa-phone"></span>
+            </div>
+            <h5 class="cib-title">Phone / WhatsApp</h5>
+            <p class="cib-text">
+                <a href="tel:{{ $contactDetail->phone ?? '+94777377956' }}">{{ $contactDetail->phone ?? '+94 777 377 956' }}</a><br>
+                @if(!empty($contactDetail->whatsapp_number))
+                <a href="https://wa.me/{{ $contactDetail->whatsapp_number }}" target="_blank" style="color:#25D366;font-weight:700;">
+                    <i class="fa fa-whatsapp"></i> WhatsApp Us
+                </a>
+                @endif
+            </p>
         </div>
-      </div>
+    </div>
 
-      <div class="col-md-4 ftco-animate mb-4">
+    <div class="col-md-4 ftco-animate mb-4">
         <div class="contact-info-box text-center">
-          <div class="cib-icon mx-auto mb-3">
-            <span class="fa fa-envelope"></span>
-          </div>
-          <h5 class="cib-title">Email Address</h5>
-          <p class="cib-text">
-            <a href="mailto:hello@wti.lk">hello@wti.lk</a><br>
-            {{-- <a href="mailto:bookings@yourcompany.com">bookings@yourcompany.com</a> --}}
-          </p>
+            <div class="cib-icon mx-auto mb-3">
+                <span class="fa fa-envelope"></span>
+            </div>
+            <h5 class="cib-title">Email Address</h5>
+            <p class="cib-text">
+                <a href="mailto:{{ $contactDetail->email ?? 'hello@wti.lk' }}">{{ $contactDetail->email ?? 'hello@wti.lk' }}</a>
+            </p>
         </div>
-      </div>
+    </div>
 
     </div>
   </div>

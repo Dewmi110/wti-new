@@ -149,12 +149,12 @@
                                 {{-- <span class="tour-card-v3__toggle-icon">&#8743;</span> --}}
                             </div>
 
-                            <div class="tour-card-v3__icons">
+                            {{-- <div class="tour-card-v3__icons">
                                 <span title="Accommodation"><i class="fa fa-building-o"></i></span>
                                 <span title="Flights"><i class="fa fa-plane"></i></span>
                                 <span title="Transport"><i class="fa fa-car"></i></span>
                                 <span title="WiFi"><i class="fa fa-wifi"></i></span>
-                            </div>
+                            </div> --}}
 
                             <div class="tour-card-v3__details">
                                 @if(!empty($features))
@@ -239,12 +239,12 @@
                                 {{-- <span class="tour-card-v3__toggle-icon">&#8743;</span> --}}
                             </div>
 
-                            <div class="tour-card-v3__icons">
+                            {{-- <div class="tour-card-v3__icons">
                                 <span title="Accommodation"><i class="fa fa-building-o"></i></span>
                                 <span title="Flights"><i class="fa fa-plane"></i></span>
                                 <span title="Transport"><i class="fa fa-car"></i></span>
                                 <span title="WiFi"><i class="fa fa-wifi"></i></span>
-                            </div>
+                            </div> --}}
 
                             <div class="tour-card-v3__details">
                                 @if(!empty($features))
@@ -336,75 +336,86 @@
         <div class="row ftco-animate">
             <div class="col-md-12">
                 <div class="carousel-testimony owl-carousel">
-                    <div class="item">
-                        <div class="testimony-wrap py-4">
-                            <div class="text">
-                                <p class="star">
-                                    <span class="fa fa-star"></span>
-                                    <span class="fa fa-star"></span>
-                                    <span class="fa fa-star"></span>
-                                    <span class="fa fa-star"></span>
-                                    <span class="fa fa-star"></span>
-                                </p>
-                                <p class="testimonial-text mb-4">Far far away, behind the word mountains, far from the
-                                    countries Vokalia
-                                    and Consonantia, there live the blind texts.</p>
-                                <div class="d-flex align-items-center">
-                                    <div class="user-img" style="background-image: url(images/person_1.jpg)"></div>
-                                    <div class="pl-3">
-                                        <p class="name">Roger Scott</p>
-                                        <span class="position">Marketing Manager</span>
+                    @if(!empty($googleReviews) && count($googleReviews) > 0)
+                        @foreach($googleReviews as $rev)
+                        <div class="item">
+                            <div class="testimony-wrap py-4">
+                                <div class="text">
+                                    <p class="star">
+                                        @for($s=1;$s<=5;$s++)
+                                            @if($s <= ($rev['rating'] ?? 0))
+                                                <span class="fa fa-star"></span>
+                                            @else
+                                                <span class="fa fa-star-o"></span>
+                                            @endif
+                                        @endfor
+                                    </p>
+                                    <p class="testimonial-text mb-4">{{ $rev['text'] }}</p>
+                                    <div class="d-flex align-items-center">
+                                        @if(!empty($rev['profile_photo_url']))
+                                        <div class="user-img" style="background-image: url('{{ $rev['profile_photo_url'] }}')"></div>
+                                        @else
+                                        <div class="user-img" style="background-image: url(images/person_1.jpg)"></div>
+                                        @endif
+                                        <div class="pl-3">
+                                            <p class="name">{{ $rev['author_name'] }}</p>
+                                            <span class="position">{{ $rev['time'] ?? '' }}</span>
+                                        </div>
+                                    </div>
+                                    @if(!empty($rev['url']))
+                                    <p class="mt-2"><a href="{{ $rev['url'] }}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-primary">See on Google Maps</a></p>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    @else
+                        {{-- Fallback static testimonials if Google reviews not available --}}
+                        <div class="item">
+                            <div class="testimony-wrap py-4">
+                                <div class="text">
+                                    <p class="star">
+                                        <span class="fa fa-star"></span>
+                                        <span class="fa fa-star"></span>
+                                        <span class="fa fa-star"></span>
+                                        <span class="fa fa-star"></span>
+                                        <span class="fa fa-star"></span>
+                                    </p>
+                                    <p class="testimonial-text mb-4">Far far away, behind the word mountains, far from the
+                                        countries Vokalia and Consonantia, there live the blind texts.</p>
+                                    <div class="d-flex align-items-center">
+                                        <div class="user-img" style="background-image: url(images/person_1.jpg)"></div>
+                                        <div class="pl-3">
+                                            <p class="name">Roger Scott</p>
+                                            <span class="position">Marketing Manager</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="item">
-                        <div class="testimony-wrap py-4">
-                            <div class="text">
-                                <p class="star">
-                                    <span class="fa fa-star"></span>
-                                    <span class="fa fa-star"></span>
-                                    <span class="fa fa-star"></span>
-                                    <span class="fa fa-star"></span>
-                                    <span class="fa fa-star"></span>
-                                </p>
-                                <p class="testimonial-text mb-4">Far far away, behind the word mountains, far from the
-                                    countries Vokalia
-                                    and Consonantia, there live the blind texts.</p>
-                                <div class="d-flex align-items-center">
-                                    <div class="user-img" style="background-image: url(images/person_2.jpg)"></div>
-                                    <div class="pl-3">
-                                        <p class="name">Roger Scott</p>
-                                        <span class="position">Marketing Manager</span>
+                        <div class="item">
+                            <div class="testimony-wrap py-4">
+                                <div class="text">
+                                    <p class="star">
+                                        <span class="fa fa-star"></span>
+                                        <span class="fa fa-star"></span>
+                                        <span class="fa fa-star"></span>
+                                        <span class="fa fa-star"></span>
+                                        <span class="fa fa-star"></span>
+                                    </p>
+                                    <p class="testimonial-text mb-4">Far far away, behind the word mountains, far from the
+                                        countries Vokalia and Consonantia, there live the blind texts.</p>
+                                    <div class="d-flex align-items-center">
+                                        <div class="user-img" style="background-image: url(images/person_2.jpg)"></div>
+                                        <div class="pl-3">
+                                            <p class="name">Roger Scott</p>
+                                            <span class="position">Marketing Manager</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="item">
-                        <div class="testimony-wrap py-4">
-                            <div class="text">
-                                <p class="star">
-                                    <span class="fa fa-star"></span>
-                                    <span class="fa fa-star"></span>
-                                    <span class="fa fa-star"></span>
-                                    <span class="fa fa-star"></span>
-                                    <span class="fa fa-star"></span>
-                                </p>
-                                <p class="testimonial-text mb-4">Far far away, behind the word mountains, far from the
-                                    countries Vokalia
-                                    and Consonantia, there live the blind texts.</p>
-                                <div class="d-flex align-items-center">
-                                    <div class="user-img" style="background-image: url(images/person_3.jpg)"></div>
-                                    <div class="pl-3">
-                                        <p class="name">Roger Scott</p>
-                                        <span class="position">Marketing Manager</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    @endif
                 </div>
             </div>
         </div>

@@ -30,7 +30,7 @@
                 <h4 class="td-sidebar-section-title">Tour Details</h4>
                 <div class="td-detail-row">
                     <span class="td-detail-label"><i class="fa fa-moon-o"></i> Duration</span>
-                    <span class="td-detail-value">{{ $tour->duration }} Nights</span>
+                    <span class="td-detail-value">{{ $tour->duration }}</span>
                 </div>
                 <div class="td-detail-row">
                     <span class="td-detail-label"><i class="fa fa-map-marker"></i> Location</span>

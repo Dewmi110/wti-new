@@ -24,7 +24,7 @@ class TourStoreRequest extends FormRequest
             'country' => 'required|exists:countries,id',
             'destinations' => 'nullable|array',
             'destinations.*' => 'integer|exists:destinations,id',
-            'price' => 'required|numeric|min:0',
+            'price' => 'nullable|numeric|min:0',
             'discount_price' => 'nullable|numeric|min:0',
             'highlight_activities' => 'nullable|array',
             'highlight_activities.*' => 'nullable|string',
@@ -43,10 +43,10 @@ class TourStoreRequest extends FormRequest
             'itineraries.*.day' => 'required_with:itineraries|integer|min:1',
             'itineraries.*.description' => 'required_with:itineraries|string',
             'visibility' => 'nullable|in:0,1',
-            'currency'     => 'nullable', 'string', 'in:USD,Rs',
-            'os_currency'  => 'nullable', 'string', 'in:USD,Rs',
-            'os_price'     => 'nullable', 'numeric', 'min:0',
-            'os_visibility'=> 'nullable', 'in:0,1',
+            'currency' => ['nullable', 'string', 'in:USD,Rs'],
+            'os_currency' => ['nullable', 'string', 'in:USD,Rs'],
+            'os_price' => 'nullable|numeric|min:0',
+            'os_visibility' => 'nullable|in:0,1',
         ];
     }
 }

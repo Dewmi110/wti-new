@@ -10,6 +10,8 @@
   $isUsersActive = request()->routeIs('admin.users.*');
   $isImageSliderActive = request()->routeIs('admin.image_sliders.*','admin.blog_sliders.*','admin.tour_banners.*','admin.corporate_banners*','admin.blog_banners*','admin.contact_banners*');
   $isServicesActive = request()->routeIs('admin.services.*');
+  $isContactDetailsActive = request()->routeIs('admin.contact_details.*');
+  $isTourPoliciesActive = request()->routeIs('admin.tour-policies.*');
   $isBookingsActive = request()->routeIs('admin.bookings.*');
   $isProfileActive = request()->routeIs('admin.profile.*');
 
@@ -58,6 +60,10 @@
     <span class="nav-icon"><i class="fas fa-calendar-check"></i></span>
     Bookings
 </a>
+  <a class="nav-item {{ $isTourPoliciesActive ? 'active' : '' }}" href="{{ route('admin.tour-policies.index') }}">
+    <span class="nav-icon"><i class="fas fa-file-contract"></i></span>
+    Tour Policies
+  </a>
   {{-- User Management — super_admin and admin only --}}
   @if(in_array(Auth::user()->role?->slug, ['super_admin', 'admin']))
   <a class="nav-item {{ $isUsersActive ? 'active' : '' }}" href="{{ route('admin.users.index') }}">
@@ -72,6 +78,11 @@
   <a class="nav-item {{ $isServicesActive ? 'active' : '' }}" href="{{ route('admin.services.index') }}">
     <span class="nav-icon"><i class="fas fa-concierge-bell"></i></span>
     Services
+  </a>
+
+  <a class="nav-item {{ $isContactDetailsActive ? 'active' : '' }}" href="{{ route('admin.contact_details.edit') }}">
+    <span class="nav-icon"><i class="fas fa-address-card"></i></span>
+    Contact Details
   </a>
 
   <div class="sidebar-label">Web Content Management</div>

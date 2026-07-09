@@ -16,9 +16,11 @@ use App\Models\BlogBanner;
 use App\Models\ImageSlider;
 use App\Models\BlogSlider;
 use App\Models\Booking;
+use App\Models\ContactDetail;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Services\GooglePlacesService;
 
 class FrontendController extends Controller
 {
@@ -54,7 +56,18 @@ class FrontendController extends Controller
 
         $imageSliders = ImageSlider::all();
 
-        return view('frontend.index', compact('destinations', 'tours', 'featured_tours', 'blogs', 'imageSliders'));
+        // Attempt to fetch Google Maps reviews (place id & API key configured in .env)
+        $googleReviews = [];
+        try {
+            $service = new GooglePlacesService();
+            $googleReviews = $service->getReviews(5);
+        } catch (\Throwable $e) {
+            // don't break the page if Google API fails
+            \Illuminate\Support\Facades\Log::info('Google reviews fetch failed: ' . $e->getMessage());
+            $googleReviews = [];
+        }
+
+        return view('frontend.index', compact('destinations', 'tours', 'featured_tours', 'blogs', 'imageSliders', 'googleReviews'));
     }
 
     public function searchTours(Request $request)
@@ -196,6 +209,9 @@ class FrontendController extends Controller
     public function singleTour(Tour $tour)
     {
         $tour->load(['images', 'itineraries']);
+        $includes = \App\Models\TourInclusion::whereIn('id', $tour->inclusion_ids ?? [])->where('status', 1)->get();
+        $excludes = \App\Models\TourExclusion::whereIn('id', $tour->exclusion_ids ?? [])->where('status', 1)->get();
+        $cancellationPolicies = \App\Models\CancellationPolicy::whereIn('id', $tour->cancellation_policy_ids ?? [])->where('status', 1)->get();
 
         $coverImagePath = $tour->banner_img_path ?: $tour->images->first()?->img_path;
         $coverImageUrl = $coverImagePath
@@ -232,7 +248,8 @@ class FrontendController extends Controller
 
         return view('frontend.single_tour', compact(
             'tour', 'coverImageUrl', 'displayPrice', 'features',
-            'locationName', 'relatedTours', 'tourDestinations','destinations'
+            'locationName', 'relatedTours', 'tourDestinations','destinations',
+             'includes', 'excludes', 'cancellationPolicies'
         ));
     }
 
@@ -286,9 +303,10 @@ class FrontendController extends Controller
     public function contact()
     {
         $contactBanner = ContactBanner::latest()->first();
+        $contactDetail = ContactDetail::first();
         $destinations  = \App\Models\Country::where('status', 1)->orderBy('name')->get();
         $serviceTypes  = \App\Models\ServiceType::where('status', 1)->orderBy('name')->get();
-        return view('frontend.contact', compact('destinations', 'serviceTypes', 'contactBanner') );
+        return view('frontend.contact', compact('destinations', 'serviceTypes', 'contactBanner', 'contactDetail') );
     }
 
      public function sendInquiry(Request $request)

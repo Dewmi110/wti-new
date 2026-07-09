@@ -1994,3 +1994,103 @@
 .pagination-page { padding:4px 10px; border-radius:6px; color:var(--text-muted); text-decoration:none; }
 .pagination-page.active { background:var(--purple); color:#fff; }
 .pagination-dots { padding:4px 6px; color:var(--text-muted); }
+.policy-tabs {
+    display: flex;
+    gap: 4px;
+    padding: 16px 22px 0;
+    border-bottom: 1px solid var(--border);
+}
+.policy-tab-btn {
+    border: none;
+    background: transparent;
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.policy-tab-btn.active {
+    color: var(--purple);
+    border-bottom-color: var(--purple);
+}
+.policy-tab-panel { display: none; }
+.policy-tab-panel.active { display: block; }
+.policy-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 24px;
+}
+.policy-form-col {
+    border-right: 1px solid var(--border);
+    padding-right: 20px;
+}
+.w-100 { width: 100%; }
+
+.policy-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.policy-modal {
+    background: #fff;
+    border-radius: 12px;
+    padding: 22px;
+    width: 100%;
+    max-width: 420px;
+}
+.policy-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+@media (max-width: 768px) {
+    .policy-layout { grid-template-columns: 1fr; }
+    .policy-form-col { border-right: none; border-bottom: 1px solid var(--border); padding-right: 0; padding-bottom: 20px; margin-bottom: 20px; }
+}
+/* Spacing fixes */
+.policy-form-col .form-group {
+    margin-bottom: 20px;
+}
+
+.policy-list-col .table-wrap {
+    padding: 0;
+}
+
+.data-table thead th {
+    padding: 14px 18px;
+}
+
+.data-table tbody td {
+    padding: 16px 18px;
+    border-top: 1px solid var(--border, #eef1f5);
+}
+
+.data-table tbody tr:first-child td {
+    border-top: none;
+}
+
+/* Empty state row needs padding on all sides, not just default cell padding */
+.data-table tbody td[colspan] {
+    padding: 28px 18px;
+    color: var(--text-muted, #8392ab);
+    text-align: center;
+}
+
+/* Give the whole layout a bit more breathing room top/bottom */
+.policy-layout {
+    padding-top: 6px;
+}
+
+.card-header-sub {
+    margin-bottom: 16px !important;
+}

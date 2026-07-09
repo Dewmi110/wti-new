@@ -1,7 +1,7 @@
 @if (!empty($itinerary))
             <div class="td-card">
                 <h3 class="td-section-title">Itinerary :</h3>
-                <p class="td-overview-text mb-4">{{ $tour->description }}</p>
+                {{-- <p class="td-overview-text mb-4">{{ $tour->description }}</p> --}}
                 <div class="td-itinerary">
                     @foreach ($itinerary as $idx => $day)
                     @php

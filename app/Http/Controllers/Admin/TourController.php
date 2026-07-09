@@ -13,6 +13,9 @@ use App\Models\Destination;
 use App\Models\Tour;
 use App\Models\TourImage;
 use App\Models\DayItinerary;
+use App\Models\TourInclusion;
+use App\Models\TourExclusion;
+use App\Models\CancellationPolicy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -78,6 +81,28 @@ class TourController extends Controller
         return $activities === [] ? null : implode("\n", $activities);
     }
 
+    private function normalizeOptionalString(?string $value): ?string
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        $trimmed = trim($value);
+
+        return $trimmed === '' ? null : $trimmed;
+    }
+
+    private function normalizeOptionalDecimal(?string $value): ?string
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        $trimmed = trim($value);
+
+        return $trimmed === '' ? null : $trimmed;
+    }
+
     public function featureIcons()
     {
         $features = Cache::remember('tour.feature-icons.catalog', now()->day(), function (): array {
@@ -132,7 +157,7 @@ class TourController extends Controller
 
     public function index()
     {
-        $tours = Tour::with(['category', 'type', 'theme', 'countryModel', 'images'])->paginate(10);
+        $tours = Tour::with(['category', 'type', 'theme', 'countryModel', 'images', 'creator'])->paginate(10);
         return view('backend.tours.index', compact('tours'));
     }
 
@@ -143,8 +168,11 @@ class TourController extends Controller
         $themes = TourTheme::where('status',1)->get();
         $countries = Country::where('status',1)->get();
         $destinations = Destination::where('status',1)->get();
+        $inclusions = TourInclusion::where('status', 1)->orderBy('title')->get();
+        $exclusions = TourExclusion::where('status', 1)->orderBy('title')->get();
+        $cancellationPolicies = CancellationPolicy::where('status', 1)->orderBy('title')->get();
 
-        return view('backend.tours.create', compact('categories','types','themes','countries','destinations'));
+        return view('backend.tours.create', compact('categories','types','themes','countries','destinations','inclusions','exclusions','cancellationPolicies'));
     }
 
     public function store(TourStoreRequest $request)
@@ -152,12 +180,22 @@ class TourController extends Controller
         $data = $request->validated();
         $data['slug'] = Str::slug($data['slug'] ?: $data['title']);
         $data['destinations'] = $data['destinations'] ?? [];
+        $data['inclusion_ids'] = $request->input('inclusion_ids', []);
+        $data['exclusion_ids'] = $request->input('exclusion_ids', []);
+        $data['cancellation_policy_ids'] = $request->input('cancellation_policy_ids', []);
+        $data['currency'] = $this->normalizeOptionalString($request->input('currency'));
+        $data['price'] = $this->normalizeOptionalDecimal($request->input('price'));
+        $data['discount_price'] = $this->normalizeOptionalDecimal($request->input('discount_price'));
         $data['features'] = $this->formatFeatures($data['features'] ?? null) ?? [];
         $data['highlight_activities'] = $this->formatHighlightActivities($data['highlight_activities'] ?? null);
         $data['status'] = $request->has('status') ? 1 : 0;
+        $data['created_by'] = auth()->id();
 
         if ($request->hasFile('banner_img')) {
             $data['banner_img_path'] = $request->file('banner_img')->store('tours/banners', 'public');
+        }
+        if ($request->hasFile('map_img')) {
+            $data['map_image_path'] = $request->file('map_img')->store('tours/maps', 'public');
         }
 
         $tour = Tour::create($data);
@@ -185,10 +223,12 @@ class TourController extends Controller
         $themes = TourTheme::where('status',1)->get();
         $countries = Country::where('status',1)->get();
         $destinations = Destination::where('status',1)->get();
-
+        $inclusions = TourInclusion::where('status', 1)->orderBy('title')->get();
+        $exclusions = TourExclusion::where('status', 1)->orderBy('title')->get();
+        $cancellationPolicies = CancellationPolicy::where('status', 1)->orderBy('title')->get();
         $tour->load(['images','itineraries']);
 
-        return view('backend.tours.edit', compact('tour','categories','types','themes','countries','destinations'));
+        return view('backend.tours.edit', compact('tour','categories','types','themes','countries','destinations','inclusions','exclusions','cancellationPolicies'));
     }
 
     public function update(TourUpdateRequest $request, Tour $tour)
@@ -196,6 +236,12 @@ class TourController extends Controller
         $data = $request->validated();
         $data['slug'] = Str::slug($data['slug'] ?: $data['title']);
         $data['destinations'] = $data['destinations'] ?? [];
+        $data['inclusion_ids'] = $request->input('inclusion_ids', []);
+        $data['exclusion_ids'] = $request->input('exclusion_ids', []);
+        $data['cancellation_policy_ids'] = $request->input('cancellation_policy_ids', []);
+        $data['currency'] = $this->normalizeOptionalString($request->input('currency'));
+        $data['price'] = $this->normalizeOptionalDecimal($request->input('price'));
+        $data['discount_price'] = $this->normalizeOptionalDecimal($request->input('discount_price'));
         $data['features'] = $this->formatFeatures($data['features'] ?? null) ?? [];
         $data['highlight_activities'] = $this->formatHighlightActivities($data['highlight_activities'] ?? null);
 
@@ -204,6 +250,9 @@ class TourController extends Controller
 
         if ($request->hasFile('banner_img')) {
             $data['banner_img_path'] = $request->file('banner_img')->store('tours/banners', 'public');
+        }
+        if ($request->hasFile('map_img')) {
+            $data['map_image_path'] = $request->file('map_img')->store('tours/maps', 'public');
         }
 
         $tour->update($data);

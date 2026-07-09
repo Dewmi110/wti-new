@@ -418,3 +418,74 @@
         word-break: break-word;
     }
 
+/* Banner & Map preview — single image, fixed box */
+#bannerPreview .tour-preview-thumb,
+#mapPreview .tour-preview-thumb {
+    display: block;
+    width: auto;
+    height: 140px;
+    max-width: 240px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+}
+
+/* Gallery preview — grid of small thumbnails */
+#galleryPreview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+#galleryPreview .tour-preview-tile {
+    width: 100px;
+}
+#galleryPreview .tour-preview-thumb {
+    display: block;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+}
+#galleryPreview .tour-preview-meta {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Empty-state placeholders */
+.tour-preview-empty {
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+}
+
+/* Multi-select styling: Price Includes / Excludes / Cancellation Policy */
+.form-select[multiple] {
+    height: auto;
+    padding: 6px;
+    border: 1.5px solid var(--border, #e2e8f0);
+    border-radius: 10px;
+    background: #fff;
+}
+
+.form-select[multiple] option {
+    padding: 9px 12px;
+    border-radius: 8px;
+    margin-bottom: 2px;
+    cursor: pointer;
+}
+
+.form-select[multiple] option:checked {
+    background: var(--purple);
+    color: #fff;
+}
+
+.form-select[multiple]:focus {
+    outline: none;
+    border-color: var(--purple);
+    box-shadow: 0 0 0 3px rgba(94, 114, 228, 0.12);
+}

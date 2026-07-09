@@ -12,11 +12,11 @@
                     <div class="td-meta-row">
                         <span class="td-meta-chip">
                             <i class="fa fa-moon-o"></i>
-                            {{ $tour->duration }}D/N
+                            {{ $tour->duration ?? '' }}
                         </span>
                         <span class="td-meta-chip">
                             <i class="fa fa-users"></i>
-                            pax: 10
+                            package for {{ $tour->group_size ?? '' }} people
                         </span>
                         @if ($tour->type)
                         <span class="td-meta-chip">
@@ -26,15 +26,15 @@
                         @endif
                         <span class="td-meta-chip">
                             <i class="fa fa-map-marker"></i>
-                            {{ $locationName }}
+                            {{ $locationName ?? '' }}
                         </span>
                     </div>
                 </div>
                 <div class="td-package-header__price">
                     @if ($tour->discount_price)
-                    <div class="td-price__old">{{ $tour->currency }} {{ number_format((float)$tour->price, 0) }}</div>
+                    <div class="td-price__old">{{ $tour->currency }} {{ number_format((float)$tour->price, 0) ? : '_' }}</div>
                     @endif
-                    <div class="td-price__main">{{ $tour->currency }} {{ number_format((float)$displayPrice, 0) }}</div>
+                    <div class="td-price__main">{{ $tour->currency }} {{ number_format((float)$displayPrice, 0) ? : '_' }}</div>
                     <div class="td-price__label">per person</div>
                 </div>
             </div>
@@ -68,60 +68,34 @@
                 <div class="td-inc-exc">
                     {{-- Included --}}
                     <div class="td-inc-exc__col">
-                        @if (!empty($priceIncludesHtml))
-                        <div class="td-inc-exc__html">{!! $priceIncludesHtml !!}</div>
-                        @elseif (!empty($includes))
-                        @foreach ($includes as $item)
-                        @if (!empty($item['label']))
-                        <div class="td-inc-exc__row td-inc-exc__row--inc">
-                            <i class="fa fa-check"></i>
-                            <span>{{ $item['label'] }}</span>
-                        </div>
-                        @endif
-                        @endforeach
-                        @else
-                        <div class="td-inc-exc__row td-inc-exc__row--inc">
-                            <i class="fa fa-check"></i><span>Specialized bilingual guide</span>
-                        </div>
-                        <div class="td-inc-exc__row td-inc-exc__row--inc">
-                            <i class="fa fa-check"></i><span>Private Transport</span>
-                        </div>
-                        <div class="td-inc-exc__row td-inc-exc__row--inc">
-                            <i class="fa fa-check"></i><span>Entrance Fees</span>
-                        </div>
-                        <div class="td-inc-exc__row td-inc-exc__row--inc">
-                            <i class="fa fa-check"></i><span>Breakfast And Lunch Box</span>
-                        </div>
-                        @endif
+                        @forelse($includes as $item)
+                            <div class="td-inc-exc__row td-inc-exc__row--inc">
+                                <i class="fa fa-check"></i>
+                                <span>{{ $item->title }}</span>
+                            </div>
+                        @empty
+                            <div class="td-overview-text">No inclusions listed.</div>
+                        @endforelse
                     </div>
                     {{-- Excluded --}}
                     <div class="td-inc-exc__col">
-                        @if (!empty($excludes))
-                        @foreach ($excludes as $item)
-                        @if (!empty($item['label']))
-                        <div class="td-inc-exc__row td-inc-exc__row--exc">
-                            <i class="fa fa-times"></i>
-                            <span>{{ $item['label'] }}</span>
-                        </div>
-                        @endif
-                        @endforeach
-                        @else
-                        <div class="td-inc-exc__row td-inc-exc__row--exc">
-                            <i class="fa fa-times"></i><span>Guide Service Fee</span>
-                        </div>
-                        <div class="td-inc-exc__row td-inc-exc__row--exc">
-                            <i class="fa fa-times"></i><span>Room Service Fees</span>
-                        </div>
-                        <div class="td-inc-exc__row td-inc-exc__row--exc">
-                            <i class="fa fa-times"></i><span>Driver Service Fee</span>
-                        </div>
-                        <div class="td-inc-exc__row td-inc-exc__row--exc">
-                            <i class="fa fa-times"></i><span>Any Private Expenses</span>
-                        </div>
-                        @endif
+                        @forelse($excludes as $item)
+                            <div class="td-inc-exc__row td-inc-exc__row--exc">
+                                <i class="fa fa-times"></i>
+                                <span>{{ $item->title }}</span>
+                            </div>
+                        @empty
+                            <div class="td-overview-text">No exclusions listed.</div>
+                        @endforelse
                     </div>
                 </div>
             </div>
+            @if(!empty($mapImageUrl))
+            <div class="td-card">
+                <h3 class="td-section-title">Tour Map :</h3>
+                <img src="{{ $mapImageUrl ?? asset('images/default.png') }}" alt="{{ $tour->title }} route map" style="width:100%; border-radius:12px;">
+            </div>
+            @endif
 
             {{-- ── Itinerary ── --}}
             @include('frontend.components.tour_itinerary')
@@ -129,11 +103,19 @@
             {{-- ── Cancellation Policy ── --}}
             <div class="td-card">
                 <h3 class="td-section-title">Cancellation Policy :</h3>
-                @if (!empty($formattedCancellationPolicy))
-                <div class="td-overview-text">{!! $formattedCancellationPolicy !!}</div>
-                @else
-                <div class="td-overview-text">No cancellation policy available.</div>
-                @endif
+                @forelse($cancellationPolicies as $policy)
+                    <div class="td-highlight-item" style="margin-bottom:8px;">
+                        <i class="fa fa-check-circle"></i>
+                        <span>
+                            <strong>{{ $policy->title }}</strong>
+                            @if($policy->description)
+                                — {{ $policy->description }}
+                            @endif
+                        </span>
+                    </div>
+                @empty
+                    <div class="td-overview-text">No cancellation policy available.</div>
+                @endforelse
             </div>
 
             {{-- ── Inquiry Form ── --}}

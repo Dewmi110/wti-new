@@ -12,7 +12,7 @@ class Tour extends Model
     protected $fillable = [
         't_category', 't_type', 't_theme', 'title', 'slug', 'description', 'duration', 'country', 'destinations', 'currency', 'price', 
         'discount_price', 'highlight_activities', 'features', 'banner_img_path', 'group_size', 'guide',
-         'price_include', 'cancellation_policy', 'visibility','os_visibility','os_price','os_currency', 'status',
+         'price_include', 'cancellation_policy', 'visibility','os_visibility','os_price','os_currency', 'status','created_by',
     ];
 
     protected $casts = [
@@ -24,6 +24,9 @@ class Tour extends Model
         'os_price' => 'decimal:2',
         'os_currency' => 'string',
         'currency' => 'string',
+        'inclusion_ids' => 'array',
+        'exclusion_ids' => 'array',
+        'cancellation_policy_ids' => 'array',
     ];
 
     public function category()
@@ -71,8 +74,13 @@ class Tour extends Model
         return Destination::whereIn('id', $this->destinations)->get();
     }
 
-    public function destinations()
-{
-    return $this->belongsToMany(Destination::class, 'tour_destination'); // adjust pivot table name
-}
+        public function destinations()
+    {
+        return $this->belongsToMany(Destination::class, 'tour_destination'); // adjust pivot table name
+    }
+
+        public function creator()
+    {
+        return $this->belongsTo(\App\Models\User::class, 'created_by');
+    }
 }

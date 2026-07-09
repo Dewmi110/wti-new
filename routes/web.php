@@ -14,10 +14,11 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\BlogBannerController;
 use App\Http\Controllers\Admin\BlogSliderController;
 use App\Http\Controllers\Admin\ContactBannerController;
-use App\Http\Controllers\Admin\ServiceBannerController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\ContactDetailController;
+use App\Http\Controllers\Admin\TourPolicyController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Middleware\AdminAuth;
@@ -59,7 +60,7 @@ Route::controller(FrontendController::class)->group(function () {
         ->name('admin.')
         ->middleware(AdminAuth::class)
         ->group(function () {
-        Route::get('/dashboard', [DashboardController::class, 'index']) ->name('dashboard');
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 // Resource Controllers
         Route::resources([
@@ -113,18 +114,31 @@ Route::controller(FrontendController::class)->group(function () {
         Route::resource('service-banners', ServiceBannerController::class)->except('show')->names('service_banners');
 // Tour Banners
         Route::prefix('tour-banners')->name('tour_banners.') ->controller(TourTypeController::class)->group(function () {
-            Route::get('/', 'indexBanner')->name('index');
-            Route::get('/create', 'createBanner')->name('create');
-            Route::post('/', 'storeBanner')->name('store');
+        Route::get('/', 'indexBanner')->name('index');
+        Route::get('/create', 'createBanner')->name('create');
+        Route::post('/', 'storeBanner')->name('store');
         });
 // Booking Routes
         Route::get('bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
         Route::patch('bookings/{booking}/status', [BookingController::class, 'updateStatus'])->name('bookings.updateStatus');
         Route::delete('bookings/{booking}', [BookingController::class, 'destroy'])->name('bookings.destroy');
         Route::resource('bookings', BookingController::class)->only(['index']);
-    });
+
+// Contact Details (singleton settings — no create/delete needed)
+        Route::prefix('contact-details')->name('contact_details.')->controller(ContactDetailController::class)->group(function () {
+        Route::get('/', 'edit')->name('edit');
+        Route::put('/', 'update')->name('update');
+        });
+
+        Route::prefix('tour-policies')->name('tour-policies.')->controller(TourPolicyController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/{type}', 'store')->name('store');
+        Route::put('/{type}/{id}', 'update')->name('update');
+        Route::delete('/{type}/{id}', 'destroy')->name('destroy');
+        });
 
 // Profile
-Route::get('profile', [ProfileController::class, 'edit'])->name('admin.profile.edit');
-Route::put('profile', [ProfileController::class, 'update'])->name('admin.profile.update');
-Route::put('profile/password', [ProfileController::class, 'updatePassword'])->name('admin.profile.password');
+        Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::put('profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
+    });

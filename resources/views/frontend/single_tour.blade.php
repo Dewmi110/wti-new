@@ -139,12 +139,12 @@ MAIN TWO-COLUMN LAYOUT
                                     </div>
                                 </div>
 
-                                <div class="tour-card-v3__icons">
+                                {{-- <div class="tour-card-v3__icons">
                                     <span title="Accommodation"><i class="fa fa-building-o"></i></span>
                                     <span title="Flights"><i class="fa fa-plane"></i></span>
                                     <span title="Transport"><i class="fa fa-car"></i></span>
                                     <span title="WiFi"><i class="fa fa-wifi"></i></span>
-                                </div>
+                                </div> --}}
 
                                 <div class="tour-card-v3__details">
                                     @if(!empty($relFeatures))

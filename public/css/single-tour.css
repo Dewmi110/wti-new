@@ -241,6 +241,7 @@
         color: #aaa;
         text-decoration: line-through;
         margin-bottom: 2px;
+        text-align: end;
     }
 
     .td-price__label {
@@ -248,6 +249,7 @@
         color: #999;
         margin-top: 3px;
         white-space: nowrap;
+        text-align: end;
     }
 
     /* ── Gallery ── */

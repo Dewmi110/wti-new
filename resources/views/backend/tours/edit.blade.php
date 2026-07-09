@@ -207,6 +207,41 @@
                 </div>
             </div>
 
+            {{-- ── TOUR MAP IMAGE ── --}}
+            <div class="card">
+                <div class="card-header" style="padding:18px 22px 0;">
+                    <div class="card-header-title">
+                        <i class="fas fa-map" style="color:var(--purple);margin-right:6px;"></i>
+                        Tour Map Image
+                    </div>
+                </div>
+                <div class="card-body">
+                    @if($tour->map_image_path)
+                        <div style="margin-bottom:14px;">
+                            <label class="form-label">Current Map</label>
+                            <div style="margin-top:6px;">
+                                <img src="{{ Storage::url($tour->map_image_path) }}"
+                                    alt="{{ $tour->title }} map"
+                                    style="height:120px; border-radius:10px; object-fit:cover; border:1px solid var(--border);">
+                            </div>
+                        </div>
+                    @endif
+
+                    <div class="form-group">
+                        <label class="form-label">Replace Map Image</label>
+                        <label class="file-upload" for="map_img_input">
+                            <input id="map_img_input" type="file" name="map_img" accept="image/*">
+                            <div class="upload-icon"><i class="fas fa-map-marked-alt"></i></div>
+                            <div class="upload-text">Click to upload a new route/map image</div>
+                            <div class="upload-hint">PNG, JPG, JPEG — max 5MB</div>
+                        </label>
+                        @error('map_img')<div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>@enderror
+                    </div>
+
+                    <div id="mapPreview" style="margin-top:12px;"></div>
+                </div>
+            </div>
+
             {{-- ── 4. TOUR FEATURES ── --}}
             <div class="card">
                 <div class="card-header" style="padding:18px 22px 0;">
@@ -249,12 +284,13 @@
                         <div class="form-group">
                             <label class="form-label">Currency</label>
                             <select name="currency" class="form-input">
-                                <option value="USD" {{ old('currency', 'USD') == 'USD' ? 'selected' : '' }}>USD</option>
-                                <option value="Rs"  {{ old('currency', 'USD') == 'Rs'  ? 'selected' : '' }}>Rs</option>
+                                <option value="" {{ old('currency', $tour->currency ?? '') === '' ? 'selected' : '' }}>Select currency</option>
+                                <option value="USD" {{ old('currency', $tour->currency ?? '') == 'USD' ? 'selected' : '' }}>USD</option>
+                                <option value="Rs"  {{ old('currency', $tour->currency ?? '') == 'Rs'  ? 'selected' : '' }}>Rs</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Price <span class="required">*</span></label>
+                            <label class="form-label">Price</label>
                             <div class="input-icon-wrap">
                                 <i class="fas fa-dollar-sign input-icon"></i>
                                 <input type="text" name="price" class="form-input {{ $errors->has('price') ? 'is-error' : '' }}"
@@ -269,7 +305,7 @@
                                 <input type="text" name="discount_price" class="form-input"
                                     placeholder="0.00" value="{{ old('discount_price', $tour->discount_price) }}">
                             </div>
-                            <div class="form-hint">Leave empty if no discount</div>
+                            <div class="form-hint">Leave empty if no price or discount</div>
                         </div>
                     </div>
                 </div>
@@ -304,7 +340,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label class="form-label">Price Includes</label>
                             <div class="input-icon-wrap">
                                 <i class="fas fa-list input-icon"></i>
@@ -320,6 +356,61 @@
                                 <textarea name="cancellation_policy" class="form-input" rows="4" placeholder="Use line breaks for bullets, **bold**, or *italic* formatting">{{ old('cancellation_policy', $tour->cancellation_policy) }}</textarea>
                             </div>
                             <div class="form-hint">Enter a full policy with paragraphs, bullets, and emphasis.</div>
+                        </div> --}}
+                        @php
+                            $selectedInclusionIds = collect(old('inclusion_ids', $tour->inclusion_ids ?? []))->map(fn($v) => (int) $v)->all();
+                            $selectedInclusionNames = $inclusions->whereIn('id', $selectedInclusionIds)->pluck('title')->values()->all();
+
+                            $selectedExclusionIds = collect(old('exclusion_ids', $tour->exclusion_ids ?? []))->map(fn($v) => (int) $v)->all();
+                            $selectedExclusionNames = $exclusions->whereIn('id', $selectedExclusionIds)->pluck('title')->values()->all();
+
+                            $selectedPolicyIds = collect(old('cancellation_policy_ids', $tour->cancellation_policy_ids ?? []))->map(fn($v) => (int) $v)->all();
+                            $selectedPolicyNames = $cancellationPolicies->whereIn('id', $selectedPolicyIds)->pluck('title')->values()->all();
+                        @endphp
+
+                        {{-- Price Includes --}}
+                        <div class="form-group">
+                            <label class="form-label">Price Includes</label>
+                            <div class="tour-destination-picker">
+                                <button type="button" id="inclusionsDropdownToggle" class="destination-dropdown-btn">
+                                    <span id="inclusionsSelectedText" class="destination-selected-text">
+                                        {{ implode(', ', $selectedInclusionNames) ?: 'Select inclusions...' }}
+                                    </span>
+                                    <i class="fas fa-chevron-down destination-dropdown-icon"></i>
+                                </button>
+                                <div id="inclusionsDropdownMenu" class="destination-dropdown-menu"></div>
+                            </div>
+                            @error('inclusion_ids')<div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>@enderror
+                        </div>
+
+                        {{-- Price Excludes --}}
+                        <div class="form-group">
+                            <label class="form-label">Price Excludes</label>
+                            <div class="tour-destination-picker">
+                                <button type="button" id="exclusionsDropdownToggle" class="destination-dropdown-btn">
+                                    <span id="exclusionsSelectedText" class="destination-selected-text">
+                                        {{ implode(', ', $selectedExclusionNames) ?: 'Select exclusions...' }}
+                                    </span>
+                                    <i class="fas fa-chevron-down destination-dropdown-icon"></i>
+                                </button>
+                                <div id="exclusionsDropdownMenu" class="destination-dropdown-menu"></div>
+                            </div>
+                            @error('exclusion_ids')<div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>@enderror
+                        </div>
+
+                        {{-- Cancellation Policy --}}
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label">Cancellation Policy</label>
+                            <div class="tour-destination-picker">
+                                <button type="button" id="policiesDropdownToggle" class="destination-dropdown-btn">
+                                    <span id="policiesSelectedText" class="destination-selected-text">
+                                        {{ implode(', ', $selectedPolicyNames) ?: 'Select cancellation policies...' }}
+                                    </span>
+                                    <i class="fas fa-chevron-down destination-dropdown-icon"></i>
+                                </button>
+                                <div id="policiesDropdownMenu" class="destination-dropdown-menu"></div>
+                            </div>
+                            @error('cancellation_policy_ids')<div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>@enderror
                         </div>
                     </div>
                 </div>
@@ -426,15 +517,14 @@
                     <div class="form-group">
                         <label class="form-label">Replace Banner Image</label>
                         <label class="file-upload" for="banner_img_input">
-                            <input id="banner_img_input" type="file" name="banner_img"
-                                accept="image/*" onchange="previewBanner(event)">
+                            <input id="banner_img_input" type="file" name="banner_img" accept="image/*">
                             <div class="upload-icon"><i class="fas fa-image"></i></div>
                             <div class="upload-text">Click to upload a new cover image</div>
                             <div class="upload-hint">PNG, JPG, JPEG — max 5MB</div>
                         </label>
                     </div>
 
-                    <div id="bannerPreview" style="margin-top:10px; display:none;">
+                    {{-- <div id="bannerPreview" style="margin-top:10px; display:none;">
                         <label class="form-label">New Image Preview</label>
                         <div style="position:relative; display:inline-block; margin-top:6px;">
                             <img id="bannerPreviewImg" src="" alt="Banner preview"
@@ -446,7 +536,8 @@
                                 <i class="fas fa-times"></i>
                             </button>
                         </div>
-                    </div>
+                    </div> --}}
+                    <div id="bannerPreview" style="margin-top:10px;"></div>
                 </div>
             </div>
 

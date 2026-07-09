@@ -26,7 +26,6 @@
                         <option>Corporate Travel</option>
                         <option>Air Tickets</option>
                         <option>Visa Services</option>
-                        <option>Corporate Travel</option>
                         <option>Ancillaries</option>
                     </select>
                     <i class="fa fa-chevron-down cf-select-icon"></i>

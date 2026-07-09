@@ -76,6 +76,7 @@
                         <td>
                             <div class="avatar-info">
                                 <strong>{{ $tour->title }}</strong>
+                                {{ optional($tour->creator)->name ?? '—' }}
                             </div>
                         </td>
 
