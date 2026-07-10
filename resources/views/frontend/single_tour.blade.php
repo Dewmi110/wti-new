@@ -51,11 +51,12 @@ $locationName = optional($tour->countryModel)->name ?? 'Sri Lanka';
 $tourImages = $tour->images->pluck('img_path')->map(fn($p) => \Illuminate\Support\Facades\Storage::url($p))->toArray();
 $features = is_array($tour->features) ? $tour->features : [];
 $itinerary = $tour->itineraries->toArray();
-$includes = [];
 $priceIncludesHtml = '';
-if (is_array($tour->includes)) { $includes = $tour->includes; }
-elseif (!empty($tour->price_include)) { $priceIncludesHtml = tourRichTextToHtml($tour->price_include); }
-$excludes = is_array($tour->excludes) ? $tour->excludes : [];
+$includes = $includes ?? [];
+$excludes = $excludes ?? [];
+if (empty($includes) && !empty($tour->price_include)) {
+    $priceIncludesHtml = tourRichTextToHtml($tour->price_include);
+}
 $highlights = [];
 if (is_array($tour->highlights)) { $highlights = $tour->highlights; }
 elseif (!empty($tour->highlight_activities)) {

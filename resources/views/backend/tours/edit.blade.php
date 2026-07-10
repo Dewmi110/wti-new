@@ -196,12 +196,13 @@
                                 </span>
                                 <i class="fas fa-chevron-down" style="color:var(--text-muted); font-size:11px; flex-shrink:0; margin-left:8px;"></i>
                             </button>
-                            <div id="destinationsDropdownMenu"
+                            <div id="destinationsDropdownMenu" class="destination-dropdown-menu"></div>
+                            {{-- <div id="destinationsDropdownMenu"
                                 style="display:none; position:absolute; top:100%; left:0; right:0; z-index:200;
                                        background:white; border:1.5px solid var(--purple); border-radius:var(--radius-sm);
                                        margin-top:4px; max-height:260px; overflow-y:auto;
                                        box-shadow:0 8px 24px rgba(108,92,231,0.12);">
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>
@@ -371,7 +372,7 @@
                         {{-- Price Includes --}}
                         <div class="form-group">
                             <label class="form-label">Price Includes</label>
-                            <div class="tour-destination-picker">
+                            <div class="tour-destination-picker" style="position:relative;">
                                 <button type="button" id="inclusionsDropdownToggle" class="destination-dropdown-btn">
                                     <span id="inclusionsSelectedText" class="destination-selected-text">
                                         {{ implode(', ', $selectedInclusionNames) ?: 'Select inclusions...' }}
@@ -380,13 +381,14 @@
                                 </button>
                                 <div id="inclusionsDropdownMenu" class="destination-dropdown-menu"></div>
                             </div>
+                            <div class="form-hint">Choose the items included in the package.</div>
                             @error('inclusion_ids')<div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>@enderror
                         </div>
 
                         {{-- Price Excludes --}}
                         <div class="form-group">
                             <label class="form-label">Price Excludes</label>
-                            <div class="tour-destination-picker">
+                            <div class="tour-destination-picker" style="position:relative;">
                                 <button type="button" id="exclusionsDropdownToggle" class="destination-dropdown-btn">
                                     <span id="exclusionsSelectedText" class="destination-selected-text">
                                         {{ implode(', ', $selectedExclusionNames) ?: 'Select exclusions...' }}
@@ -395,13 +397,14 @@
                                 </button>
                                 <div id="exclusionsDropdownMenu" class="destination-dropdown-menu"></div>
                             </div>
+                            <div class="form-hint">Choose the items not covered by the package.</div>
                             @error('exclusion_ids')<div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>@enderror
                         </div>
 
                         {{-- Cancellation Policy --}}
-                        <div class="form-group" style="grid-column: 1 / -1;">
+                        <div class="form-group">
                             <label class="form-label">Cancellation Policy</label>
-                            <div class="tour-destination-picker">
+                            <div class="tour-destination-picker" style="position:relative;">
                                 <button type="button" id="policiesDropdownToggle" class="destination-dropdown-btn">
                                     <span id="policiesSelectedText" class="destination-selected-text">
                                         {{ implode(', ', $selectedPolicyNames) ?: 'Select cancellation policies...' }}
@@ -410,11 +413,12 @@
                                 </button>
                                 <div id="policiesDropdownMenu" class="destination-dropdown-menu"></div>
                             </div>
+                            <div class="form-hint">Pick the applicable cancellation policy options.</div>
                             @error('cancellation_policy_ids')<div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>@enderror
                         </div>
                     </div>
                 </div>
-
+            </div>
             <div class="card">
                 <div class="card-header" style="padding:18px 22px 0;">
                     <div style="display:flex; align-items:center; justify-content:space-between; width:100%;">
@@ -730,6 +734,121 @@
 
 </div>
 
+<style>
+    .form-grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1.25rem;
+        align-items: start;
+    }
+
+    .form-grid-3 > .form-group {
+        min-width: 0;
+    }
+
+    .tour-destination-picker {
+        position: relative;
+        width: 100%;
+    }
+
+    .destination-dropdown-btn {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: left;
+        padding: 0.85rem 1rem;
+        min-height: 48px;
+        border: 1.5px solid #d2d6da;
+        border-radius: 0.75rem;
+        background: #fff;
+        cursor: pointer;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .destination-dropdown-btn:hover {
+        border-color: #cbd3e1;
+    }
+
+    .destination-dropdown-btn:focus {
+        outline: none;
+        border-color: #5e72e4;
+        box-shadow: 0 0 0 3px rgba(94, 114, 228, 0.12);
+    }
+
+    .destination-selected-text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: #344767;
+        line-height: 1.4;
+    }
+
+    .destination-dropdown-icon {
+        color: #8392ab;
+        font-size: 11px;
+        flex-shrink: 0;
+        margin-left: 8px;
+    }
+
+    .destination-dropdown-menu {
+        display: none;
+        position: absolute;
+        top: calc(100% + 6px);
+        left: 0;
+        width: 100%;
+        z-index: 1080;
+        border-radius: 0.875rem;
+        border: 1px solid #e9ecef;
+        background: #fff;
+        box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.12);
+        overflow: hidden;
+    }
+
+    .destination-dropdown-menu.is-open {
+        display: block !important;
+    }
+
+    .destination-dropdown-menu .custom-control {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.7rem 1rem;
+        margin-bottom: 0;
+    }
+
+    .destination-dropdown-menu .custom-control:hover {
+        background: #f8f9fa;
+    }
+
+    .form-hint {
+        margin-top: 0.4rem;
+        font-size: 0.8rem;
+        color: #8392ab;
+    }
+
+    #bannerPreview .tour-preview-thumb,
+    #mapPreview .tour-preview-thumb {
+        display: block;
+        height: 140px;
+        max-width: 240px;
+        object-fit: cover;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+    }
+
+    @media (max-width: 992px) {
+        .form-grid-3 {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @media (max-width: 576px) {
+        .form-grid-3 {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
 {{-- ── SCRIPTS ── --}}
 <script>
 // Banner preview
@@ -767,6 +886,203 @@ function previewGallery(event) {
         reader.readAsDataURL(file);
     });
 }
+//............
+const policyPickerData = {
+    inclusions: {
+        items: @json($inclusions->map(fn($i) => ['id' => $i->id, 'name' => $i->title])->values()),
+        selectedIds: @json($selectedInclusionIds),
+        inputName: 'inclusion_ids[]',
+        idPrefix: 'inclusion_',
+        placeholder: 'Select inclusions...',
+    },
+    exclusions: {
+        items: @json($exclusions->map(fn($e) => ['id' => $e->id, 'name' => $e->title])->values()),
+        selectedIds: @json($selectedExclusionIds),
+        inputName: 'exclusion_ids[]',
+        idPrefix: 'exclusion_',
+        placeholder: 'Select exclusions...',
+    },
+    policies: {
+        items: @json($cancellationPolicies->map(fn($p) => ['id' => $p->id, 'name' => $p->title])->values()),
+        selectedIds: @json($selectedPolicyIds),
+        inputName: 'cancellation_policy_ids[]',
+        idPrefix: 'policy_',
+        placeholder: 'Select cancellation policies...',
+    },
+};
+
+function getPickerToggle(key) { return document.getElementById(key + 'DropdownToggle'); }
+function getPickerMenu(key) { return document.getElementById(key + 'DropdownMenu'); }
+function getPickerDisplay(key) { return document.getElementById(key + 'SelectedText'); }
+
+function updatePickerDisplay(key) {
+    const display = getPickerDisplay(key);
+    if (!display) return;
+    const checked = Array.from(document.querySelectorAll('input.picker-checkbox[data-picker-key="' + key + '"]:checked'));
+    const labels = checked.map(function (cb) { return cb.dataset.label || ''; }).filter(Boolean);
+    display.textContent = labels.length ? labels.join(', ') : policyPickerData[key].placeholder;
+}
+
+function setPickerMenuVisibility(key, isVisible) {
+    const menu = getPickerMenu(key);
+    const toggle = getPickerToggle(key);
+    if (!menu) return;
+    menu.classList.toggle('is-open', isVisible);
+    if (toggle) toggle.setAttribute('aria-expanded', isVisible ? 'true' : 'false');
+}
+
+function togglePickerMenu(key) {
+    const menu = getPickerMenu(key);
+    if (!menu) return;
+    const willOpen = !menu.classList.contains('is-open');
+    Object.keys(policyPickerData).forEach(function (otherKey) {
+        if (otherKey !== key) setPickerMenuVisibility(otherKey, false);
+    });
+    setDestinationMenuVisibility(false);
+    setPickerMenuVisibility(key, willOpen);
+}
+
+function renderPickerOptions(key) {
+    const menu = getPickerMenu(key);
+    const config = policyPickerData[key];
+    if (!menu || !config) return;
+
+    menu.innerHTML = '';
+
+    if (!config.items.length) {
+        menu.innerHTML = '<div class="destination-empty-message">No options available. Add some from Tour Policies.</div>';
+        updatePickerDisplay(key);
+        return;
+    }
+
+    const searchWrap = document.createElement('div');
+    searchWrap.className = 'destination-search-wrap';
+    const searchInput = document.createElement('input');
+    searchInput.type = 'search';
+    searchInput.className = 'destination-search-input';
+    searchInput.placeholder = 'Search...';
+    searchWrap.appendChild(searchInput);
+
+    const optionsList = document.createElement('div');
+    optionsList.className = 'destination-options-list';
+
+    menu.appendChild(searchWrap);
+    menu.appendChild(optionsList);
+
+    config.items.forEach(function (item) {
+        const option = document.createElement('div');
+        option.className = 'custom-control custom-checkbox px-3 py-1';
+        option.dataset.label = String(item.name || '').toLowerCase();
+
+        const checkbox = document.createElement('input');
+        checkbox.className = 'custom-control-input picker-checkbox';
+        checkbox.type = 'checkbox';
+        checkbox.id = config.idPrefix + item.id;
+        checkbox.name = config.inputName;
+        checkbox.value = item.id;
+        checkbox.dataset.label = item.name;
+        checkbox.dataset.pickerKey = key;
+        checkbox.checked = config.selectedIds.map(String).includes(String(item.id));
+        checkbox.addEventListener('change', function () { updatePickerDisplay(key); });
+
+        const label = document.createElement('label');
+        label.className = 'custom-control-label';
+        label.setAttribute('for', checkbox.id);
+        label.textContent = item.name;
+
+        option.appendChild(checkbox);
+        option.appendChild(label);
+        optionsList.appendChild(option);
+    });
+
+    const emptySearchState = document.createElement('div');
+    emptySearchState.className = 'destination-empty-message';
+    emptySearchState.textContent = 'No matches found.';
+    emptySearchState.style.display = 'none';
+    optionsList.appendChild(emptySearchState);
+
+    searchInput.addEventListener('input', function () {
+        const query = searchInput.value.trim().toLowerCase();
+        let visibleCount = 0;
+        Array.from(optionsList.querySelectorAll('.custom-control')).forEach(function (option) {
+            const isVisible = query === '' || (option.dataset.label || '').includes(query);
+            option.style.display = isVisible ? '' : 'none';
+            if (isVisible) visibleCount++;
+        });
+        emptySearchState.style.display = visibleCount === 0 ? 'block' : 'none';
+    });
+
+    updatePickerDisplay(key);
+}
+
+function initPolicyPickers() {
+    Object.keys(policyPickerData).forEach(function (key) {
+        renderPickerOptions(key);
+        const toggle = getPickerToggle(key);
+        if (toggle) {
+            toggle.addEventListener('click', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                togglePickerMenu(key);
+            });
+        }
+    });
+
+    document.addEventListener('click', function (event) {
+        Object.keys(policyPickerData).forEach(function (key) {
+            const menu = getPickerMenu(key);
+            const toggle = getPickerToggle(key);
+            if (!menu || !toggle) return;
+            if (!menu.contains(event.target) && !toggle.contains(event.target)) {
+                setPickerMenuVisibility(key, false);
+            }
+        });
+    });
+}
+
+function renderMapPreview(fileInput) {
+    const preview = document.getElementById('mapPreview');
+    if (!preview) return;
+    const file = fileInput && fileInput.files ? fileInput.files[0] : null;
+    preview.innerHTML = '';
+    if (!file) return;
+    preview.appendChild(createPreviewImage(file, 'tour-preview-thumb'));
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const countrySelect = document.getElementById('country-select');
+    const destinationToggle = getDestinationToggle();
+    const featureSearchInput = getFeatureSearchInput();
+    const bannerInput = document.getElementById('banner_img_input');
+    const galleryInput = document.getElementById('gallery_images_input');
+    const mapInput = document.getElementById('map_img_input');   // ← add
+
+    renderDestinationOptions(initialDestinations);
+    renderFeatureSelectedCards();
+    renderBannerPreview(bannerInput);
+    renderGalleryPreview(galleryInput);
+    initPolicyPickers();   // ← add
+
+    // ...existing featureSearchInput/destinationToggle listeners unchanged...
+
+    if (mapInput) {   // ← add
+        mapInput.addEventListener('change', function () {
+            renderMapPreview(mapInput);
+        });
+    }
+
+    if (bannerInput) {
+        bannerInput.addEventListener('change', function () {
+            renderBannerPreview(bannerInput);
+        });
+    }
+
+    if (galleryInput) {
+        galleryInput.addEventListener('change', function () {
+            renderGalleryPreview(galleryInput);
+        });
+    }
+});
 
 // Highlight Activities
 let highlightIndex = {{ count($highlightActivities) }};

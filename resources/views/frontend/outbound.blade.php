@@ -62,7 +62,7 @@
                                                 <a href="{{ route('frontend.single_tour', $tour) }}">{{ $tour->title
                                                     }}</a>
                                             </h3>
-                                            <p class="tour-card-v3__subtitle">{{ $tour->duration }} Nights, {{
+                                            <p class="tour-card-v3__subtitle">{{ $tour->duration }} , {{
                                                 $locationName }}</p>
                                         </div>
                                         {{-- <span class="tour-card-v3__toggle-icon">&#8743;</span> --}}
@@ -92,7 +92,7 @@
                                 {{-- Bottom bar OUTSIDE footer-inner so sticky works --}}
                                 <div class="tour-card-v3__bottom">
                                     <div class="tour-card-v3__price-wrap">
-                                        <span class="tour-card-v3__nights">{{ $tour->duration }} Nights</span>
+                                        <span class="tour-card-v3__nights">{{ $tour->duration }}</span>
                                         <span class="tour-card-v3__price">From {{ $tour->currency }} {{ number_format((float) $displayPrice, 0) }} PP</span>
                                     </div>
                                     <a href="{{ route('frontend.single_tour', $tour) }}" class="tour-card-v3__btn">VIEW

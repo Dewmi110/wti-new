@@ -389,7 +389,7 @@
                                 $selectedInclusionIds = collect(old('inclusion_ids', []))->map(fn($v) => (int) $v)->all();
                                 $selectedInclusionNames = $inclusions->whereIn('id', $selectedInclusionIds)->pluck('title')->values()->all();
                             @endphp
-                            <div class="tour-destination-picker">
+                            <div class="tour-destination-picker" style="position:relative;">
                                 <button type="button" id="inclusionsDropdownToggle" class="destination-dropdown-btn">
                                     <span id="inclusionsSelectedText" class="destination-selected-text">
                                         {{ implode(', ', $selectedInclusionNames) ?: 'Select inclusions...' }}
@@ -398,6 +398,7 @@
                                 </button>
                                 <div id="inclusionsDropdownMenu" class="destination-dropdown-menu"></div>
                             </div>
+                            <div class="form-hint">Choose the items included in the package.</div>
                             @error('inclusion_ids')<div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>@enderror
                         </div>
 
@@ -408,7 +409,7 @@
                                 $selectedExclusionIds = collect(old('exclusion_ids', []))->map(fn($v) => (int) $v)->all();
                                 $selectedExclusionNames = $exclusions->whereIn('id', $selectedExclusionIds)->pluck('title')->values()->all();
                             @endphp
-                            <div class="tour-destination-picker">
+                            <div class="tour-destination-picker" style="position:relative;">
                                 <button type="button" id="exclusionsDropdownToggle" class="destination-dropdown-btn">
                                     <span id="exclusionsSelectedText" class="destination-selected-text">
                                         {{ implode(', ', $selectedExclusionNames) ?: 'Select exclusions...' }}
@@ -417,6 +418,7 @@
                                 </button>
                                 <div id="exclusionsDropdownMenu" class="destination-dropdown-menu"></div>
                             </div>
+                            <div class="form-hint">Choose the items not covered by the package.</div>
                             @error('exclusion_ids')<div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>@enderror
                         </div>
 
@@ -427,7 +429,7 @@
                                 $selectedPolicyIds = collect(old('cancellation_policy_ids', []))->map(fn($v) => (int) $v)->all();
                                 $selectedPolicyNames = $cancellationPolicies->whereIn('id', $selectedPolicyIds)->pluck('title')->values()->all();
                             @endphp
-                            <div class="tour-destination-picker">
+                            <div class="tour-destination-picker" style="position:relative;">
                                 <button type="button" id="policiesDropdownToggle" class="destination-dropdown-btn">
                                     <span id="policiesSelectedText" class="destination-selected-text">
                                         {{ implode(', ', $selectedPolicyNames) ?: 'Select cancellation policies...' }}
@@ -436,6 +438,7 @@
                                 </button>
                                 <div id="policiesDropdownMenu" class="destination-dropdown-menu"></div>
                             </div>
+                            <div class="form-hint">Pick the applicable cancellation policy options.</div>
                             @error('cancellation_policy_ids')<div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>@enderror
                         </div>
                     </div>

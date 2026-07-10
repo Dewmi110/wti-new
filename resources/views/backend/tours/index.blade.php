@@ -74,9 +74,12 @@
                         </td>
 
                         <td>
-                            <div class="avatar-info">
-                                <strong>{{ $tour->title }}</strong>
-                                {{ optional($tour->creator)->name ?? '—' }}
+                            <div class="avatar-info" >
+                                <strong>{{ $tour->title }}</strong><br>
+                               <span class="author"style="
+                                font-size: 12px;
+                                color: #6c757d;
+                            ">created by:{{ optional($tour->creator)->name ?? '—' }}</span>
                             </div>
                         </td>
 

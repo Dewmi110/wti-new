@@ -58,18 +58,18 @@
                                                 <a href="{{ route('frontend.single_tour', $tour) }}">{{ $tour->title
                                                     }}</a>
                                             </h3>
-                                            <p class="tour-card-v3__subtitle">{{ $tour->duration }} Nights, {{
+                                            <p class="tour-card-v3__subtitle">{{ $tour->duration }} , {{
                                                 $locationName }}</p>
                                         </div>
                                         {{-- <span class="tour-card-v3__toggle-icon">&#8743;</span> --}}
                                     </div>
 
-                                    <div class="tour-card-v3__icons">
+                                    {{-- <div class="tour-card-v3__icons">
                                         <span title="Accommodation"><i class="fa fa-building-o"></i></span>
                                         <span title="Flights"><i class="fa fa-plane"></i></span>
                                         <span title="Transport"><i class="fa fa-car"></i></span>
                                         <span title="WiFi"><i class="fa fa-wifi"></i></span>
-                                    </div>
+                                    </div> --}}
 
                                     <div class="tour-card-v3__details">
                                         @if(!empty($features))
@@ -88,7 +88,7 @@
                                 {{-- Bottom bar OUTSIDE footer-inner so sticky works --}}
                                 <div class="tour-card-v3__bottom">
                                     <div class="tour-card-v3__price-wrap">
-                                        <span class="tour-card-v3__nights">{{ $tour->duration }} Nights</span>
+                                        <span class="tour-card-v3__nights">{{ $tour->duration }}</span>
                                         <span class="tour-card-v3__price">From {{ $tour->currency }} {{ number_format((float) $displayPrice, 0) }} PP</span>
                                     </div>
                                     <a href="{{ route('frontend.single_tour', $tour) }}" class="tour-card-v3__btn">VIEW

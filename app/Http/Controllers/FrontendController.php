@@ -209,14 +209,19 @@ class FrontendController extends Controller
     public function singleTour(Tour $tour)
     {
         $tour->load(['images', 'itineraries']);
-        $includes = \App\Models\TourInclusion::whereIn('id', $tour->inclusion_ids ?? [])->where('status', 1)->get();
-        $excludes = \App\Models\TourExclusion::whereIn('id', $tour->exclusion_ids ?? [])->where('status', 1)->get();
-        $cancellationPolicies = \App\Models\CancellationPolicy::whereIn('id', $tour->cancellation_policy_ids ?? [])->where('status', 1)->get();
 
         $coverImagePath = $tour->banner_img_path ?: $tour->images->first()?->img_path;
         $coverImageUrl = $coverImagePath
             ? \Illuminate\Support\Facades\Storage::url($coverImagePath)
             : asset('images/hero-bg-1.jpg');
+
+        $mapImageUrl = $tour->map_image_path
+            ? \Illuminate\Support\Facades\Storage::url($tour->map_image_path)
+            : null;
+
+        $includes = \App\Models\TourInclusion::whereIn('id', $tour->inclusion_ids ?? [])->where('status', 1)->get();
+        $excludes = \App\Models\TourExclusion::whereIn('id', $tour->exclusion_ids ?? [])->where('status', 1)->get();
+        $cancellationPolicies = \App\Models\CancellationPolicy::whereIn('id', $tour->cancellation_policy_ids ?? [])->where('status', 1)->get();
 
         $displayPrice  = $tour->discount_price ?: $tour->price;
         $locationName  = optional($tour->countryModel)->name ?? 'Sri Lanka';
@@ -247,9 +252,9 @@ class FrontendController extends Controller
             });
 
         return view('frontend.single_tour', compact(
-            'tour', 'coverImageUrl', 'displayPrice', 'features',
-            'locationName', 'relatedTours', 'tourDestinations','destinations',
-             'includes', 'excludes', 'cancellationPolicies'
+        'tour', 'coverImageUrl', 'mapImageUrl', 'displayPrice', 'features',
+        'locationName', 'relatedTours', 'tourDestinations', 'destinations',
+        'includes', 'excludes', 'cancellationPolicies'
         ));
     }
 

@@ -93,7 +93,7 @@
             @if(!empty($mapImageUrl))
             <div class="td-card">
                 <h3 class="td-section-title">Tour Map :</h3>
-                <img src="{{ $mapImageUrl ?? asset('images/default.png') }}" alt="{{ $tour->title }} route map" style="width:100%; border-radius:12px;">
+                <img src="{{ $mapImageUrl ?? asset('images/default.png') }}" alt="{{ $tour->title }} route map" style="width:80%; border-radius:12px;">
             </div>
             @endif
 

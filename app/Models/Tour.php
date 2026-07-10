@@ -10,9 +10,10 @@ class Tour extends Model
     protected $table = 'tours';
 
     protected $fillable = [
-        't_category', 't_type', 't_theme', 'title', 'slug', 'description', 'duration', 'country', 'destinations', 'currency', 'price', 
-        'discount_price', 'highlight_activities', 'features', 'banner_img_path', 'group_size', 'guide',
-         'price_include', 'cancellation_policy', 'visibility','os_visibility','os_price','os_currency', 'status','created_by',
+    't_category', 't_type', 't_theme', 'title', 'slug', 'description', 'duration', 'country', 'destinations', 'currency', 'price', 
+    'discount_price', 'highlight_activities', 'features', 'banner_img_path', 'group_size', 'guide',
+    'price_include', 'cancellation_policy', 'visibility','os_visibility','os_price','os_currency', 'status','created_by',
+    'map_image_path', 'inclusion_ids', 'exclusion_ids', 'cancellation_policy_ids',
     ];
 
     protected $casts = [
