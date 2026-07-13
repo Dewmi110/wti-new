@@ -69,35 +69,6 @@ Set the following values for your environment:
 php artisan migrate
 ```
 
-6. Install frontend dependencies
-
-```bash
-npm install
-```
-
-7. Build frontend assets
-
-```bash
-npm run build
-```
-
-## Development
-
-To run the application locally:
-
-```bash
-composer run dev
-```
-
-This starts the Laravel app, queue worker, and Vite development server together.
-
-If you want to run them separately:
-
-```bash
-php artisan serve
-npm run dev
-```
-
 ## Common Commands
 
 - Run tests:
