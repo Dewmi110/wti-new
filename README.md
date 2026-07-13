@@ -1,6 +1,32 @@
-# WTI New Laravel Project
+# WTI New
 
-## Project Setup
+WTI New is a Laravel 13 tourism website with a Vite-powered frontend and an admin dashboard for managing tours, bookings, blogs, destinations, and site content.
+
+## Tech Stack
+
+- PHP 8.3+
+- Laravel 13
+- Vite
+- Tailwind CSS
+- MySQL-compatible database
+
+## Project Highlights
+
+- Frontend pages for tours, destinations, blogs, contact, and inquiries
+- Admin authentication and management dashboard
+- Tour, category, type, theme, booking, and content management modules
+- Vite build pipeline for frontend assets
+
+## Requirements
+
+Before you start, make sure you have:
+
+- PHP 8.3 or later
+- Composer
+- Node.js and npm
+- A database server such as MySQL
+
+## Local Setup
 
 1. Install PHP dependencies
 
@@ -8,22 +34,34 @@
 composer install
 ```
 
-2. Copy environment file
+2. Create the environment file
+
+```bash
+copy .env.example .env
+```
+
+If you are using macOS or Linux, use:
 
 ```bash
 cp .env.example .env
 ```
 
-3. Generate application key
+3. Generate the application key
 
 ```bash
 php artisan key:generate
 ```
 
-4. Configure `.env`
+4. Configure your database settings in `.env`
 
-- Set `APP_NAME`, `APP_URL`, `DB_CONNECTION`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`
-- Configure mail and queue settings if needed
+Set the following values for your environment:
+
+- `DB_CONNECTION`
+- `DB_HOST`
+- `DB_PORT`
+- `DB_DATABASE`
+- `DB_USERNAME`
+- `DB_PASSWORD`
 
 5. Run database migrations
 
@@ -37,129 +75,87 @@ php artisan migrate
 npm install
 ```
 
-7. Start local development
+7. Build frontend assets
 
 ```bash
-npm run dev
+npm run build
 ```
 
-8. Open the app in your browser
+## Development
 
-- Visit `http://127.0.0.1:5173` or `http://127.0.0.1:8000` depending on Vite and Laravel server setup.
+To run the application locally:
 
-## Common Development Commands
+```bash
+composer run dev
+```
 
-- Run backend server only:
+This starts the Laravel app, queue worker, and Vite development server together.
+
+If you want to run them separately:
 
 ```bash
 php artisan serve
-```
-
-- Run frontend only:
-
-```bash
 npm run dev
 ```
 
-- Publish pagination views for customization:
+## Common Commands
 
-```bash
-php artisan vendor:publish --tag=laravel-pagination
-```
-
-- Link public storage for uploaded files:
-
-```bash
-php artisan storage:link
-```
-
-- Run PHPUnit tests:
+- Run tests:
 
 ```bash
 php artisan test
 ```
 
-## Production / Go Live
-
-Use these commands when deploying to production.
-
-1. Install composer dependencies without dev packages
-
-```bash
-composer install --optimize-autoloader --no-dev
-```
-
-2. Install frontend dependencies and build assets
-
-```bash
-npm install
-npm run build
-```
-
-3. Set the production environment
-
-```bash
-cp .env.example .env
-```
-
-4. Update `.env` for production
-
-- Set `APP_ENV=production`
-- Set `APP_DEBUG=false`
-- Set `APP_URL` to your live URL
-- Configure production database and mail settings
-
-5. Generate the application key if not already set
-
-```bash
-php artisan key:generate
-```
-
-6. Run migrations
-
-```bash
-php artisan migrate --force
-```
-
-7. Cache configuration and routes
-
-```bash
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
-```
-
-8. Create storage symlink if it is not already created
+- Link storage for uploaded files:
 
 ```bash
 php artisan storage:link
 ```
 
-## Optional Production Maintenance
-
-- Clear caches:
+- Clear cached configuration:
 
 ```bash
-php artisan cache:clear
 php artisan config:clear
+php artisan cache:clear
 php artisan route:clear
 php artisan view:clear
 ```
 
-- If you change Composer dependencies later:
+## Admin Access
 
-```bash
-composer update --optimize-autoloader --no-dev
-php artisan boost:update --ansi
+The admin area is available under:
+
+```text
+/login
 ```
 
-- If you change frontend assets later:
+After login, use the admin dashboard to manage content and bookings.
+
+## Production Deployment
+
+For production, use the following flow:
 
 ```bash
+composer install --optimize-autoloader --no-dev
+npm install
 npm run build
+php artisan key:generate
+php artisan migrate --force
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+php artisan storage:link
 ```
+
+Set the appropriate production values in `.env`, including:
+
+- `APP_ENV=production`
+- `APP_DEBUG=false`
+- `APP_URL`
+- database and mail credentials
 
 ## Notes
 
-- This project uses Laravel 13 and Vite.
-- If you run into Vite asset errors, rebuild assets with `npm run build`.
+- The project uses Laravel 13 and Vite.
+- If frontend assets do not update correctly, run `npm run build` again.
+- The public storage directory should be linked once during setup or deployment.
